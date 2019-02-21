@@ -1,0 +1,54 @@
+/** HEADER **/
+
+header:before {
+  /*background-color:rgb(240, 240, 240);*/
+  background-color: #fff;
+  box-shadow: none;
+}
+
+header #logo img {
+  height: 50px;
+  /*background-color: rgb(240, 240, 240);*/
+  background-color: #fff;
+}
+
+/**  INFORMATIONS BLOC **/
+
+#swagger-ui.api-platform .information-container.wrapper {
+  /*background-color: rgb(40, 143, 136);*/
+  background-color: #fff;
+}
+
+#swagger-ui.api-platform .info .title {
+  /*color:#fff;*/
+  color: rgb(40, 143, 136);
+  border-bottom: 1px solid rgb(40, 143, 136);
+  margin-bottom: 0.3em;
+}
+
+.swagger-ui .info .title small {
+  background: rgb(253, 77, 33);
+}
+
+.swagger-ui .info .base-url {
+  color: rgb(240, 240, 240);
+}
+
+.swagger-ui .info li, .swagger-ui .info p, .swagger-ui .info table {
+  /*color: rgb(240, 240, 240);*/
+}
+
+#swagger-ui.api-platform .information-container.wrapper {
+  padding-bottom: 0.5em;
+}
+
+/**  METHODS BLOCS **/
+
+#swagger-ui.api-platform .opblock-tag:hover {
+  background-color: inherit;
+  transform: scale(1.01);
+}
+
+#swagger-ui.api-platform .opblock.opblock-get .opblock-summary-method {
+  background-color:rgb(40, 143, 136);
+}

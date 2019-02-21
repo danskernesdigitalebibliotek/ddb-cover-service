@@ -1,0 +1,32 @@
+api_platform:
+    # The title of the API.
+    title: 'DDB Cover Service'
+
+    # The description of the API.
+    description: 'Search for covers by ISBN/FAUST/PID'
+
+    # The version of the API.
+    version: '2.0'
+
+    mapping:
+        paths: ['%kernel.project_dir%/src/Api/Dto']
+
+    collection:
+        pagination:
+            enabled: false
+
+    formats:
+        # First in list is default format
+        json:     ['application/json']
+        jsonld:   ['application/ld+json']
+        xml:      ['application/xml', 'text/xml']
+        # Needed for generated documentation
+        html:     ['text/html']
+
+    exception_to_status:
+        # The 2 following handlers are registered by default, keep those lines to prevent unexpected side effects
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400
+        ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST'
+
+        App\Api\Exception\UnknownIdentifierTypeException: 404
+        App\Api\Exception\RequiredParameterMissingException: 'HTTP_BAD_REQUEST'

@@ -1,0 +1,13 @@
+monolog:
+  #
+  # Set new logger to log statistics information to ES.
+  #
+  channels: ["statistics"]
+  handlers:
+    statistics:
+      type: elasticsearch
+      elasticsearch:
+        host: localhost
+        port: 9200
+      index: '%env(ES_STATS_INDEX)%'
+      channels: ["statistics"]

@@ -1,0 +1,17 @@
+#
+# Note: The transformations parameters has to be set to "allowed" at the
+#       Cloudinary web-page to make transformations available and the URL's
+#       generated here accessible.
+
+# This is an empty transformation that will return the original url without any
+# transformations. This is here to keep url logic inside the transformation
+# service.
+original:
+
+default:
+  transformation: 't_ddb_cover'
+  extension: 'jpg'
+
+auto:
+  transformation: 't_ddb_cover,q_auto'
+  extension: 'jpg'

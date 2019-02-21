@@ -1,0 +1,11 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR2' => true,
+        '@Symfony' => true,
+        '@Symfony:risky' => false,
+        'phpdoc_align' => false,
+        'array_syntax' => ['syntax' => 'short'],
+    ])
+;

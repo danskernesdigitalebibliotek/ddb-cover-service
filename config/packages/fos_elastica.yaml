@@ -1,0 +1,24 @@
+# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/Resources/doc/setup.md
+fos_elastica:
+    clients:
+        default: { host: localhost, port: 9200 }
+    indexes:
+        app:
+            index_name: app_%kernel.environment%
+            types:
+                search:
+                    properties:
+                        isIdentifier: {type:  keyword}
+                        isType: {type:  keyword}
+                        imageUrl: ~
+                        imageFormat: {type:  keyword}
+                        width: ~
+                        height: ~
+                    persistence:
+                        driver: orm
+                        model: App\Entity\Search
+                        provider: ~
+                        finder: ~
+                        repository: App\Repository\SearchRepository
+                        elastica_to_model_transformer:
+                            ignore_missing: true
