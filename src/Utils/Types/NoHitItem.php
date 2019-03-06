@@ -5,7 +5,7 @@
  * Wrapper for search no hit.
  */
 
-namespace App\Service\Utils\Types;
+namespace App\Utils\Types;
 
 class NoHitItem
 {
