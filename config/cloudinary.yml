@@ -12,6 +12,6 @@ default:
   transformation: 't_ddb_cover'
   extension: 'jpg'
 
-auto:
-  transformation: 't_ddb_cover,q_auto'
-  extension: 'jpg'
+#auto:
+#  transformation: 't_ddb_cover,q_auto'
+#  extension: 'jpg'
