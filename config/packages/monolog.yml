@@ -7,7 +7,7 @@ monolog:
     statistics:
       type: elasticsearch
       elasticsearch:
-        host: localhost
-        port: 9200
+        host: '%env(ESASTICA_HOST)%'
+        port: '%env(ESASTICA_PORT)%'
       index: '%env(ES_STATS_INDEX)%'
       channels: ["statistics"]
