@@ -13,7 +13,7 @@ namespace App\Api\DataProvider;
 use App\Api\Factory\IdentifierFactory;
 use App\Event\SearchNoHitEvent;
 use App\Api\Exception\UnknownIdentifierTypeException;
-use App\Service\Utils\Types\NoHitItem;
+use App\Utils\Types\NoHitItem;
 use App\Utils\Types\IdentifierType;
 use Elastica\Query;
 use Elastica\Type;
