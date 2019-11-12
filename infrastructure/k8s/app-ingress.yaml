@@ -1,0 +1,21 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cover-service
+  name: cover-service-frontend
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+    - hosts:
+        - coverservice.itkdev.dk
+      secretName: cover-service-frontend-tls-secret
+  rules:
+    - host: coverservice.itkdev.dk
+      http:
+        paths:
+          - backend:
+              serviceName: nginx-cover-service
+              servicePort: 80
+            path: /

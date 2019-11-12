@@ -1,7 +1,7 @@
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/Resources/doc/setup.md
 fos_elastica:
     clients:
-        default: { host: '%env(ELASTIC_HOST)%', port: '%env(ELASTIC_PORT)%' }
+        default: {url: '%env(ELASTIC_URL)%', ssl: '%env(bool:ELASTIC_SSL)%', username: '%env(ELASTIC_USERNAME)%', password: '%env(ELASTIC_PASSWORD)%', curl: {64: '%env(bool:ELASTIC_SSL_VERIFY)%', 81: '%env(bool:ELASTIC_SSL_VERIFY)%'}}
     indexes:
         app:
             index_name: app_%kernel.environment%

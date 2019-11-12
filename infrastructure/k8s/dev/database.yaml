@@ -1,0 +1,73 @@
+# This should only be used in test setup and not production. In production the database should be outside the cluster.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: cover-service
+  name: database
+spec:
+  selector:
+    matchLabels:
+      app: cover-service-database
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: cover-service-database
+        tier: backend
+    spec:
+      containers:
+        - name: mariadb
+          image: itkdev/mariadb
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "640Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: 'password'
+            - name: MYSQL_USER
+              value: 'db'
+            - name: MYSQL_PASSWORD
+              value: 'db'
+            - name: MYSQL_DATABASE
+              value: 'db'
+          ports:
+            - containerPort: 3306
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: cover-service
+  name: database
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: cover-service-database
+  ports:
+    - protocol: TCP
+      port: 3306
+  type: ClusterIP
+
+# Access database from outside kubernetes.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: cover-service
+  name: database-sql
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: cover-service-database
+  ports:
+    - protocol: TCP
+      port: 3306
+  type: NodePort
