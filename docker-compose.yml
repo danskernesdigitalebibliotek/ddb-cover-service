@@ -64,7 +64,7 @@ services:
     ports:
       - '6379'
 
-  es:
+  elasticsearch:
     image: 'elasticsearch:6.8.4'
     networks:
       - app
