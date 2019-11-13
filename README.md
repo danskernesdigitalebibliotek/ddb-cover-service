@@ -173,7 +173,7 @@ contain the import logic for the vendors specific access setup
 ## Development Setup
 
 ### Docker compose
-The project comes with a docker-compose setup base on development only images, that comes with all required extension 
+The project comes with a docker-compose setup base on development only images, that comes with all required extensions 
 to PHP (including xdebug) and all services required to run the application.
 
 For easy usage it's recommended to use træfik (proxy) and the wrapper script for docker-compose used at ITKDev 
