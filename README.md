@@ -172,6 +172,32 @@ contain the import logic for the vendors specific access setup
 
 ## Development Setup
 
+### Docker compose
+The project comes with a docker-compose setup base on development only images, that comes with all required extensions 
+to PHP (including xdebug) and all services required to run the application.
+
+For easy usage it's recommended to use træfik (proxy) and the wrapper script for docker-compose used at ITKDev 
+(https://github.com/aakb/itkdev-docker/tree/develop/scripts). It's not an requirement and the setup examples below is 
+without the script. The script just makes working with docker simpler and faster. 
+
+#### Running docker setup
+
+Start the stack.
+```
+docker-compose up --detach
+```
+
+Access the site using the command blow to get the port number and append it to this URL `http://0.0.0.0:<PORT>` in your
+browser.
+```
+docker-compose port nginx 80 | cut -d: -f2
+```
+
+All the symfony commands below to install the application can be executed using this pattern.
+```
+docker-compose exce bin/console <CMD>
+```
+
 ### Install
 
 We assume you have a working local/vagrant/docker web server setup with PHP,
