@@ -8,6 +8,7 @@
         "ext-imagick": "*",
         "ext-json": "*",
         "ext-redis": "*",
+        "ext-soap": "*",
         "ext-xmlreader": "*",
         "ext-zip": "*",
         "api-platform/api-pack": "^1.1",

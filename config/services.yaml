@@ -23,6 +23,7 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
+            $projectDir: '%kernel.project_dir%'
             $resourcesDir: '%kernel.project_dir%/resources'
             $statsLogger: '@monolog.logger.statistics'
             $cloudinaryUrl: '%env(CLOUDINARY_URL)%'
@@ -48,6 +49,11 @@ services:
         arguments:
             $local: '@oneup_flysystem.local_filesystem'
             $ftp: '@oneup_flysystem.bogportalen_ftp_filesystem'
+
+    App\Service\MoreInfoService\MoreInfoService:
+        autoconfigure: false
+        arguments:
+            $index: '@fos_elastica.index.app.search'
 
     App\Api\DataProvider\CoverCollectionDataProvider:
         tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
