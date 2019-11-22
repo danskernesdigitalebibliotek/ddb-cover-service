@@ -1,13 +1,13 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: turegjorup
- * Date: 2018-11-28
- * Time: 19:56.
+ * @file
+ * Exception for MoreInfo errors.
  */
 
 namespace App\Service\MoreInfoService\Exception;
 
-class MoreInfoException extends \Exception
+use Exception;
+
+class MoreInfoException extends Exception
 {
 }

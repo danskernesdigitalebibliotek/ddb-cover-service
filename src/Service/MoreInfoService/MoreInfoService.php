@@ -15,6 +15,7 @@
 namespace App\Service\MoreInfoService;
 
 use App\Event\SearchNoHitEvent;
+use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
 use App\Service\MoreInfoService\Exception\MoreInfoException;
 use App\Service\MoreInfoService\Types\IdentifierInformationType;
@@ -27,9 +28,15 @@ use Elastica\Query;
 use Elastica\Result;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
+use ReflectionException;
 use SoapClient;
+use SoapFault;
+use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Service\MoreInfoService\Types\MoreInfoRequest;
+use App\Service\MoreInfoService\Types\FormatType;
+use App\Service\MoreInfoService\Types\AuthenticationType;
 
 /**
  * moreInfoService class.
@@ -40,8 +47,6 @@ class MoreInfoService extends SoapClient
 {
     /**
      * Namespace for service calls.
-     *
-     * @TODO update namespace uri when we know the cover service URL
      */
     private const SERVICE_NAMESPACE = 'https://cover.dandigbib.org/ns/moreinfo_wsdl';
 
@@ -51,14 +56,14 @@ class MoreInfoService extends SoapClient
      * @var array
      */
     private static $classMap = [
-        'AuthenticationType' => 'App\Service\MoreInfoService\Types\AuthenticationType',
-        'FormatType' => 'App\Service\MoreInfoService\Types\FormatType',
-        'IdentifierInformationType' => 'App\Service\MoreInfoService\Types\IdentifierInformationType',
-        'IdentifierType' => 'App\Service\MoreInfoService\Types\IdentifierType',
-        'ImageType' => 'App\Service\MoreInfoService\Types\ImageType',
-        'RequestStatusType' => 'App\Service\MoreInfoService\Types\RequestStatusType',
-        'MoreInfoRequest' => 'App\Service\MoreInfoService\Types\MoreInfoRequest',
-        'MoreInfoResponse' => 'App\Service\MoreInfoService\Types\MoreInfoResponse',
+        'AuthenticationType' => AuthenticationType::class,
+        'FormatType' => FormatType::class,
+        'IdentifierInformationType' => IdentifierInformationType::class,
+        'IdentifierType' => IdentifierType::class,
+        'ImageType' => ImageType::class,
+        'RequestStatusType' => RequestStatusType::class,
+        'MoreInfoRequest' => MoreInfoRequest::class,
+        'MoreInfoResponse' => MoreInfoResponse::class,
     ];
 
     private $index;
@@ -84,6 +89,8 @@ class MoreInfoService extends SoapClient
      *   The location of the WSDL file
      * @param array $options
      *   Any additional parameters to add to the service
+     *
+     * @throws SoapFault
      */
     public function __construct(Type $index, LoggerInterface $statsLogger, RequestStack $requestStack,
                                 EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer,
@@ -152,7 +159,7 @@ class MoreInfoService extends SoapClient
      * @param string $namespace
      *   The namespace which will default to this service's namespace
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function assignSoapHeader(string $headerName, $rawHeaderData = null, string $namespace = self::SERVICE_NAMESPACE): void
     {
@@ -204,7 +211,7 @@ class MoreInfoService extends SoapClient
      * @return MoreInfoResponse
      *
      * @throws MoreInfoException
-     * @throws \App\Exception\CoverStoreTransformationException
+     * @throws CoverStoreTransformationException
      */
     public function moreInfo($body): MoreInfoResponse
     {
@@ -260,11 +267,11 @@ class MoreInfoService extends SoapClient
     /**
      * Validate SOAP request body authentication part.
      *
-     * @param \stdClass $body
+     * @param stdClass $body
      *
      * @throws MoreInfoException
      */
-    private function validateRequestAuthentication(\stdClass $body): void
+    private function validateRequestAuthentication(stdClass $body): void
     {
         // Check if authentication is set for usage logging.
         if (!property_exists($body->authentication, 'authenticationGroup')
@@ -276,13 +283,13 @@ class MoreInfoService extends SoapClient
     /**
      * Get an array of search parameters from request body.
      *
-     * @param \stdClass $body
+     * @param stdClass $body
      *
      * @return array
      *
      * @throws MoreInfoException
      */
-    public function getSearchParameters(\stdClass $body): array
+    public function getSearchParameters(stdClass $body): array
     {
         // Check for identifier on body
         if (!property_exists($body, 'identifier')) {
@@ -379,7 +386,7 @@ class MoreInfoService extends SoapClient
      *
      * @return MoreInfoResponse
      *
-     * @throws \App\Exception\CoverStoreTransformationException
+     * @throws CoverStoreTransformationException
      */
     private function buildSoapResponse(array $searchParameters, array $results): MoreInfoResponse
     {
