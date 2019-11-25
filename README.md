@@ -195,7 +195,7 @@ docker-compose port nginx 80 | cut -d: -f2
 
 All the symfony commands below to install the application can be executed using this pattern.
 ```
-docker-compose exce bin/console <CMD>
+docker-compose exec bin/console <CMD>
 ```
 
 ### Install
@@ -211,7 +211,7 @@ Nginx, MariaDB, ElasticSearch and Redis.
 4. Run migrations `bin/console doctrine:migrations:migrate`
 5. Create ES search index `bin/console fos:elastica:create`
 6. Run `vendor/bin/phpunit` and `vendor/bin/behat` to ensure your test suite is
-   working
+   working. Run `bin/console fos:elastica:create --env=test` to create the test index.
 
 API is now exposed at `http://<servername>/api`
 
