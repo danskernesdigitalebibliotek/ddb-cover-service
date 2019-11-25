@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a77723f45521d7be216fc8d21d8111ed",
+    "content-hash": "3373725776aa5f4c8c0abb6da713fc99",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -3926,16 +3926,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.1.9",
+            "version": "v4.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "3fac676e06205374189deee0680ebc28a5da725b"
+                "reference": "919a245e0642afa353a333d8bf3352320af85969"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/3fac676e06205374189deee0680ebc28a5da725b",
-                "reference": "3fac676e06205374189deee0680ebc28a5da725b",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/919a245e0642afa353a333d8bf3352320af85969",
+                "reference": "919a245e0642afa353a333d8bf3352320af85969",
                 "shasum": ""
             },
             "require": {
@@ -3993,7 +3993,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2018-12-02T15:58:55+00:00"
+            "time": "2019-04-16T11:21:55+00:00"
         },
         {
             "name": "symfony/doctrine-bridge",
@@ -6399,12 +6399,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/Mink.git",
-                "reference": "d5ee350c40baff5f331a05ebdbe1927345c9ac8b"
+                "reference": "a534fe7dac9525e8e10ca68e737c3d7e5058ec83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/Mink/zipball/d5ee350c40baff5f331a05ebdbe1927345c9ac8b",
-                "reference": "d5ee350c40baff5f331a05ebdbe1927345c9ac8b",
+                "url": "https://api.github.com/repos/minkphp/Mink/zipball/a534fe7dac9525e8e10ca68e737c3d7e5058ec83",
+                "reference": "a534fe7dac9525e8e10ca68e737c3d7e5058ec83",
                 "shasum": ""
             },
             "require": {
@@ -6412,7 +6412,7 @@
                 "symfony/css-selector": "^2.7|^3.0|^4.0"
             },
             "require-dev": {
-                "symfony/phpunit-bridge": "^3.3|^4.0"
+                "symfony/phpunit-bridge": "^4.2"
             },
             "suggest": {
                 "behat/mink-browserkit-driver": "extremely fast headless driver for Symfony\\Kernel-based apps (Sf2, Silex)",
@@ -6450,7 +6450,7 @@
                 "testing",
                 "web"
             ],
-            "time": "2018-06-24T20:08:51+00:00"
+            "time": "2019-07-15T12:45:29+00:00"
         },
         {
             "name": "behat/mink-browserkit-driver",
@@ -6864,6 +6864,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -8748,7 +8749,6 @@
         "ext-imagick": "*",
         "ext-json": "*",
         "ext-redis": "*",
-        "ext-soap": "*",
         "ext-xmlreader": "*",
         "ext-zip": "*"
     },
