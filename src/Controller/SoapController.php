@@ -6,8 +6,11 @@
 
 namespace App\Controller;
 
-use App\Service\MoreInfoService\MoreInfoService;
+use App\Service\MoreInfoService\AbstractMoreInfoService;
+use App\Service\MoreInfoService\DbcMoreInfoService;
+use App\Service\MoreInfoService\DdbMoreInfoService;
 use Psr\Log\LoggerInterface;
+use SoapServer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,50 +25,50 @@ class SoapController extends AbstractController
      * @Route("/2.11/", name="ddb_soap")
      *
      * @param Request $request
-     * @param MoreInfoService $moreInfoService
+     * @param DdbMoreInfoService $ddbMoreInfoService
      * @param LoggerInterface $statsLogger
      * @param $projectDir
      *
      * @return Response
      */
-    public function ddbSoap(Request $request, MoreInfoService $moreInfoService, LoggerInterface $statsLogger, $projectDir): Response
+    public function ddbSoap(Request $request, DdbMoreInfoService $ddbMoreInfoService, LoggerInterface $statsLogger, $projectDir): Response
     {
         $dbcWsdlFile = $projectDir.self::DDB_WSDL_FILE;
 
-        return $this->soap($request, $moreInfoService, $statsLogger, $dbcWsdlFile);
+        return $this->soap($request, $ddbMoreInfoService, $statsLogger, $dbcWsdlFile);
     }
 
     /**
      * @Route("/fbs/2.11/", name="fbs_soap")
      *
      * @param Request $request
-     * @param MoreInfoService $moreInfoService
+     * @param DbcMoreInfoService $dbcMoreInfoService
      * @param LoggerInterface $statsLogger
      * @param $projectDir
      *
      * @return Response
      */
-    public function fbsSoap(Request $request, MoreInfoService $moreInfoService, LoggerInterface $statsLogger, $projectDir): Response
+    public function fbsSoap(Request $request, DbcMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, $projectDir): Response
     {
         $dbcWsdlFile = $projectDir.self::DBC_WSDL_FILE;
 
-        return $this->soap($request, $moreInfoService, $statsLogger, $dbcWsdlFile);
+        return $this->soap($request, $dbcMoreInfoService, $statsLogger, $dbcWsdlFile);
     }
 
     /**
      * Return a SOAP response for the given request.
      *
      * @param Request $request
-     * @param MoreInfoService $moreInfoService
+     * @param AbstractMoreInfoService $dbcMoreInfoService
      * @param LoggerInterface $statsLogger
      * @param $wsdlFile
      *
      * @return Response
      */
-    private function soap(Request $request, MoreInfoService $moreInfoService, LoggerInterface $statsLogger, $wsdlFile): Response
+    private function soap(Request $request, AbstractMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, $wsdlFile): Response
     {
-        $soapServer = new \SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_NONE]);
-        $soapServer->setObject($moreInfoService);
+        $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_NONE]);
+        $soapServer->setObject($dbcMoreInfoService);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml; charset=ISO-8859-1');

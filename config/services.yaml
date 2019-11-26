@@ -50,7 +50,12 @@ services:
             $local: '@oneup_flysystem.local_filesystem'
             $ftp: '@oneup_flysystem.bogportalen_ftp_filesystem'
 
-    App\Service\MoreInfoService\MoreInfoService:
+    App\Service\MoreInfoService\DdbMoreInfoService:
+        autoconfigure: false
+        arguments:
+            $index: '@fos_elastica.index.app.search'
+
+    App\Service\MoreInfoService\DbcMoreInfoService:
         autoconfigure: false
         arguments:
             $index: '@fos_elastica.index.app.search'

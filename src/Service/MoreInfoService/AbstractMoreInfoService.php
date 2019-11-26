@@ -2,7 +2,7 @@
 
 /**
  * @file
- * SOAP Service that mimics the original 'moreInfo' service.
+ * Abstract SOAP Service that mimics the original 'moreInfo' service.
  *
  * This class was created using wsdl2php. Modified for 'moreInfo' service.
  *
@@ -25,7 +25,6 @@ use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
 use Elastica\Query;
-use Elastica\Result;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
@@ -43,13 +42,8 @@ use App\Service\MoreInfoService\Types\AuthenticationType;
  *
  * @author wsdl2php
  */
-class MoreInfoService extends SoapClient
+abstract class AbstractMoreInfoService extends SoapClient
 {
-    /**
-     * Namespace for service calls.
-     */
-    private const SERVICE_NAMESPACE = 'https://cover.dandigbib.org/ns/moreinfo_wsdl';
-
     /**
      * Default class mapping for this service.
      *
@@ -66,6 +60,7 @@ class MoreInfoService extends SoapClient
         'MoreInfoResponse' => MoreInfoResponse::class,
     ];
 
+    private $namespace;
     private $index;
     private $statsLogger;
     private $requestStack;
@@ -85,8 +80,6 @@ class MoreInfoService extends SoapClient
      *   Dispatch events
      * @param coverStoreTransformationInterface $transformer
      *   URL transformation service
-     * @param string|null $wsdl
-     *   The location of the WSDL file
      * @param array $options
      *   Any additional parameters to add to the service
      *
@@ -94,16 +87,13 @@ class MoreInfoService extends SoapClient
      */
     public function __construct(Type $index, LoggerInterface $statsLogger, RequestStack $requestStack,
                                 EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer,
-                                string $wsdl = null, array $options = [])
+                                array $options = [])
     {
         $this->index = $index;
         $this->statsLogger = $statsLogger;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
         $this->transformer = $transformer;
-
-        // Use the optional WSDL file location if it is supplied.
-        $wsdl = \is_null($wsdl) ? __DIR__.'/Schemas/moreInfoService.wsdl' : $wsdl;
 
         // Add the classmap to the options.
         foreach (self::$classMap as $serviceClassName => $mappedClassName) {
@@ -112,8 +102,13 @@ class MoreInfoService extends SoapClient
             }
         }
 
-        parent::__construct($wsdl, $options);
+        parent::__construct($this->getWsdl(), $options);
     }
+
+    abstract protected function getNameSpace(): string;
+
+    abstract protected function getWsdl(): string;
+
 
     /**
      * Service call proxy.
@@ -161,8 +156,12 @@ class MoreInfoService extends SoapClient
      *
      * @throws ReflectionException
      */
-    public function assignSoapHeader(string $headerName, $rawHeaderData = null, string $namespace = self::SERVICE_NAMESPACE): void
+    public function assignSoapHeader(string $headerName, $rawHeaderData = null, string $namespace): void
     {
+        if (!$namespace) {
+            $namespace = $this->getNameSpace();
+        }
+
         // Is there a corresponding property of this service for the requested SOAP Header?
         // Is there a mapped class for this SOAP Header?
         // Do we have any data to populate the SOAP Header with?
