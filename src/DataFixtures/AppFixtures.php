@@ -37,6 +37,9 @@ class AppFixtures extends Fixture
         $vendor->setDataServerURI($faker->dataServerURI($vendor->getName()));
         $vendor->setDataServerUser($faker->dataServerUser);
         $vendor->setDataServerPassword($faker->dataServerPassword);
+        $vendor->setClass($faker->name);
+        $vendor->setId(0);
+        $vendor->setRank(1);
 
         $manager->persist($vendor);
 

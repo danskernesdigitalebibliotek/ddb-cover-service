@@ -195,7 +195,7 @@ docker-compose port nginx 80 | cut -d: -f2
 
 All the symfony commands below to install the application can be executed using this pattern.
 ```
-docker-compose exce bin/console <CMD>
+docker-compose exec phpfpm bin/console <CMD>
 ```
 
 ### Install
@@ -207,19 +207,18 @@ Nginx, MariaDB, ElasticSearch and Redis.
    project root dir
 2. Create a `/.env.local` file and define the relevant environment variables to
    match your setup
-3. Create database `bin/console doctrine:database:create`
-4. Run migrations `bin/console doctrine:migrations:migrate`
-5. Create ES search index `bin/console fos:elastica:create`
-6. Run `vendor/bin/phpunit` and `vendor/bin/behat` to ensure your test suite is
-   working
+3. Run migrations `bin/console doctrine:migrations:migrate`
+4. Create ES search index `bin/console fos:elastica:create`
+5. Run `vendor/bin/phpunit` and `vendor/bin/behat` to ensure your test suite is
+   working.
 
 API is now exposed at `http://<servername>/api`
 
 ### Fixtures
 
 To add test data to the database and elastic index you can run the database
-fixtures command.  Run `bin/console doctrine:fixtures:load
---purge-with-truncate` to populate the database with random data.
+fixtures command.  Run `bin/console doctrine:fixtures:load` to populate the 
+database with random data.
 
 ## Development
 
