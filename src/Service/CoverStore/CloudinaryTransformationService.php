@@ -20,15 +20,15 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
 {
     private $transformations;
 
-  /**
-   * CloudinaryTransformationService constructor.
-   *
-   * The transformations available are defined in the "cloudinary.yml" file that
-   * can be found in the configuration folder.
-   *
-   * @param array $cloudinaryTransformations
-   *   The transformation available from the configuration.
-   */
+    /**
+     * CloudinaryTransformationService constructor.
+     *
+     * The transformations available are defined in the "cloudinary.yml" file that
+     * can be found in the configuration folder.
+     *
+     * @param array $cloudinaryTransformations
+     *   The transformation available from the configuration
+     */
     public function __construct(array $cloudinaryTransformations)
     {
         $this->transformations = $cloudinaryTransformations;

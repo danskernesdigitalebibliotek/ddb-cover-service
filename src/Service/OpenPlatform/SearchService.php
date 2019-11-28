@@ -146,7 +146,6 @@ class SearchService
                 'no hits' => $item->get()->isEmpty(),
             ]);
             $material = $item->get();
-
         }
 
         return $material;

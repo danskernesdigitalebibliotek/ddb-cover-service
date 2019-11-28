@@ -243,7 +243,7 @@ abstract class AbstractBaseVendorService
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
         // Stats logger.
-        $this->statsLogger->info($this->getVendorName() . ' records read', [
+        $this->statsLogger->info($this->getVendorName().' records read', [
             'service' => $className,
             'records' => $this->totalIsIdentifiers,
             'updated' => $this->totalUpdated,

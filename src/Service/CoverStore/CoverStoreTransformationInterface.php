@@ -34,8 +34,9 @@ interface CoverStoreTransformationInterface
      *
      * @param string $url
      *   The base URL to transform
+     *
      * @return array
-     *   All transformation keyed by name.
+     *   All transformation keyed by name
      */
     public function transformAll(string $url): array;
 
