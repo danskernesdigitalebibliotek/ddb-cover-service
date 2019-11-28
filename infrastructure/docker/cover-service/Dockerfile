@@ -1,12 +1,11 @@
 FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.2-fpm AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION=feature/docker-images
+ARG APP_VERSION=develop
 ENV APP_PATH=/var/www/html
 
 # Move site into the container.
-ADD https://github.com/itk-dev/ddb-cover-service/archive/${APP_VERSION}.tar.gz /tmp/app.tar
-#ADD https://github.com/danskernesdigitalebibliotek/ddb-cover-service/archive/${APP_VERSION}.tar.gz /tmp/app.tar
+ADD https://github.com/danskernesdigitalebibliotek/ddb-cover-service/archive/${APP_VERSION}.tar.gz /tmp/app.tar
 RUN tar -zxf /tmp/app.tar --strip-components=1 -C ${APP_PATH} \
     && rm /tmp/app.tar
 
