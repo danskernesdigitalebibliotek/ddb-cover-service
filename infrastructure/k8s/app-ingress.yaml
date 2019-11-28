@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - coverservice.itkdev.dk
+        - cover.dandigbib.org
       secretName: cover-service-frontend-tls-secret
   rules:
-    - host: coverservice.itkdev.dk
+    - host: cover.dandigbib.org
       http:
         paths:
           - backend:
