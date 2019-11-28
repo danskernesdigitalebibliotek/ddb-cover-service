@@ -1,12 +1,11 @@
 FROM nginx:1.17-alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION="latest"
 ENV APP_PATH=/var/www/html
 
 RUN mkdir -p ${APP_PATH}/public
 
-COPY --from=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:${APP_VERSION} ${APP_PATH}/public ${APP_PATH}/public
+COPY --from=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service ${APP_PATH}/public ${APP_PATH}/public
 
 WORKDIR ${APP_PATH}
 
