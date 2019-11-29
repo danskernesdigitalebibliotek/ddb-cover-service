@@ -261,8 +261,7 @@ class BogPortalenVendorService extends AbstractBaseVendorService
             $isbn = substr($fileName, -17, 13);
 
             // Ensure that the found string is a number to filter out
-            // files with wrong or incomplete isbn numbers1
-
+            // files with wrong or incomplete isbn numbers.
             $temp = (int) $isbn;
             $temp = (string) $temp;
             if (($isbn === $temp) && (13 === strlen($isbn))) {
