@@ -35,6 +35,7 @@ RUN apk --update add --no-cache --virtual .build-deps autoconf g++ make \
 
 # Copy configuration.
 COPY etc/supervisor.d /etc/supervisor.d
+COPY etc/confd /etc/confd
 
 # Use default PHP production configuration.
 RUN mv ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
@@ -46,5 +47,11 @@ COPY etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/20-php.ini
 # Copy application.
 COPY --from=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service ${APP_PATH}/ ${APP_PATH}/
 
-ENTRYPOINT ["supervisord"]
-CMD ["--nodaemon", "--configuration", "/etc/supervisord.conf"]
+# Install configuration template handler
+ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
+RUN chmod +x /usr/local/bin/confd
+
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+CMD [ "docker-entrypoint.sh" ]
