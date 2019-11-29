@@ -21,7 +21,7 @@ export let options = {
     userAgent: "MyK6UserAgentString/1.0"
 };
 
-export let urls = [
+let urls = [
     'https://cover.dandigbib.org/api/cover/isbn/9780819569165',
     'https://cover.dandigbib.org/api/cover/isbn/9780819571830',
     'https://cover.dandigbib.org/api/cover/isbn/9780819569936',

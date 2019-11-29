@@ -2,4 +2,4 @@
 
 set -eux
 
-/usr/bin/k6 run /tests.js
+/usr/bin/k6 run $1
