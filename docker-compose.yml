@@ -32,12 +32,11 @@ services:
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=256M
       - DOCKER_HOST_DOMAIN=${COMPOSE_DOMAIN}
+      - PHP_IDE_CONFIG=serverName=localhost
     depends_on:
       - mariadb
     volumes:
       - .:/app:delegated
-      - vendor-cache:/app/vendor
-      - $PWD/vendor:/app-vendor
 
     tmpfs:
       - /app/var/cache:size=1G
@@ -91,6 +90,3 @@ services:
     ports:
       - '9200'
       - '9300'
-
-volumes:
-  vendor-cache:

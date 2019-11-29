@@ -70,16 +70,16 @@ class VendorImageProcessor implements PsrProcessor, TopicSubscriberInterface
 
         if ($source) {
             switch ($processMessage->getOperation()) {
-            case VendorState::INSERT:
-              $processorStatus = $this->processInsert($processMessage, $source);
-              break;
+                case VendorState::INSERT:
+                  $processorStatus = $this->processInsert($processMessage, $source);
+                  break;
 
-            case VendorState::UPDATE:
-              $processorStatus = $this->processUpdate($processMessage, $source);
-              break;
+                case VendorState::UPDATE:
+                  $processorStatus = $this->processUpdate($processMessage, $source);
+                  break;
 
-            default:
-              $processorStatus = self::REJECT;
+                default:
+                  $processorStatus = self::REJECT;
           }
         } else {
             $processorStatus = self::REJECT;
