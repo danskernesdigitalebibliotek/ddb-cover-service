@@ -7,6 +7,7 @@ use App\Exception\DuplicateVendorServiceException;
 use App\Exception\IllegalVendorServiceException;
 use App\Exception\UnknownVendorServiceException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * Class VendorServiceFactory.
@@ -20,6 +21,7 @@ class VendorServiceFactory
      * VendorFactoryService constructor.
      *
      * @param iterable $vendors
+     * @param EntityManagerInterface $entityManager
      *
      * @throws DuplicateVendorServiceException
      * @throws IllegalVendorServiceException
@@ -35,7 +37,7 @@ class VendorServiceFactory
             $this->vendorServices[$className] = $vendor;
 
             if (0 === $vendor->getVendorId() || !is_int($vendor->getVendorId())) {
-                throw new IllegalVendorServiceException('VENDOR_ID must be a non-zero integer. Illegal value detcted in '.$className);
+                throw new IllegalVendorServiceException('VENDOR_ID must be a non-zero integer. Illegal value detected in '.$className);
             }
             if (\in_array($vendor->getVendorId(), $ids, false)) {
                 throw new DuplicateVendorServiceException('Vendor services must have a unique VENDOR_ID. Duplicate id detected in '.$className);
@@ -54,6 +56,8 @@ class VendorServiceFactory
      *
      * @return int
      *   The number of vendor rows inserted
+     *
+     * @throws NonUniqueResultException
      */
     public function populateVendors(): int
     {

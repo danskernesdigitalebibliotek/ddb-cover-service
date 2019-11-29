@@ -109,7 +109,6 @@ abstract class AbstractMoreInfoService extends SoapClient
 
     abstract protected function getWsdl(): string;
 
-
     /**
      * Service call proxy.
      *

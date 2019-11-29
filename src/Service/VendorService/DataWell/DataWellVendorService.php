@@ -7,6 +7,8 @@
 
 namespace App\Service\VendorService\DataWell;
 
+use App\Exception\IllegalVendorServiceException;
+use App\Exception\UnknownVendorServiceException;
 use App\Service\VendorService\AbstractBaseVendorService;
 use App\Service\VendorService\DataWell\DataConverter\IversePublicUrlConverter;
 use App\Service\VendorService\ProgressBarTrait;
@@ -88,8 +90,8 @@ class DataWellVendorService extends AbstractBaseVendorService
     /**
      * Set config fro service from DB vendor object.
      *
-     * @throws \App\Exception\UnknownVendorServiceException
-     * @throws \App\Exception\IllegalVendorServiceException
+     * @throws UnknownVendorServiceException
+     * @throws IllegalVendorServiceException
      */
     private function loadConfig(): void
     {
