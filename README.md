@@ -296,6 +296,15 @@ which vendors to import.
 bin/console app:vendor:load
 ```
 
+Please note:
+To ensure that the command run with a "flat" memory foot print in production
+you must run it with `--no-debug` in the `prod` environment.
+
+Production
+```sh
+bin/console app:vendor:load --env=prod --no-debug
+```
+
 Note: For some Vendors proper access credentials need to be set in the database
 before running an import. To populate the `Vendor` table you can run
 

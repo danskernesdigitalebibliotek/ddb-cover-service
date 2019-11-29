@@ -45,8 +45,6 @@ class BogPortalenVendorService extends AbstractBaseVendorService
      *   Logger object to send stats to ES
      * @param AdapterInterface $cache
      *   Cache adapter for the application
-     *
-     * @throws \App\Exception\UnknownVendorServiceException
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, Filesystem $local,
                                 Filesystem $ftp, EntityManagerInterface $entityManager,
@@ -254,15 +252,22 @@ class BogPortalenVendorService extends AbstractBaseVendorService
      * @param array $fileNames
      *
      * @return array
-     *
-     * @throws \Isbn\Exception
      */
     private function getIsbnNumbers(array &$fileNames): array
     {
         $isbnList = [];
 
         foreach ($fileNames as $fileName) {
-            $isbnList[] = substr($fileName, -17, 13);
+            $isbn = substr($fileName, -17, 13);
+
+            // Ensure that the found string is a number to filter out
+            // files with wrong or incomplete isbn numbers1
+
+            $temp = (int) $isbn;
+            $temp = (string) $temp;
+            if (($isbn === $temp) && (13 === strlen($isbn))) {
+                $isbnList[] = $isbn;
+            }
         }
 
         // Ensure there are no duplicate values in the array.
