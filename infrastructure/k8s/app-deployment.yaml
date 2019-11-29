@@ -127,6 +127,11 @@ spec:
               secretKeyRef:
                 name: cover-service-secret
                 key: APP_CLOUDINARY_SECRET
+          - name: APP_CLOUDINARY_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: cover-service-secret
+                key: APP_CLOUDINARY_DOMAIN
           - name: APP_SECRET
             valueFrom:
               secretKeyRef:

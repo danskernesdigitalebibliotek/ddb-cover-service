@@ -31,7 +31,8 @@ RUN apk --update add --no-cache \
         opcache \
         mysqli \
         pdo_mysql \
-        soap
+        soap \
+        sysvsem
 
 RUN apk --update add --no-cache --virtual .build-deps autoconf g++ make \
     && pecl install redis-4.0.1 imagick \
