@@ -42,8 +42,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: cover-service-app
-  minReplicas: 3
-  maxReplicas: 10
+  minReplicas: 5
+  maxReplicas: 25
   metrics:
     - type: Resource
       resource:
