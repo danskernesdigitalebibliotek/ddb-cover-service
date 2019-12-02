@@ -1,5 +1,9 @@
 <?php
 
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__.'/{src,tests}')
+;
+
 return PhpCsFixer\Config::create()
     ->setRules([
         '@PSR2' => true,
@@ -8,4 +12,5 @@ return PhpCsFixer\Config::create()
         'phpdoc_align' => false,
         'array_syntax' => ['syntax' => 'short'],
     ])
+    ->setFinder($finder);
 ;

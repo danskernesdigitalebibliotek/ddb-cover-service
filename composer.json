@@ -45,7 +45,9 @@
         "behat/symfony2-extension": "^2.1",
         "behatch/contexts": "^3.2",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
+        "escapestudios/symfony2-coding-standard": "^3.10",
         "friendsofphp/php-cs-fixer": "^2.13",
+        "friendsoftwig/twigcs": "^3.2",
         "fzaninotto/faker": "^1.8",
         "phpunit/phpunit": "^7",
         "symfony/maker-bundle": "^1.9"
@@ -92,11 +94,22 @@
         "check": [
             "@php-cs-check"
         ],
-        "php-cs-check": [
-            "php vendor/bin/php-cs-fixer fix --dry-run --diff src/"
+        "check-coding-standards/php-cs-fixer": [
+            "php-cs-fixer --config=.php_cs.dist fix --dry-run"
+        ],
+        "check-coding-standards/phpcs": [
+            "phpcs --standard=phpcs.xml.dist"
+        ],
+        "check-coding-standards/twigcs": [
+            "twigcs lint templates"
+        ],
+        "check-coding-standards": [
+            "@check-coding-standards/php-cs-fixer",
+            "@check-coding-standards/phpcs",
+            "@check-coding-standards/twigcs"
         ],
         "php-cs-fix": [
-            "php vendor/bin/php-cs-fixer fix src/"
+            "php vendor/bin/php-cs-fixer fix"
         ],
         "phpunit": [
             "vendor/bin/phpunit"
