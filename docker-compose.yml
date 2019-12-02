@@ -22,7 +22,7 @@ services:
       #- ENCRYPT=1 # Uncomment to enable database encryption.
 
   phpfpm:
-    image: itkdev/php7.2-fpm
+    image: itkdev/php7.3-fpm
     networks:
       - app
     environment:
