@@ -1,3 +1,9 @@
+services:
+  monolog.elastica.client:
+    class: Elastica\Client
+    arguments:
+      $config: {url: '%env(ELASTIC_URL)%', ssl: '%env(bool:ELASTIC_SSL)%', username: '%env(ELASTIC_USERNAME)%', password: '%env(ELASTIC_PASSWORD)%', curl: {64: '%env(bool:ELASTIC_SSL_VERIFY)%', 81: '%env(bool:ELASTIC_SSL_VERIFY)%'}}
+
 monolog:
   #
   # Set new logger to log statistics information to ES.
@@ -7,7 +13,6 @@ monolog:
     statistics:
       type: elasticsearch
       elasticsearch:
-        host: '%env(ELASTIC_HOST)%'
-        port: '%env(ELASTIC_PORT)%'
+        id: monolog.elastica.client
       index: '%env(ELASTIC_STATS_INDEX)%'
       channels: ["statistics"]
