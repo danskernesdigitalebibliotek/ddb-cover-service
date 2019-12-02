@@ -39,7 +39,7 @@ RUN apk --update add --no-cache --virtual .build-deps autoconf g++ make \
     && docker-php-ext-enable redis imagick \
     && apk del .build-deps
 
-# Added FPM healtcheck script (https://github.com/renatomefi/php-fpm-healthcheck)
+# Added FPM health check script (https://github.com/renatomefi/php-fpm-healthcheck)
 ADD https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck /usr/local/bin/php-fpm-healthcheck
 RUN chmod +x /usr/local/bin/php-fpm-healthcheck
 

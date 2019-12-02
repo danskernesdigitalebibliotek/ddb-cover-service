@@ -1,7 +1,7 @@
 # Azure kubernetes service
 This document explains how to configure AKS to run Cover Service in Kubernetes with virtual node scaling and monitoring.
 
-Login in through CLI and list available regions. You should use a region in the EU to ensure data safety.
+Log in through CLI and list available regions. You should use a region in the EU to ensure data safety.
 ```sh
 az login
 az account list-locations -o table
@@ -18,8 +18,8 @@ version=$(az aks get-versions -l ${region} --query 'orchestrators[-1].orchestrat
 
 ## Create services and the cluster
 This setup is the more advanced AKS setup with virtual node 
-(https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli) to handle peak traffic better. This requires an AKS setup
- with advanced network setup to enabled communication between ACI (Azure container instance) and the cluster.
+(https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli) to handle peak traffic better. This requires an AKS setup 
+with advanced network setup to enable communication between ACI (Azure container instance) and the cluster.
 
 Enable ACI for your subscription.
 ```sh
@@ -200,7 +200,6 @@ az aks enable-addons --resource-group ${res} \
     --workspace-resource-id ${workspaceresoid}
 ```
 
-
 Send pod container logs to insights and enabled live view.
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -238,7 +237,7 @@ kubectl apply -f logreader-rbac.yaml
 
 ## Horizontal pod autoscaler (HPA)
 
-The application deployment use HPA see the app deployment for more information.
+The application deployment uses HPA. See the app deployment for more information.
 
 # Install elastic search operator
 
@@ -246,7 +245,8 @@ The application deployment use HPA see the app deployment for more information.
 kubectl apply -f https://download.elastic.co/downloads/eck/1.0.0-beta1/all-in-one.yaml
 ```
 
-Use this after you have installed the elastic-search application.
+Use the command below after you have deployed the elastic-search application to get the password for the `elastica` 
+user.
 ```sh
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
 ```
@@ -259,7 +259,7 @@ kubectl create secret docker-registry github-registry \
     --docker-server=docker.pkg.github.com \
     --docker-username=cableman \
     --docker-password=XXXXX_TOKEN_XXXXX \
-    --docker-email=jeskr@aarhus.dk
+    --docker-email=YOUR_MAIL_ADDRESS
 ```
 
 See the github secret in clear text from the cluster.
@@ -268,23 +268,31 @@ kubectl get secret github-registry --output="jsonpath={.data.\.dockerconfigjson}
 ```
 
 # Application install
+To install the application into the kubernetes cluster yaml files can be found in the k8s folder and should be applied 
+in the order given below. 
 
+Install namespace, storage and elasticsearch server.
 ```sh
 kubectl apply -f namespace.yaml -f aks-storage.yaml -f elasticsearch.yaml
 ```
 
+Get elasticsearch password. 
 ```sh
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
 ```
 
+Jump into the new namespace.
 ```sh
 kubens cover-service
 ```
 
+The `app-secret` is not part of the code-base as is contains secrets. So you have to figure these out by reading the 
+other yaml files and get the secrets from the services.
 ```sh
 kubectl apply -f app-secret.yaml -f letsencrypt-clusterissuer.yaml 
 ```
 
+Get the main application up and running.
 ```sh
 kubectl apply -f redis-deployment.yaml -f app-deployment.yaml -f nginx-deployment.yaml -f app-ingress.yaml
 ```

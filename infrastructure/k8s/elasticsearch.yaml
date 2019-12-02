@@ -25,12 +25,9 @@ spec:
         node.master: true
         node.data: true
         node.ingest: true
-        #node.store.allow_mmap: false
       podTemplate:
         spec:
-          # this changes the kernel setting on the node to allow ES to use mmap
-          # if you uncomment this init container you will likely also want to remove the
-          # "node.store.allow_mmap: false" setting above
+          # This changes the kernel setting on the node to allow ES to use mmap.
           initContainers:
             - name: sysctl
               securityContext:
