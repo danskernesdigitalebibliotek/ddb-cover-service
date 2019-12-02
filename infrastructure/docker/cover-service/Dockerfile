@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.2-fpm AS APP_BUILDER
+FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION=develop
@@ -20,7 +20,7 @@ RUN APP_ENV=prod composer docker-build
 ####
 ## Build main application image.
 ####
-FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.2-fpm
+FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html
