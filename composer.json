@@ -49,6 +49,8 @@
         "friendsofphp/php-cs-fixer": "^2.13",
         "friendsoftwig/twigcs": "^3.2",
         "fzaninotto/faker": "^1.8",
+        "phan/phan": "^2.4",
+        "phpmd/phpmd": "^2.7",
         "phpunit/phpunit": "^7",
         "symfony/maker-bundle": "^1.9"
     },
@@ -91,11 +93,16 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "deploy": [
+            "bin/console --env=prod doctrine:migrations:migrate",
+            "bin/console --env=prod cache:clear --no-debug",
+            "bin/console --env=prod cache:warmup"
+        ],
         "check": [
-            "@php-cs-check"
+            "@check-coding-standards"
         ],
         "check-coding-standards/php-cs-fixer": [
-            "php-cs-fixer --config=.php_cs.dist fix --dry-run"
+            "php-cs-fixer --config=.php_cs.dist fix --dry-run --format=checkstyle"
         ],
         "check-coding-standards/phpcs": [
             "phpcs --standard=phpcs.xml.dist"
@@ -108,16 +115,33 @@
             "@check-coding-standards/phpcs",
             "@check-coding-standards/twigcs"
         ],
-        "php-cs-fix": [
-            "php vendor/bin/php-cs-fixer fix"
+        "apply-coding-standards/php-cs-fixer": [
+            "php-cs-fixer --config=.php_cs.dist fix"
+        ],
+        "apply-coding-standards/phpcs": [
+            "phpcbf --standard=phpcs.xml.dist"
+        ],
+        "apply-coding-standards": [
+            "@apply-coding-standards/php-cs-fixer",
+            "@apply-coding-standards/phpcs"
+        ],
+        "phan": [
+            "./vendor/bin/phan --allow-polyfill-parser"
+        ],
+        "md":[
+            "./vendor/bin/phpmd ./src/ text cleancode,codesize,controversial,design,naming,unusedcode --suffixes php"
         ],
         "phpunit": [
-            "vendor/bin/phpunit"
+            "./vendor/bin/phpunit"
         ],
-        "deploy": [
-            "bin/console --env=prod doctrine:migrations:migrate",
-            "bin/console --env=prod cache:clear --no-debug",
-            "bin/console --env=prod cache:warmup"
+        "actions/phpcs": [
+            "phpcs --standard=phpcs.xml.dist --report=checkstyle"
+        ],
+        "actions/phan": [
+            "./vendor/bin/phan --allow-polyfill-parser --output-mode=checkstyle"
+        ],
+        "actions/phpcsfixer": [
+            "php-cs-fixer --config=.php_cs.dist fix --dry-run --format=checkstyle"
         ]
     },
     "conflict": {
