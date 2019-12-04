@@ -136,7 +136,7 @@ kubens ingress
 
 Install nginx ingress using helm chart.
 ```sh
-helm upgrade --install ingress stable/nginx-ingress --namespace ingress
+helm upgrade --install ingress stable/nginx-ingress --namespace ingress --set controller.metrics.enabled=true
 ```
 
 Wait for the public IP to be assigned.
