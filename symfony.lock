@@ -179,6 +179,12 @@
             "ref": "2f8314cdcb8f459135aadbcb1e6545ccfdd899d9"
         }
     },
+    "escapestudios/symfony2-coding-standard": {
+        "version": "3.10.0"
+    },
+    "felixfbecker/advanced-json-rpc": {
+        "version": "v3.0.4"
+    },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
         "recipe": {
@@ -196,6 +202,9 @@
             "version": "5.0",
             "ref": "3f73f240ee0c3719e89f1c994ce66904e2ef84f6"
         }
+    },
+    "friendsoftwig/twigcs": {
+        "version": "v3.2.2"
     },
     "fzaninotto/faker": {
         "version": "v1.8.0"
@@ -230,6 +239,9 @@
     "league/flysystem-ziparchive": {
         "version": "1.0.3"
     },
+    "microsoft/tolerant-php-parser": {
+        "version": "v0.0.18"
+    },
     "monolog/monolog": {
         "version": "1.24.0"
     },
@@ -244,6 +256,9 @@
             "version": "1.5",
             "ref": "f0436fc35fca88eada758311f8de43bfb61f1980"
         }
+    },
+    "netresearch/jsonmapper": {
+        "version": "v1.6.0"
     },
     "nikic/php-parser": {
         "version": "v4.1.0"
@@ -266,6 +281,12 @@
     "pagerfanta/pagerfanta": {
         "version": "v1.1.0"
     },
+    "pdepend/pdepend": {
+        "version": "2.5.2"
+    },
+    "phan/phan": {
+        "version": "2.4.4"
+    },
     "phar-io/manifest": {
         "version": "1.0.3"
     },
@@ -286,6 +307,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpmd/phpmd": {
+        "version": "2.7.0"
     },
     "phpspec/prophecy": {
         "version": "1.8.0"
@@ -313,6 +337,9 @@
             "version": "4.7",
             "ref": "89239f0cf2759efccc76b9944083bfcc4d180f9d"
         }
+    },
+    "pimple/pimple": {
+        "version": "v3.2.3"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -343,6 +370,9 @@
     },
     "ruflin/elastica": {
         "version": "6.0.2"
+    },
+    "sabre/event": {
+        "version": "5.0.3"
     },
     "sebastian/code-unit-reverse-lookup": {
         "version": "1.0.1"
@@ -376,6 +406,18 @@
     },
     "sebastian/version": {
         "version": "2.0.1"
+    },
+    "squizlabs/php_codesniffer": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "0dc9cceda799fd3a08b96987e176a261028a3709"
+        },
+        "files": [
+            "phpcs.xml.dist"
+        ]
     },
     "symfony/apache-pack": {
         "version": "1.0",

@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class IversePublicUrlConverterTest extends TestCase
 {
     /**
-     * Test that array of urls are changed correctly
+     * Test that array of urls are changed correctly.
      */
     public function testConvertArrayValues(): void
     {
@@ -49,9 +49,8 @@ class IversePublicUrlConverterTest extends TestCase
         $this->assertEquals($expected, $list);
     }
 
-
     /**
-     * Test that single urls are changed correctly
+     * Test that single urls are changed correctly.
      */
     public function testConvertSingleUrl(): void
     {
