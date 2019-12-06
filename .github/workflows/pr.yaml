@@ -10,6 +10,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
+                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
             - name: Install Reviewdog
               run: |
@@ -31,6 +32,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
+                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
             - name: Install Dependencies
               run: |
@@ -47,6 +49,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
+                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
             - name: Install Dependencies
               run: |
