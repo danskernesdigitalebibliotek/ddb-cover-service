@@ -18,9 +18,12 @@ use App\Event\SearchNoHitEvent;
 use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
 use App\Service\MoreInfoService\Exception\MoreInfoException;
+use App\Service\MoreInfoService\Types\AuthenticationType;
+use App\Service\MoreInfoService\Types\FormatType;
 use App\Service\MoreInfoService\Types\IdentifierInformationType;
 use App\Service\MoreInfoService\Types\IdentifierType;
 use App\Service\MoreInfoService\Types\ImageType;
+use App\Service\MoreInfoService\Types\MoreInfoRequest;
 use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
@@ -33,9 +36,6 @@ use SoapFault;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use App\Service\MoreInfoService\Types\MoreInfoRequest;
-use App\Service\MoreInfoService\Types\FormatType;
-use App\Service\MoreInfoService\Types\AuthenticationType;
 
 /**
  * moreInfoService class.

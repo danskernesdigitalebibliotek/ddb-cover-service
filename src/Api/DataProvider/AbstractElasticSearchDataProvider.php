@@ -10,11 +10,11 @@
 
 namespace App\Api\DataProvider;
 
+use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\IdentifierFactory;
 use App\Event\SearchNoHitEvent;
-use App\Api\Exception\UnknownIdentifierTypeException;
-use App\Utils\Types\NoHitItem;
 use App\Utils\Types\IdentifierType;
+use App\Utils\Types\NoHitItem;
 use Elastica\Query;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
