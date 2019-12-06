@@ -40,20 +40,22 @@ jobs:
             - name: phpcsfixerr
               run: |
                   composer actions/phpcsfixer
-    phan:
-        name: PHAN
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@master
-            - name: Setup PHP, with composer and extensions
-              uses: shivammathur/setup-php@master
-              with:
-                  php-version: 7.3
-                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
-                  coverage: none
-            - name: Install Dependencies
-              run: |
-                  composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
-            - name: PHAN
-              run: |
-                  composer actions/phan
+
+#   @TODO: Add in future release.
+#    phan:
+#        name: PHAN
+#        runs-on: ubuntu-latest
+#        steps:
+#            - uses: actions/checkout@master
+#            - name: Setup PHP, with composer and extensions
+#              uses: shivammathur/setup-php@master
+#              with:
+#                  php-version: 7.3
+#                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+#                  coverage: none
+#            - name: Install Dependencies
+#              run: |
+#                  composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+#            - name: PHAN
+#              run: |
+#                  composer actions/phan
