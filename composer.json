@@ -137,11 +137,11 @@
         "actions/phpcs": [
             "phpcs --standard=phpcs.xml.dist --report=checkstyle"
         ],
-        "actions/phan": [
-            "./vendor/bin/phan --allow-polyfill-parser --output-mode=checkstyle"
-        ],
         "actions/phpcsfixer": [
-            "php-cs-fixer --config=.php_cs.dist fix --dry-run --format=checkstyle"
+            "php-cs-fixer --config=.php_cs.dist fix --dry-run --diff --diff-format=udiff"
+        ],
+        "actions/phan": [
+            "./vendor/bin/phan --no-progress-bar --allow-polyfill-parser"
         ]
     },
     "conflict": {
