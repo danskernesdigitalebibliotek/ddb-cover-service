@@ -18,9 +18,12 @@ use App\Event\SearchNoHitEvent;
 use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
 use App\Service\MoreInfoService\Exception\MoreInfoException;
+use App\Service\MoreInfoService\Types\AuthenticationType;
+use App\Service\MoreInfoService\Types\FormatType;
 use App\Service\MoreInfoService\Types\IdentifierInformationType;
 use App\Service\MoreInfoService\Types\IdentifierType;
 use App\Service\MoreInfoService\Types\ImageType;
+use App\Service\MoreInfoService\Types\MoreInfoRequest;
 use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
@@ -30,12 +33,10 @@ use Psr\Log\LoggerInterface;
 use ReflectionException;
 use SoapClient;
 use SoapFault;
+use SoapHeader;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use App\Service\MoreInfoService\Types\MoreInfoRequest;
-use App\Service\MoreInfoService\Types\FormatType;
-use App\Service\MoreInfoService\Types\AuthenticationType;
 
 /**
  * moreInfoService class.
@@ -116,7 +117,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   The name of the service being called
      * @param array $parameters
      *   The parameters being supplied to the service
-     * @param \SoapHeader[] $requestHeaders
+     * @param SoapHeader[] $requestHeaders
      *   An array of SOAPHeaders
      *
      * @return mixed the service response
@@ -197,7 +198,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             }
 
             // Build the SOAP Header and assign it the corresponding property.
-            $this->$headerName = new \SoapHeader($namespace, $headerName, $dataForSoapHeader);
+            $this->$headerName = new SoapHeader($namespace, $headerName, $dataForSoapHeader);
         }
     }
 
@@ -415,9 +416,8 @@ abstract class AbstractMoreInfoService extends SoapClient
 
             $image = new ImageType();
             $image->_ = $this->transformer->transform($data['imageUrl']);
-            // @TODO add imageFormat to search/elastic so we can expose it here.
             $image->imageSize = 'detail';
-            $image->imageFormat = $data['imageFormat'];
+            $image->imageFormat = $this->getImageFormat($data['imageFormat']);
 
             $identifierInformation->coverImage[] = $image;
         }
@@ -445,5 +445,30 @@ abstract class AbstractMoreInfoService extends SoapClient
         }
 
         return empty($urls) ? null : $urls;
+    }
+
+    /**
+     * Get the correct image format as defined in the XSD.
+     *
+     * @param string $format
+     *
+     * @return string
+     */
+    private function getImageFormat(string $format): string
+    {
+        $format = strtolower($format);
+
+        switch ($format) {
+            case 'gif':
+                return FormatType::GIF;
+
+            case 'pdf':
+                return FormatType::PDF;
+
+            // We default to 'jpeg' for compatibility reasons.
+            // Format must match one of GIF/PDF/JPEG defined in XSD schema.
+            default:
+                return FormatType::JPEG;
+        }
     }
 }

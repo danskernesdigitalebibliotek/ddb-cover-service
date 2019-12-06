@@ -13,6 +13,10 @@ namespace App\Service\MoreInfoService\Types;
 
 class FormatType
 {
+    const JPEG = 'jpeg';
+    const GIF = 'gif';
+    const PDF = 'pdf';
+
     /**
      * @var anyURI
      */
