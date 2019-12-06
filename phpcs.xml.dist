@@ -7,8 +7,6 @@
 
     <config name="installed_paths" value="vendor/escapestudios/symfony2-coding-standard" />
 
-    <!-- Do not print warnings -->
-    <arg value="n"/>
     <arg name="basepath" value="."/>
     <arg name="cache" value=".phpcs-cache"/>
     <arg name="colors"/>
