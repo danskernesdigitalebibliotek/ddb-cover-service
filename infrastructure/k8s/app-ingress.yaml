@@ -5,7 +5,10 @@ metadata:
   namespace: cover-service
   name: cover-service-frontend
   annotations:
+    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
 spec:
   tls:
     - hosts:

@@ -136,7 +136,11 @@ kubens ingress
 
 Install nginx ingress using helm chart.
 ```sh
-helm upgrade --install ingress stable/nginx-ingress --namespace ingress
+helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
+--set controller.metrics.enabled=true \
+--set controller.stats.enabled=true \
+--set controller.podAnnotations."prometheus\.io/scrape"=true \
+--set controller.podAnnotations."prometheus\.io/port"=10254 
 ```
 
 Wait for the public IP to be assigned.

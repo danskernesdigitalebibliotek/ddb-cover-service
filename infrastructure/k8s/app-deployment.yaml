@@ -69,6 +69,11 @@ spec:
       labels:
         app: cover-service-app
         tier: frontend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9253"
+        prometheus.io/scheme: "http"
     spec:
       imagePullSecrets:
         - name: github-registry
