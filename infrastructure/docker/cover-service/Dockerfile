@@ -14,7 +14,7 @@ COPY --from=composer:1.9.1 /usr/bin/composer /usr/bin/composer
 
 WORKDIR ${APP_PATH}
 
-RUN APP_ENV=prod composer install --no-dev -o --no-scripts
+RUN APP_ENV=prod composer install --no-dev -o --no-scripts --classmap-authoritative
 RUN APP_ENV=prod composer docker-build
 
 ####
