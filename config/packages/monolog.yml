@@ -11,8 +11,10 @@ monolog:
   channels: ["statistics"]
   handlers:
     statistics:
-      type: elasticsearch
-      elasticsearch:
-        id: monolog.elastica.client
-      index: '%env(ELASTIC_STATS_INDEX)%'
+      type: stream
+      path: '/dev/null'
+      #type: elasticsearch
+      #elasticsearch:
+      #  id: monolog.elastica.client
+      #index: '%env(ELASTIC_STATS_INDEX)%'
       channels: ["statistics"]
