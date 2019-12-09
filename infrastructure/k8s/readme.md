@@ -300,3 +300,7 @@ Get the main application up and running.
 ```sh
 kubectl apply -f redis-deployment.yaml -f app-deployment.yaml -f nginx-deployment.yaml -f app-ingress.yaml
 ```
+
+# TODO
+
+* Create helm charts to get around all the yaml file versions.

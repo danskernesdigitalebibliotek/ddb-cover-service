@@ -10,17 +10,17 @@ spec:
   version: 6.8.4
   nodeSets:
     - name: cs-elasticsearch
-      count: 1
+      count: 2
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
           spec:
             accessModes:
-              - ReadWriteOnce
+              - ReadWriteMany
             resources:
               requests:
-                storage: 30Gi
-            storageClassName: managed-premium-retain
+                storage: 100Gi
+            storageClassName: azurefile-premium-retain
       config:
         node.master: true
         node.data: true
