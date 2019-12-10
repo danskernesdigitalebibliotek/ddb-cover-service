@@ -113,6 +113,30 @@ Verify that you are connected to the cluster now.
 kubectl get nodes
 ```
 
+### Storage account
+
+```sh
+AKS_PERS_STORAGE_ACCOUNT_NAME=coverserviceprod
+AKS_PERS_RESOURCE_GROUP=CoverService
+AKS_PERS_LOCATION=westeurope
+AKS_PERS_SHARE_NAME=coverservice
+```
+
+Create a storage account
+```sh
+az storage account create -n $AKS_PERS_STORAGE_ACCOUNT_NAME -g $AKS_PERS_RESOURCE_GROUP -l $AKS_PERS_LOCATION --sku Premium_LRS --kind FileStorage
+```
+
+Get storage account key
+```sh
+STORAGE_KEY=$(az storage account keys list --resource-group $AKS_PERS_RESOURCE_GROUP --account-name $AKS_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
+```
+
+Create cluster secret to access storage account.
+```
+kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+```
+
 ## Helm
 We are going to use https://helm.sh/ to install ingress and cert-manager into the cluster setup. Note that we here are using helm version 3. We also install the kubectx helper tool as it makes switching cluster and namespaces easier.
 ```sh

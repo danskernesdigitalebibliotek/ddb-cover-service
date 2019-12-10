@@ -11,6 +11,16 @@ spec:
   nodeSets:
     - name: cs-elasticsearch
       count: 1
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteMany
+            resources:
+              requests:
+                storage: 100Gi
+            storageClassName: azurefile-premium-retain
       config:
         node.master: true
         node.data: true
@@ -28,11 +38,11 @@ spec:
               # specify resource limits and requests
               resources:
                 requests:
-                  memory: 3Gi
+                  memory: 2Gi
                   cpu: 500m
                 limits:
-                  memory: 3Gi
+                  memory: 2Gi
                   cpu: 1
               env:
                 - name: ES_JAVA_OPTS
-                  value: "-Xms2g -Xmx2g"
+                  value: "-Xms1g -Xmx1g"
