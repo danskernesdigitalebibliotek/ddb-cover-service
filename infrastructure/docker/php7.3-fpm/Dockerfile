@@ -5,6 +5,7 @@ ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
     PHP_OPCACHE_MAX_ACCELERATED_FILES="20000" \
     PHP_OPCACHE_MEMORY_CONSUMPTION="192" \
     PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10" \
+    PHP_APCU_MEMORY_SIZE="16M" \
     PHP_MAX_EXECUTION_TIME="30" \
     PHP_MEMORY_LIMIT="128M" \
     PHP_POST_MAX_SIZE="8M" \
@@ -36,8 +37,8 @@ RUN apk --update add --no-cache \
         sysvsem
 
 RUN apk --update add --no-cache --virtual .build-deps autoconf g++ make \
-    && pecl install redis-4.0.1 imagick \
-    && docker-php-ext-enable redis imagick \
+    && pecl install redis-4.0.1 imagick apcu \
+    && docker-php-ext-enable redis imagick apcu \
     && apk del .build-deps
 
 # Added FPM health check script (https://github.com/renatomefi/php-fpm-healthcheck)
@@ -50,6 +51,8 @@ RUN mv ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 # Copy custom PHP configuration.
 COPY etc/php/conf.d/opcache.ini /usr/local/etc/php/conf.d/20-opcache.ini
 COPY etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/20-php.ini
+COPY etc/php/conf.d/apcu.ini /usr/local/etc/php/conf.d/05-apcu.ini
+
 
 # Custom FPM configuration.
 COPY etc/php-fpm.d/fpm.ini /usr/local/etc/php-fpm.d/zz-fpm-docker.conf

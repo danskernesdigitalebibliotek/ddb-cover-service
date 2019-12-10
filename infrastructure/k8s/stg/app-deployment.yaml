@@ -5,7 +5,7 @@ metadata:
   namespace: cover-service
   name: cover-service-config
 data:
-  APP_DB_SERVER: 'cover-service-prod-database.mariadb.database.azure.com'
+  APP_DB_SERVER: 'cover-service-stg-database.mariadb.database.azure.com'
   APP_DB_PORT: '3306'
   APP_DB_DATABASE: 'cover-service'
   APP_REDIS_SERVER: 'redis'
@@ -30,29 +30,6 @@ spec:
     - protocol: TCP
       port: 9000
   type: ClusterIP
-
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  namespace: cover-service
-  name: coverserive-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: cover-service-app
-  minReplicas: 5
-  maxReplicas: 25
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        targetAverageUtilization: 70
-    - type: Resource
-      resource:
-        name: memory
-        targetAverageUtilization: 80
 
 ---
 apiVersion: apps/v1

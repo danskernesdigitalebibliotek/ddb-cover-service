@@ -18,8 +18,10 @@ RUN apk --update add --no-cache \
         imagemagick \
         imagemagick-libs \
         imagemagick-dev \
+        libzip-dev \
         supervisor \
         inotify-tools \
+        php7-pecl-apcu \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) \
         zip \
@@ -30,8 +32,8 @@ RUN apk --update add --no-cache \
         sysvsem
 
 RUN apk --update add --no-cache --virtual .build-deps autoconf g++ make \
-    && pecl install redis-4.0.1 imagick \
-    && docker-php-ext-enable redis imagick \
+    && pecl install redis-4.0.1 imagick apcu \
+    && docker-php-ext-enable redis imagick apcu \
     && apk del .build-deps
 
 # Copy configuration.
