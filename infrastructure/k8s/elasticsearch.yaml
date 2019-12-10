@@ -16,11 +16,11 @@ spec:
             name: elasticsearch-data
           spec:
             accessModes:
-              - ReadWriteMany
+              - ReadWriteOnce
             resources:
               requests:
-                storage: 100Gi
-            storageClassName: azurefile-premium-retain
+                storage: 1024Gi
+            storageClassName: managed-premium-retain
       config:
         node.master: true
         node.data: true
