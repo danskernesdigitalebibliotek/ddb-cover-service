@@ -6,6 +6,9 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        soap:
+            pattern: ^/(fbs|2.11)/
+            security: false
         main:
             anonymous: true
 
