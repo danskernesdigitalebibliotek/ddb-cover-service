@@ -45,6 +45,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 abstract class AbstractMoreInfoService extends SoapClient
 {
+    private const FALLBACK_CODE = 'fallback';
+    private const FALLBACK_IMAGE_URL = 'http://res.cloudinary.com/dandigbib/image/upload/v1543590683/default/forside-mangler.jpg';
+
     /**
      * Default class mapping for this service.
      *
@@ -61,7 +64,6 @@ abstract class AbstractMoreInfoService extends SoapClient
         'MoreInfoResponse' => MoreInfoResponse::class,
     ];
 
-    private $namespace;
     private $index;
     private $statsLogger;
     private $requestStack;
@@ -248,11 +250,15 @@ abstract class AbstractMoreInfoService extends SoapClient
         $noHits = [];
 
         foreach ($identifierInformation as $info) {
-            if (!$info->identifierKnown) {
-                foreach ($info->identifier as $isType => $isIdentifier) {
-                    if (!empty($isIdentifier)) {
-                        $noHits[] = new NoHitItem($isType, $isIdentifier);
+            foreach ($info->coverImage as $coverImage) {
+                if (self::FALLBACK_CODE === $coverImage->source) {
+                    foreach ($info->identifier as $isType => $isIdentifier) {
+                        if (!empty($isIdentifier)) {
+                            $noHits[] = new NoHitItem($isType, $isIdentifier);
+                        }
                     }
+                    // We only set the source to be able to filter no hits
+                    unset($coverImage->source);
                 }
             }
         }
@@ -396,15 +402,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         $identifierInformationList = [];
         foreach ($searchParameters as $isType => $isIdentifiers) {
             foreach ($isIdentifiers as $isIdentifier) {
-                $identifierInformation = new IdentifierInformationType();
-                $identifierInformation->identifierKnown = false;
-
-                $identifier = new IdentifierType();
-                $identifier->{$isType} = $isIdentifier;
-
-                $identifierInformation->identifier = $identifier;
-
-                $identifierInformationList[$isIdentifier] = $identifierInformation;
+                $identifierInformationList[$isIdentifier] = $this->getDefaultImage($isType, $isIdentifier);
             }
         }
 
@@ -419,6 +417,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             $image->imageSize = 'detail';
             $image->imageFormat = $this->getImageFormat($data['imageFormat']);
 
+            $identifierInformation->coverImage = [];
             $identifierInformation->coverImage[] = $image;
         }
 
@@ -427,6 +426,28 @@ abstract class AbstractMoreInfoService extends SoapClient
         $response->identifierInformation = array_values($identifierInformationList);
 
         return $response;
+    }
+
+    private function getDefaultImage(string $isType, string $isIdentifier): IdentifierInformationType
+    {
+        $identifierInformation = new IdentifierInformationType();
+        $identifierInformation->identifierKnown = true;
+
+        $identifier = new IdentifierType();
+        $identifier->{$isType} = $isIdentifier;
+
+        $identifierInformation->identifier = $identifier;
+
+        $image = new ImageType();
+        $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
+        $image->imageSize = 'detail';
+        $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
+        // Set source to fallback code to allow no hits filtering
+        $image->source = self::FALLBACK_CODE;
+
+        $identifierInformation->coverImage[] = $image;
+
+        return $identifierInformation;
     }
 
     /**
