@@ -27,7 +27,9 @@ ENV APP_PATH=/var/www/html
 
 # Install the application.
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
-RUN chown -R www-data:www-data ${APP_PATH}/var
+RUN chown -R www-data:www-data ${APP_PATH}/var \
+    && mkdir -p ${APP_PATH}/config/secrets \
+    && chown -R www-data:www-data ${APP_PATH}/config/secrets
 
 # Download prometheus php-fpm export.
 COPY --from=hipages/php-fpm_exporter /php-fpm_exporter /usr/local/bin/php-fpm_exporter
