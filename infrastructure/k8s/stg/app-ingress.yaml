@@ -9,6 +9,9 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     prometheus.io/scrape: "true"
     prometheus.io/port: "10254"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
 spec:
   tls:
     - hosts:
