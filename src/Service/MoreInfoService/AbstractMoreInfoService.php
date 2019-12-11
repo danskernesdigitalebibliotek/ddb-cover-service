@@ -402,7 +402,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         $identifierInformationList = [];
         foreach ($searchParameters as $isType => $isIdentifiers) {
             foreach ($isIdentifiers as $isIdentifier) {
-                $identifierInformationList[$isIdentifier] = $this->getDefaultImage($isType, $isIdentifier);
+                $identifierInformationList[$isIdentifier] = $this->getDefaultIdentifierInformation($isType, $isIdentifier);
             }
         }
 
@@ -428,7 +428,17 @@ abstract class AbstractMoreInfoService extends SoapClient
         return $response;
     }
 
-    private function getDefaultImage(string $isType, string $isIdentifier): IdentifierInformationType
+    /**
+     * Get default default identifier with default image set.
+     *
+     * @param string $isType
+     * @param string $isIdentifier
+     *
+     * @return IdentifierInformationType
+     *
+     * @throws CoverStoreTransformationException
+     */
+    private function getDefaultIdentifierInformation(string $isType, string $isIdentifier): IdentifierInformationType
     {
         $identifierInformation = new IdentifierInformationType();
         $identifierInformation->identifierKnown = true;
