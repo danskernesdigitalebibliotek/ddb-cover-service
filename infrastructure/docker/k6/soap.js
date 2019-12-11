@@ -4,13 +4,13 @@ import { check } from "k6";
 export let options = {
     stages: [
         // Ramp-up
-        { duration: "1m", target: 50 },
+        { duration: "2m", target: 50 },
 
-        { duration: "2m", target: 100 },
-        { duration: "2m", target: 250 },
+        { duration: "3m", target: 100 },
+        { duration: "3m", target: 150 },
 
         // Ramp-down
-        { duration: "1m", target: 0 }
+        { duration: "2m", target: 0 }
     ],
     insecureSkipTLSVerify: true,
     noUsageReport: true,
@@ -97,7 +97,8 @@ export default function() {
             "Content-Type": "application/soap+xml"
         }
     };
-    let url = 'https://cover.dandigbib.org/2.11/';
+    let url = 'https://itk:itk@coverservice.itkdev.dk/2.11/';
+    //let url = 'https://cover.dandigbib.org/2.11/';
     let res = http.post(url, envelope(), params);
     check(res, {
         "status was 200": (r) => r.status === 200,
