@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 abstract class AbstractMoreInfoService extends SoapClient
 {
     private const FALLBACK_CODE = 'fallback';
-    private const FALLBACK_IMAGE_URL = 'http://res.cloudinary.com/dandigbib/image/upload/v1543590683/default/forside-mangler.jpg';
+    private const FALLBACK_IMAGE_URL = 'http://res.cloudinary.com/dandigbib/image/upload/v1576072122/default/forside-mangler.jpg';
 
     /**
      * Default class mapping for this service.
