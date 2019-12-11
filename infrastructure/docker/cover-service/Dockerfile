@@ -14,8 +14,12 @@ COPY --from=composer:1.9.1 /usr/bin/composer /usr/bin/composer
 
 WORKDIR ${APP_PATH}
 
-RUN APP_ENV=prod composer install --no-dev -o --no-scripts --classmap-authoritative
-RUN APP_ENV=prod composer docker-build
+## Install assets, which requires a HACK as redis is not available (should be removed later on).
+RUN APP_ENV=prod composer install --no-dev -o --no-scripts --classmap-authoritative \
+    && cp config/packages/framework.yaml /tmp \
+    && awk '!/system: cache.adapter.redis/' config/packages/framework.yaml > temp && mv temp config/packages/framework.yaml \
+    && APP_ENV=prod REDIS_CACHE_SYSTEM_BACKEND=cache.adapter.system composer docker-build \
+    && cp -f /tmp/framework.yaml config/packages/framework.yaml
 
 ####
 ## Build main application image.
