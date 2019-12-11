@@ -15,6 +15,9 @@ jobs:
             -   name: Validate composer files
                 run: |
                     composer validate composer.json
+            -   name: Export .env variables
+                run: |
+                    set -a && source .env && set +a
             -   name: Run composer install
                 run: |
                     APP_ENV=prod composer install --no-dev -o
