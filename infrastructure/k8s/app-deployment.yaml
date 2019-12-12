@@ -67,6 +67,11 @@ spec:
   selector:
     matchLabels:
       app: cover-service-app
+  strategy:
+  type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   template:
     metadata:
       labels:
