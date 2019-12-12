@@ -13,10 +13,10 @@
 
 namespace App\Api\Dto;
 
-use App\Api\Filter\SearchFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Api\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**

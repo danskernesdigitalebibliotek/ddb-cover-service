@@ -59,7 +59,6 @@ class AuthenticationService
      * If not in local cache an request to the open platform for a new token will
      * be executed.
      *
-     *
      * @param bool $refresh
      *   If TRUE refresh token. Default: FALSE.
      *

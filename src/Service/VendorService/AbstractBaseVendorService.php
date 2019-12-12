@@ -11,10 +11,12 @@ use App\Entity\Vendor;
 use App\Event\VendorEvent;
 use App\Exception\IllegalVendorServiceException;
 use App\Exception\UnknownVendorServiceException;
+use App\Repository\SourceRepository;
 use App\Utils\Message\VendorImportResultMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\VendorState;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\QueryException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Lock\Factory;
@@ -155,7 +157,7 @@ abstract class AbstractBaseVendorService
      */
     protected function updateOrInsertMaterials(array &$identifierImageUrlArray, string $identifierType = IdentifierType::ISBN, int $batchSize = self::BATCH_SIZE): void
     {
-        $sourceRepos = $this->em->getRepository(Source::class);
+        $sourceRepo = $this->em->getRepository(Source::class);
 
         $offset = 0;
         $count = \count($identifierImageUrlArray);
@@ -164,60 +166,94 @@ abstract class AbstractBaseVendorService
             // Update or insert in batches. Because doctrine lacks
             // 'INSERT ON DUPLICATE KEY UPDATE' we need to search for and load
             // sources already in the db.
-
-            // @TODO this can be solved by using $entityManager->merge($entity) but
-            // this requires that we can predict the ID of the entity
-            // Doctrine allows for composite primary keys so we can use
-            // (isbn, vendor) but this requires a custom DataProvider in
-            // API-platform.
             $batch = \array_slice($identifierImageUrlArray, $offset, self::BATCH_SIZE, true);
-
-            // Split into to results arrays (updated and inserted).
-            $updatedIds = [];
-            $insertedIds = [];
-
-            // Load batch from database to enable updates.
-            $sources = $sourceRepos->findByMatchIdList($identifierType, $batch, $this->getVendor());
-
-            foreach ($batch as $identifier => $imageUrl) {
-                if (array_key_exists($identifier, $sources)) {
-                    $source = $sources[$identifier];
-                    ++$this->totalUpdated;
-                    $updatedIds[] = $identifier;
-                } else {
-                    $source = new Source();
-                    $this->em->persist($source);
-                    ++$this->totalInserted;
-                    $insertedIds[] = $identifier;
-                }
-
-                $source->setMatchType($identifierType)
-                    ->setMatchId($identifier)
-                    ->setVendor($this->vendor)
-                    ->setDate(new \DateTime())
-                    ->setOriginalFile($imageUrl);
-
-                ++$this->totalIsIdentifiers;
-            }
-
-            $this->em->flush();
-            $this->em->clear('App\Entity\Source');
+            [$updatedIdentifiers, $insertedIdentifiers] = $this->processBatch($batch, $sourceRepo, $identifierType);
 
             // Send event with the last batch to the job processors.
-            if ($this->queue) {
-                if (!empty($insertedIds)) {
-                    $event = new VendorEvent(VendorState::INSERT, $insertedIds, $identifierType, $this->vendor->getId());
-                    $this->dispatcher->dispatch($event::NAME, $event);
-                }
-                if (!empty($updatedIds)) {
-                    $event = new VendorEvent(VendorState::UPDATE, $updatedIds, $identifierType, $this->vendor->getId());
-                    $this->dispatcher->dispatch($event::NAME, $event);
-                }
-
-                // @TODO: DELETED event???
-            }
+            $this->sendCoverImportEvents($updatedIdentifiers, $insertedIdentifiers, $identifierType);
 
             $offset += $batchSize;
+        }
+    }
+
+    /**
+     * Process one batch of identifiers.
+     *
+     * @param array $batch
+     *   Array of identifiers to process
+     * @param SourceRepository $sourceRepo
+     *   Sources repository
+     * @param string $identifierType
+     *   The type of identifiers in to be processed
+     *
+     * @return array
+     *   Array containing two arrays with identifiers for updated and inserted sources
+     *
+     * @throws IllegalVendorServiceException
+     * @throws UnknownVendorServiceException
+     * @throws QueryException
+     */
+    private function processBatch(array $batch, SourceRepository $sourceRepo, string $identifierType): array
+    {
+        // Split into to results arrays (updated and inserted).
+        $updatedIdentifiers = [];
+        $insertedIdentifiers = [];
+
+        // Load batch from database to enable updates.
+        $sources = $sourceRepo->findByMatchIdList($identifierType, $batch, $this->getVendor());
+
+        foreach ($batch as $identifier => $imageUrl) {
+            if (array_key_exists($identifier, $sources)) {
+                $source = $sources[$identifier];
+                ++$this->totalUpdated;
+                $updatedIdentifiers[] = $identifier;
+            } else {
+                $source = new Source();
+                $this->em->persist($source);
+                ++$this->totalInserted;
+                $insertedIdentifiers[] = $identifier;
+            }
+
+            $source->setMatchType($identifierType)
+                ->setMatchId($identifier)
+                ->setVendor($this->vendor)
+                ->setDate(new \DateTime())
+                ->setOriginalFile($imageUrl);
+
+            ++$this->totalIsIdentifiers;
+        }
+
+        $this->em->flush();
+        $this->em->clear();
+
+        gc_collect_cycles();
+
+        return [$updatedIdentifiers, $insertedIdentifiers];
+    }
+
+    /**
+     * Send events to the job queue with identifiers to process.
+     *
+     * @param array $updatedIdentifiers
+     *   Updated identifiers
+     * @param array $insertedIdentifiers
+     *   Inserted identifiers
+     * @param string $identifierType
+     *   The type of identifiers in to be processed
+     */
+    private function sendCoverImportEvents(array $updatedIdentifiers, array $insertedIdentifiers, string $identifierType): void
+    {
+        if ($this->queue) {
+            if (!empty($insertedIdentifiers)) {
+                $event = new VendorEvent(VendorState::INSERT, $insertedIdentifiers, $identifierType, $this->vendor->getId());
+                $this->dispatcher->dispatch($event::NAME, $event);
+            }
+            if (!empty($updatedIdentifiers)) {
+                $event = new VendorEvent(VendorState::UPDATE, $updatedIdentifiers, $identifierType, $this->vendor->getId());
+                $this->dispatcher->dispatch($event::NAME, $event);
+            }
+
+            // @TODO: DELETED event???
         }
     }
 
@@ -243,7 +279,7 @@ abstract class AbstractBaseVendorService
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
         // Stats logger.
-        $this->statsLogger->info($this->getVendorName() . ' records read', [
+        $this->statsLogger->info($this->getVendorName().' records read', [
             'service' => $className,
             'records' => $this->totalIsIdentifiers,
             'updated' => $this->totalUpdated,

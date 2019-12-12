@@ -1,0 +1,48 @@
+# @see https://symfony.com/doc/current/setup/web_server_configuration.html
+server {
+    listen 80;
+    server_name localhost;
+    root /var/www/html/public;
+
+    location / {
+        # try to serve file directly, fallback to index.php
+        try_files $uri /index.php$is_args$args;
+    }
+
+    location ~* \.(txt|log)$ {
+        deny all;
+    }
+
+    # Block access to "hidden" files and directories
+    location ~ (^|/)\. {
+        return 403;
+    }
+
+    # Don't allow direct access to PHP files in the vendor directory.
+    location ~ /vendor/.*\.php$ {
+        deny all;
+        return 404;
+    }
+
+    error_page 404 /index.php;
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass {{ getenv "PHP_FPM_SERVER" "phpfpm" }}:{{ getenv "PHP_FPM_SERVER_PORT" "9000" }};
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+
+        internal;
+    }
+
+    # return 404 for all other php files not matching the front controller
+    # this prevents access to other php files you don't want to be accessible.
+    location ~ \.php$ {
+        return 404;
+    }
+
+    error_log /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+}

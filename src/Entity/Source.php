@@ -158,7 +158,7 @@ class Source
         return $this;
     }
 
-    public function getOriginalLastModified(): \DateTime
+    public function getOriginalLastModified(): ?\DateTime
     {
         return $this->originalLastModified;
     }

@@ -1,4 +1,6 @@
 {
+    "name": "danskernesdigitalebibliotek/ddb-cover-service",
+    "description": "Interactive cover service for danish libraries",
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -8,6 +10,7 @@
         "ext-imagick": "*",
         "ext-json": "*",
         "ext-redis": "*",
+        "ext-soap": "*",
         "ext-xmlreader": "*",
         "ext-zip": "*",
         "api-platform/api-pack": "^1.1",
@@ -23,18 +26,18 @@
         "league/flysystem-ziparchive": "^1.0",
         "oneup/flysystem-bundle": "^3.0",
         "ruflin/elastica": "^6.0",
-        "symfony/apache-pack": "^1.0",
-        "symfony/browser-kit": "4.1.*",
-        "symfony/cache": "4.1.*",
+        "symfony/browser-kit": "^4.0",
+        "symfony/cache": "^4.0",
         "symfony/console": "^4.0",
-        "symfony/dotenv": "4.1.*",
-        "symfony/event-dispatcher": "4.1.*",
+        "symfony/dotenv": "^4.0",
+        "symfony/event-dispatcher": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.0",
-        "symfony/lock": "4.1.*",
+        "symfony/lock": "^4.0",
         "symfony/monolog-bundle": "^3.3",
         "symfony/orm-pack": "^1.0",
-        "symfony/process": "4.1.*",
+        "symfony/process": "^4.0",
+        "symfony/translation": "4.4.*",
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
@@ -44,9 +47,14 @@
         "behat/symfony2-extension": "^2.1",
         "behatch/contexts": "^3.2",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
+        "escapestudios/symfony2-coding-standard": "^3.10",
         "friendsofphp/php-cs-fixer": "^2.13",
+        "friendsoftwig/twigcs": "^3.2",
         "fzaninotto/faker": "^1.8",
+        "phan/phan": "^2.4",
+        "phpmd/phpmd": "^2.7",
         "phpunit/phpunit": "^7",
+        "symfony/debug-pack": "^1.0",
         "symfony/maker-bundle": "^1.9"
     },
     "config": {
@@ -78,28 +86,65 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
+        "docker-build": [
+            "bin/console --env=prod assets:install",
+            "bin/console --env=prod cache:warmup"
+        ],
         "post-install-cmd": [
             "@auto-scripts"
         ],
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "check": [
-            "@php-cs-check"
-        ],
-        "php-cs-check": [
-            "php vendor/bin/php-cs-fixer fix --dry-run --diff src/"
-        ],
-        "php-cs-fix": [
-            "php vendor/bin/php-cs-fixer fix src/"
-        ],
-        "phpunit": [
-            "vendor/bin/phpunit"
-        ],
         "deploy": [
             "bin/console --env=prod doctrine:migrations:migrate",
             "bin/console --env=prod cache:clear --no-debug",
             "bin/console --env=prod cache:warmup"
+        ],
+        "check": [
+            "@check-coding-standards"
+        ],
+        "check-coding-standards/php-cs-fixer": [
+            "php-cs-fixer --config=.php_cs.dist fix --dry-run --format=checkstyle"
+        ],
+        "check-coding-standards/phpcs": [
+            "phpcs --standard=phpcs.xml.dist"
+        ],
+        "check-coding-standards/twigcs": [
+            "twigcs lint templates"
+        ],
+        "check-coding-standards": [
+            "@check-coding-standards/php-cs-fixer",
+            "@check-coding-standards/phpcs",
+            "@check-coding-standards/twigcs"
+        ],
+        "apply-coding-standards/php-cs-fixer": [
+            "php-cs-fixer --config=.php_cs.dist fix"
+        ],
+        "apply-coding-standards/phpcs": [
+            "phpcbf --standard=phpcs.xml.dist"
+        ],
+        "apply-coding-standards": [
+            "@apply-coding-standards/php-cs-fixer",
+            "@apply-coding-standards/phpcs"
+        ],
+        "phan": [
+            "./vendor/bin/phan --allow-polyfill-parser"
+        ],
+        "md":[
+            "./vendor/bin/phpmd ./src/ text cleancode,codesize,controversial,design,naming,unusedcode --suffixes php"
+        ],
+        "phpunit": [
+            "./vendor/bin/phpunit"
+        ],
+        "actions/phpcs": [
+            "phpcs --standard=phpcs.xml.dist --report=checkstyle"
+        ],
+        "actions/phpcsfixer": [
+            "php-cs-fixer --config=.php_cs.dist fix --dry-run --diff --diff-format=udiff"
+        ],
+        "actions/phan": [
+            "./vendor/bin/phan --no-progress-bar --allow-polyfill-parser"
         ]
     },
     "conflict": {
@@ -108,7 +153,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.1.*"
+            "require": "4.4.*"
         }
     }
 }

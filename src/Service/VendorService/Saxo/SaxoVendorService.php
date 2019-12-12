@@ -6,9 +6,13 @@
 
 namespace App\Service\VendorService\Saxo;
 
+use App\Exception\IllegalVendorServiceException;
+use App\Exception\UnknownVendorServiceException;
 use App\Service\VendorService\AbstractBaseVendorService;
 use App\Service\VendorService\ProgressBarTrait;
 use App\Utils\Message\VendorImportResultMessage;
+use Box\Spout\Common\Exception\IOException;
+use Box\Spout\Common\Exception\UnsupportedTypeException;
 use Box\Spout\Common\Type;
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Reader\XLSX\Reader;
@@ -113,8 +117,8 @@ class SaxoVendorService extends AbstractBaseVendorService
      *
      * @return string
      *
-     * @throws \App\Exception\UnknownVendorServiceException
-     * @throws \App\Exception\IllegalVendorServiceException
+     * @throws UnknownVendorServiceException
+     * @throws IllegalVendorServiceException
      */
     private function getVendorsImageUrl(string $isbn): string
     {
@@ -126,8 +130,8 @@ class SaxoVendorService extends AbstractBaseVendorService
      *
      * @return Reader
      *
-     * @throws \Box\Spout\Common\Exception\IOException
-     * @throws \Box\Spout\Common\Exception\UnsupportedTypeException
+     * @throws IOException
+     * @throws UnsupportedTypeException
      */
     private function getSheetReader(): Reader
     {

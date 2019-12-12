@@ -9,9 +9,9 @@ namespace App\Queue;
 use App\Entity\Source;
 use App\Entity\Vendor;
 use App\Service\VendorService\VendorImageValidatorService;
+use App\Utils\CoverVendor\VendorImageItem;
 use App\Utils\Message\ProcessMessage;
 use App\Utils\Types\VendorState;
-use App\Utils\CoverVendor\VendorImageItem;
 use Doctrine\ORM\EntityManagerInterface;
 use Enqueue\Client\ProducerInterface;
 use Enqueue\Client\TopicSubscriberInterface;
@@ -70,16 +70,16 @@ class VendorImageProcessor implements PsrProcessor, TopicSubscriberInterface
 
         if ($source) {
             switch ($processMessage->getOperation()) {
-            case VendorState::INSERT:
-              $processorStatus = $this->processInsert($processMessage, $source);
-              break;
+                case VendorState::INSERT:
+                  $processorStatus = $this->processInsert($processMessage, $source);
+                  break;
 
-            case VendorState::UPDATE:
-              $processorStatus = $this->processUpdate($processMessage, $source);
-              break;
+                case VendorState::UPDATE:
+                  $processorStatus = $this->processUpdate($processMessage, $source);
+                  break;
 
-            default:
-              $processorStatus = self::REJECT;
+                default:
+                  $processorStatus = self::REJECT;
           }
         } else {
             $processorStatus = self::REJECT;

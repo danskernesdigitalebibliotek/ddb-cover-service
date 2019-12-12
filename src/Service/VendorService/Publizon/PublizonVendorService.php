@@ -7,6 +7,8 @@
 
 namespace App\Service\VendorService\Publizon;
 
+use App\Exception\IllegalVendorServiceException;
+use App\Exception\UnknownVendorServiceException;
 use App\Service\VendorService\AbstractBaseVendorService;
 use App\Service\VendorService\ProgressBarTrait;
 use App\Utils\Message\VendorImportResultMessage;
@@ -169,8 +171,8 @@ class PublizonVendorService extends AbstractBaseVendorService
     /**
      * Set config from service from DB vendor object.
      *
-     * @throws \App\Exception\UnknownVendorServiceException
-     * @throws \App\Exception\IllegalVendorServiceException
+     * @throws UnknownVendorServiceException
+     * @throws IllegalVendorServiceException
      */
     private function loadConfig(): void
     {

@@ -172,6 +172,32 @@ contain the import logic for the vendors specific access setup
 
 ## Development Setup
 
+### Docker compose
+The project comes with a docker-compose setup base on development only images, that comes with all required extensions 
+to PHP (including xdebug) and all services required to run the application.
+
+For easy usage it's recommended to use træfik (proxy) and the wrapper script for docker-compose used at ITKDev 
+(https://github.com/aakb/itkdev-docker/tree/develop/scripts). It's not an requirement and the setup examples below is 
+without the script. The script just makes working with docker simpler and faster. 
+
+#### Running docker setup
+
+Start the stack.
+```
+docker-compose up --detach
+```
+
+Access the site using the command blow to get the port number and append it to this URL `http://0.0.0.0:<PORT>` in your
+browser.
+```
+docker-compose port nginx 80 | cut -d: -f2
+```
+
+All the symfony commands below to install the application can be executed using this pattern.
+```
+docker-compose exec phpfpm bin/console <CMD>
+```
+
 ### Install
 
 We assume you have a working local/vagrant/docker web server setup with PHP,
@@ -181,19 +207,18 @@ Nginx, MariaDB, ElasticSearch and Redis.
    project root dir
 2. Create a `/.env.local` file and define the relevant environment variables to
    match your setup
-3. Create database `bin/console doctrine:database:create`
-4. Run migrations `bin/console doctrine:migrations:migrate`
-5. Create ES search index `bin/console fos:elastica:create`
-6. Run `vendor/bin/phpunit` and `vendor/bin/behat` to ensure your test suite is
-   working
+3. Run migrations `bin/console doctrine:migrations:migrate`
+4. Create ES search index `bin/console fos:elastica:create`
+5. Run `vendor/bin/phpunit` and `vendor/bin/behat` to ensure your test suite is
+   working.
 
 API is now exposed at `http://<servername>/api`
 
 ### Fixtures
 
 To add test data to the database and elastic index you can run the database
-fixtures command.  Run `bin/console doctrine:fixtures:load
---purge-with-truncate` to populate the database with random data.
+fixtures command.  Run `bin/console doctrine:fixtures:load` to populate the 
+database with random data.
 
 ## Development
 
@@ -269,6 +294,15 @@ which vendors to import.
 
 ```sh
 bin/console app:vendor:load
+```
+
+Please note:
+To ensure that the command run with a "flat" memory foot print in production
+you must run it with `--no-debug` in the `prod` environment.
+
+Production
+```sh
+bin/console app:vendor:load --env=prod --no-debug
 ```
 
 Note: For some Vendors proper access credentials need to be set in the database

@@ -1,0 +1,27 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cover-service
+  name: cover-service-frontend
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+spec:
+  tls:
+    - hosts:
+        - coverservice.itkdev.dk
+      secretName: cover-service-frontend-tls-secret
+  rules:
+    - host: coverservice.itkdev.dk
+      http:
+        paths:
+          - backend:
+              serviceName: nginx-cover-service
+              servicePort: 80
+            path: /

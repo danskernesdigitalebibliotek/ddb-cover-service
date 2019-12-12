@@ -98,8 +98,8 @@ class CoverStoreTransformationServiceTest extends TestCase
     /**
      * Get the transformation service.
      *
-     * @return CoverStoreTransformationInterface
-     *   The service.
+     * @return coverStoreTransformationInterface
+     *   The service
      */
     private function getService(): CoverStoreTransformationInterface
     {
@@ -110,7 +110,7 @@ class CoverStoreTransformationServiceTest extends TestCase
      * Mock configuration.
      *
      * @return array
-     *   Configuration array as build by the YML file.
+     *   Configuration array as build by the YML file
      */
     private function getTransformations()
     {
