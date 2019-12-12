@@ -87,6 +87,11 @@ class SoapController extends AbstractController
         }
         $response->setContent(ob_get_clean());
 
+        $response->headers->set('X-Elastic-QueryTime', $dbcMoreInfoService->getElasticQueryTime());
+        $response->headers->set('X-Stat-Time', $dbcMoreInfoService->getStatsTime());
+        $response->headers->set('X-NoHits-Time', $dbcMoreInfoService->getNohitsTime());
+        $response->headers->set('X-Total-Time', $dbcMoreInfoService->getTotalTime());
+
         return $response;
     }
 }
