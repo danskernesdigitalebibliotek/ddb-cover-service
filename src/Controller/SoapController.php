@@ -67,7 +67,7 @@ class SoapController extends AbstractController
      */
     private function soap(Request $request, AbstractMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, $wsdlFile): Response
     {
-        $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_NONE]);
+        $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_MEMORY]);
         $soapServer->setObject($dbcMoreInfoService);
 
         $response = new Response();
