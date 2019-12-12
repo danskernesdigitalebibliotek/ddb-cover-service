@@ -1,4 +1,6 @@
 {
+    "name": "danskernesdigitalebibliotek/ddb-cover-service",
+    "description": "Interactive cover service for danish libraries",
     "type": "project",
     "license": "proprietary",
     "require": {
