@@ -1,11 +1,11 @@
 #!/bin/sh
 
-(cd php7.3-fpm && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm .)
-(cd cover-service && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service .)
-(cd nginx && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx .)
-(cd cover-service-jobs && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service-jobs .)
+(cd php7.3-fpm && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm:1.1.0 .)
+(cd cover-service && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.0 .)
+(cd nginx && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx:1.1.0 .)
+(cd cover-service-jobs && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service-jobs:1.1.0 .)
 
-docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm
-docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service
-docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx
-docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service-jobs
+docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm:1.1.0
+docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.0
+docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx:1.1.0
+docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service-jobs:1.1.0

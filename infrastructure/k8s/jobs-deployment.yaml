@@ -27,7 +27,7 @@ spec:
         - name: github-registry
       containers:
       - name: coverservice
-        image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service-jobs
+        image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service-jobs:1.1.0
         imagePullPolicy: Always
         resources:
           requests:
