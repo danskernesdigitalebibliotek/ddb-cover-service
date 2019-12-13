@@ -324,10 +324,13 @@ abstract class AbstractMoreInfoService extends SoapClient
         if (!empty($noHits)) {
             // Defer no hit processing to terminate event after response has
             // been delivered.
-            $this->dispatcher->addListener(KernelEvents::TERMINATE, function (TerminateEvent $event) use ($noHits) {
-                $noHitEvent = new SearchNoHitEvent($noHits);
-                $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
-            });
+            $this->dispatcher->addListener(
+                KernelEvents::TERMINATE,
+                function (TerminateEvent $event) use ($noHits) {
+                    $noHitEvent = new SearchNoHitEvent($noHits);
+                    $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
+                }
+            );
         }
     }
 
