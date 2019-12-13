@@ -67,7 +67,7 @@ class SoapController extends AbstractController
      */
     private function soap(Request $request, AbstractMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, $wsdlFile): Response
     {
-        $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_NONE]);
+        $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_MEMORY]);
         $soapServer->setObject($dbcMoreInfoService);
 
         $response = new Response();
@@ -86,6 +86,11 @@ class SoapController extends AbstractController
             $soapServer->fault('Sender', $exception->getMessage());
         }
         $response->setContent(ob_get_clean());
+
+        $response->headers->set('X-Elastic-QueryTime', $dbcMoreInfoService->getElasticQueryTime());
+        $response->headers->set('X-Stat-Time', $dbcMoreInfoService->getStatsTime());
+        $response->headers->set('X-NoHits-Time', $dbcMoreInfoService->getNohitsTime());
+        $response->headers->set('X-Total-Time', $dbcMoreInfoService->getTotalTime());
 
         return $response;
     }

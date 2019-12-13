@@ -70,6 +70,11 @@ abstract class AbstractMoreInfoService extends SoapClient
     private $dispatcher;
     private $transformer;
 
+    protected $elasticQueryTime;
+    protected $statsTime;
+    protected $nohitsTime;
+    protected $totalTime;
+
     /**
      * MoreInfoService constructor.
      *
@@ -216,6 +221,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      */
     public function moreInfo($body): MoreInfoResponse
     {
+        $start = microtime(true);
+
         $this->validateRequestAuthentication($body);
 
         $searchParameters = $this->getSearchParameters($body);
@@ -223,21 +230,70 @@ abstract class AbstractMoreInfoService extends SoapClient
         // Build Elastic Query Results
         $boolQuery = $this->buildElasticQuery($searchParameters);
         $search = $this->index->search($boolQuery);
+
+        $this->elasticQueryTime = $search->getResponse()->getQueryTime();
         $results = $search->getResults();
 
+        $statsStart = microtime(true);
         $this->statsLogger->info('Cover request/response', [
             'service' => 'MoreInfoService',
             'clientID' => $body->authentication->authenticationGroup,
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
             'fileNames' => $this->getImageUrls($results),
+            'ElasticQueryTime' => $this->elasticQueryTime,
         ]);
+        $this->statsTime = microtime(true) - $statsStart;
 
         $response = $this->buildSoapResponse($searchParameters, $results);
 
+        $nohitsStart = microtime(true);
         $this->registerSearchNoHits($response->identifierInformation);
+        $this->nohitsTime = microtime(true) - $nohitsStart;
+
+        $this->totalTime = microtime(true) - $start;
 
         return $response;
+    }
+
+    /**
+     * Get the last registered elasticsearch query time.
+     *
+     * @return float|null
+     */
+    public function getElasticQueryTime(): ?float
+    {
+        return $this->elasticQueryTime;
+    }
+
+    /**
+     * Get the time to log statistics.
+     *
+     * @return mixed
+     */
+    public function getStatsTime(): ?float
+    {
+        return $this->statsTime;
+    }
+
+    /**
+     * Get the time to log no hits.
+     *
+     * @return mixed
+     */
+    public function getNohitsTime(): ?float
+    {
+        return $this->nohitsTime;
+    }
+
+    /**
+     * Get total time for moreInfo call.
+     *
+     * @return mixed
+     */
+    public function getTotalTime(): ?float
+    {
+        return $this->totalTime;
     }
 
     /**
