@@ -1,4 +1,4 @@
-FROM justwatch/elasticsearch_exporter:1.1.0
+FROM justwatch/elasticsearch_exporter:1.1.1
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV ES_USERNAME='elastic' \
