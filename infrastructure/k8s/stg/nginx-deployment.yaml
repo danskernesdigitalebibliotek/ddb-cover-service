@@ -47,11 +47,16 @@ spec:
       labels:
         app: nginx
         tier: frontend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9113"
+        prometheus.io/scheme: "http"
     spec:
       imagePullSecrets:
         - name: github-registry
       containers:
-        - name: coverservice
+        - name: nginx
           image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx
           imagePullPolicy: Always
           resources:
@@ -76,3 +81,25 @@ spec:
                 name: nginx-config
           ports:
             - containerPort: 80
+        - name: nginx-exporter
+          image: nginx/nginx-prometheus-exporter:0.5.0
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "96Mi"
+              cpu: "100m"
+          readinessProbe:
+            tcpSocket:
+              port: 9113
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9113
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          ports:
+            - containerPort: 9113
