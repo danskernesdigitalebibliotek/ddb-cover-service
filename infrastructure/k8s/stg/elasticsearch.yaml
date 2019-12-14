@@ -24,7 +24,7 @@ spec:
       config:
         node.master: true
         node.data: true
-        node.ingest: true
+        node.ingest: false
       podTemplate:
         metadata:
           labels:
@@ -52,10 +52,14 @@ spec:
                   cpu: 500m
                 limits:
                   memory: 2Gi
-                  cpu: 1
+                  cpu: 2
               env:
                 - name: ES_JAVA_OPTS
                   value: "-Xms1g -Xmx1g"
+                - name: xpack.security.enabled
+                  value: "false"
+                - name: READINESS_PROBE_PROTOCOL
+                  value: http
             - name: elasticsearch-exporter
               image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/elasticsearch_exporter
               imagePullPolicy: Always
@@ -88,4 +92,3 @@ spec:
                       key: elastic
               ports:
                 - containerPort: 9114
-
