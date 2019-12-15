@@ -21,6 +21,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Class AbstractElasticSearchDataProvider.
@@ -72,9 +74,16 @@ abstract class AbstractElasticSearchDataProvider
             $noHits[] = new NoHitItem($type, $identifier);
         }
 
-        if ($noHits) {
-            $event = new SearchNoHitEvent($noHits);
-            $this->dispatcher->dispatch($event::NAME, $event);
+        if (!empty($noHits)) {
+            // Defer no hit processing to the kernel terminate event after
+            // response has been delivered.
+            $this->dispatcher->addListener(
+                KernelEvents::TERMINATE,
+                function (TerminateEvent $event) use ($noHits) {
+                    $noHitEvent = new SearchNoHitEvent($noHits);
+                    $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
+                }
+            );
         }
     }
 
