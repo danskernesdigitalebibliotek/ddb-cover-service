@@ -34,10 +34,9 @@ class SoapController extends AbstractController
      *
      * @return Response
      */
-    public function ddbSoap(Request $request, DdbMoreInfoService $ddbMoreInfoService, LoggerInterface $statsLogger,
-                            MetricsService $metricsService, $projectDir): Response
+    public function ddbSoap(Request $request, DdbMoreInfoService $ddbMoreInfoService, LoggerInterface $statsLogger, MetricsService $metricsService, $projectDir): Response
     {
-        $labels = [ 'type' => 'ddbSoap' ];
+        $labels = ['type' => 'ddbSoap'];
         $metricsService->counter('soap_requests_total', 'Total soap requests', 1, $labels);
 
         $dbcWsdlFile = $projectDir.self::DDB_WSDL_FILE;
@@ -56,10 +55,9 @@ class SoapController extends AbstractController
      *
      * @return Response
      */
-    public function fbsSoap(Request $request, DbcMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger,
-                            MetricsService $metricsService, $projectDir): Response
+    public function fbsSoap(Request $request, DbcMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, MetricsService $metricsService, $projectDir): Response
     {
-        $labels = [ 'type' => 'fbsSoap' ];
+        $labels = ['type' => 'fbsSoap'];
         $metricsService->counter('soap_requests_total', 'Total soap requests', 1, $labels);
 
         $dbcWsdlFile = $projectDir.self::DBC_WSDL_FILE;
@@ -78,10 +76,9 @@ class SoapController extends AbstractController
      *
      * @return Response
      */
-    public function defaultCoverSoap(Request $request, DefaultCoverMoreInfoService $defaultCoverMoreInfoService,
-                                     LoggerInterface $statsLogger, MetricsService $metricsService, $projectDir): Response
+    public function defaultCoverSoap(Request $request, DefaultCoverMoreInfoService $defaultCoverMoreInfoService, LoggerInterface $statsLogger, MetricsService $metricsService, $projectDir): Response
     {
-        $labels = [ 'type' => 'defaultCoverSoap' ];
+        $labels = ['type' => 'defaultCoverSoap'];
         $metricsService->counter('soap_requests_total', 'Total soap requests', 1, $labels);
 
         $dbcWsdlFile = $projectDir.self::DBC_WSDL_FILE;

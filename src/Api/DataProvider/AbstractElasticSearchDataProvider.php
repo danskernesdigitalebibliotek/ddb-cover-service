@@ -46,8 +46,8 @@ abstract class AbstractElasticSearchDataProvider
      *   Symfony request stack
      * @param LoggerInterface $statsLogger
      *   Logger for statistics
-     * @param MetricsService $metricsService
-     *   Log metric information.
+     * @param metricsService $metricsService
+     *   Log metric information
      * @param EventDispatcherInterface $dispatcher
      *   Symfony Event Dispatcher
      * @param IdentifierFactory $factory

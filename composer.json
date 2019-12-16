@@ -97,11 +97,6 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "deploy": [
-            "bin/console --env=prod doctrine:migrations:migrate",
-            "bin/console --env=prod cache:clear --no-debug",
-            "bin/console --env=prod cache:warmup"
-        ],
         "check": [
             "@check-coding-standards"
         ],

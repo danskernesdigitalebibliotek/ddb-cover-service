@@ -12,22 +12,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class MetricsController
- *
- * @package App\Controller
+ * Class MetricsController.
  */
-class MetricsController extends AbstractController {
-
+class MetricsController extends AbstractController
+{
     /**
      * @Route("/metrics", name="metrics")
      *
      * Render metrics collected by the application.
      *
-     * @param MetricsService $metricsService
-     *   The service used to collection data in the application.
+     * @param metricsService $metricsService
+     *   The service used to collection data in the application
      *
-     * @return Response
-     *   HTTP response to send back to the client.
+     * @return response
+     *   HTTP response to send back to the client
      */
     public function metrics(MetricsService $metricsService): Response
     {

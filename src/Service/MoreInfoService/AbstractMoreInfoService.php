@@ -87,8 +87,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   Elastica index
      * @param LoggerInterface $statsLogger
      *   Statistics logger
-     * @param MetricsService $metricsService
-     *   Metrics service to log stats.
+     * @param metricsService $metricsService
+     *   Metrics service to log stats
      * @param RequestStack $requestStack
      *   HTTP RequestStack
      * @param eventDispatcherInterface $dispatcher
@@ -232,7 +232,7 @@ abstract class AbstractMoreInfoService extends SoapClient
     public function moreInfo($body): MoreInfoResponse
     {
         $totalTime = microtime(true);
-        $labels = [ 'type' => 'soapRequest' ];
+        $labels = ['type' => 'soapRequest'];
 
         $this->validateRequestAuthentication($body);
 
