@@ -14,12 +14,28 @@ use SoapServer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SoapController extends AbstractController
 {
     private const DDB_WSDL_FILE = '/src/Service/MoreInfoService/Schemas/DDB/moreInfoService.wsdl';
     private const DBC_WSDL_FILE = '/src/Service/MoreInfoService/Schemas/DBC/moreInfoService.wsdl';
+
+    private $dispatcher;
+
+    /**
+     * SoapController constructor.
+     *
+     * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
+     */
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
 
     /**
      * @Route("/2.11/", name="ddb_soap")
@@ -77,11 +93,18 @@ class SoapController extends AbstractController
         try {
             $soapServer->handle();
         } catch (\Exception $exception) {
-            $statsLogger->error('SOAP endpoint exception', [
-                'service' => 'SoapController',
-                'remoteIP' => $request->getClientIp(),
-                'message' => $exception->getMessage(),
-            ]);
+            // Defer logging to the kernel terminate event after response has been
+            // delivered.
+            $this->dispatcher->addListener(
+                KernelEvents::TERMINATE,
+                function (TerminateEvent $event) use ($statsLogger, $exception, $request) {
+                    $statsLogger->error('SOAP endpoint exception', [
+                        'service' => 'SoapController',
+                        'remoteIP' => $request->getClientIp(),
+                        'message' => $exception->getMessage(),
+                    ]);
+                }
+            );
 
             $soapServer->fault('Sender', $exception->getMessage());
         }

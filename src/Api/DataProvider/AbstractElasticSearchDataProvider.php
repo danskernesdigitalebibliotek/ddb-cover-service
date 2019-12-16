@@ -173,8 +173,10 @@ abstract class AbstractElasticSearchDataProvider
      *   Array of identifiers of {type}
      * @param array $results
      *   An array of result from an Elastica search
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The request.
      */
-    protected function logStatistics(string $type, array $identifiers, array $results): void
+    protected function logStatistics(string $type, array $identifiers, array $results, Request $request): void
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
@@ -182,9 +184,7 @@ abstract class AbstractElasticSearchDataProvider
         // been delivered.
         $this->dispatcher->addListener(
             KernelEvents::TERMINATE,
-            function (TerminateEvent $event) use ($className, $type, $identifiers, $results) {
-                $request = $event->getRequest();
-
+            function (TerminateEvent $event) use ($className, $type, $identifiers, $results, $request) {
                 $this->statsLogger->info('Cover request/response', [
                     'service' => $className,
                     // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
