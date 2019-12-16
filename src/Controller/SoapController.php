@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SoapController extends AbstractController
 {
@@ -29,13 +29,12 @@ class SoapController extends AbstractController
     /**
      * SoapController constructor.
      *
-     * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
-
 
     /**
      * @Route("/2.11/", name="ddb_soap")
