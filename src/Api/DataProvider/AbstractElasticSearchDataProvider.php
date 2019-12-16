@@ -173,21 +173,28 @@ abstract class AbstractElasticSearchDataProvider
      *   Array of identifiers of {type}
      * @param array $results
      *   An array of result from an Elastica search
-     * @param Request $request
-     *   The Symfony HTTP Request
      */
-    protected function logStatistics(string $type, array $identifiers, array $results, Request $request): void
+    protected function logStatistics(string $type, array $identifiers, array $results): void
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
-        $this->statsLogger->info('Cover request/response', [
-            'service' => $className,
-            // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
-            'clientID' => 'REST_API',
-            'remoteIP' => $request->getClientIp(),
-            'isType' => $type,
-            'isIdentifiers' => $identifiers,
-            'fileNames' => $this->getImageUrls($results),
-        ]);
+        // Defer logging to the kernel terminate event after response has
+        // been delivered.
+        $this->dispatcher->addListener(
+            KernelEvents::TERMINATE,
+            function (TerminateEvent $event) use ($className, $type, $identifiers, $results) {
+                $request = $event->getRequest();
+
+                $this->statsLogger->info('Cover request/response', [
+                    'service' => $className,
+                    // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
+                    'clientID' => 'REST_API',
+                    'remoteIP' => $request->getClientIp(),
+                    'isType' => $type,
+                    'isIdentifiers' => $identifiers,
+                    'fileNames' => $this->getImageUrls($results),
+                ]);
+            }
+        );
     }
 }
