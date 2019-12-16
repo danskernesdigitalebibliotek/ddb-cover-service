@@ -92,8 +92,7 @@ class SoapController extends AbstractController
         try {
             $soapServer->handle();
         } catch (\Exception $exception) {
-            // Defer logging to the kernel terminate event after response has been
-            // delivered.
+            // Defer logging to the kernel terminate event after response has been delivered.
             $this->dispatcher->addListener(
                 KernelEvents::TERMINATE,
                 function (TerminateEvent $event) use ($statsLogger, $exception, $request) {
