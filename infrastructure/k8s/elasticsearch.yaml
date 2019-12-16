@@ -48,14 +48,18 @@ spec:
               # specify resource limits and requests
               resources:
                 requests:
-                  memory: 4Gi
-                  cpu: 500m
+                  memory: "4Gi"
+                  cpu: "500m"
                 limits:
-                  memory: 4Gi
-                  cpu: 1
+                  memory: "4Gi"
+                  cpu: "4"
               env:
                 - name: ES_JAVA_OPTS
                   value: "-Xms2g -Xmx2g"
+                - name: xpack.security.enabled
+                  value: "false"
+                - name: READINESS_PROBE_PROTOCOL
+                  value: http
             - name: elasticsearch-exporter
               image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/elasticsearch_exporter
               imagePullPolicy: Always

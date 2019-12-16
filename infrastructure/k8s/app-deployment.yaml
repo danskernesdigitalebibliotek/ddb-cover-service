@@ -13,9 +13,7 @@ data:
   APP_REDIS_CACHE_SERVER: 'redis'
   APP_REDIS_CACHE_PORT: '6379'
   APP_REDIS_CACHE_DB: '10'
-  APP_ELASTIC_URL: 'https://elasticsearch-es-http:9200/'
-  APP_ELASTIC_SSL: 'true'
-  ELASTIC_SSL_VERIFY: 'false'
+  APP_ELASTIC_URL: 'http://elasticsearch-es-http:9200/'
 
 ---
 apiVersion: v1
@@ -68,7 +66,7 @@ spec:
     matchLabels:
       app: cover-service-app
   strategy:
-  type: RollingUpdate
+    type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
@@ -150,16 +148,6 @@ spec:
               secretKeyRef:
                 name: cover-service-secret
                 key: APP_SECRET
-          - name: APP_ELASTIC_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_ELASTIC_USERNAME
-          - name: APP_ELASTIC_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_ELASTIC_PASSWORD
         envFrom:
           - configMapRef:
               name: cover-service-config
