@@ -23,6 +23,8 @@ class TheMovieDatabaseApiService
     {
         $posterUrl = '';
 
+        // @TODO Respect api rate limits: https://developers.themoviedb.org/3/getting-started/request-rate-limiting
+
         try {
             $response = $this->client->request('GET', self::SEARCH_URL, [
                 'query' => [

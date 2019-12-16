@@ -50,6 +50,7 @@ class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
 
         }
 
+        // @TODO Fix "MySQL server has gone away" error so we can read/write to DB
 
         $vendorId = $apiSearchMessage->getVendorId();
         $d = $entityManager->find(Source::class, 6);
@@ -62,6 +63,9 @@ class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
             $source->setOriginalFile($posterUrl);
             $this->entityManager->flush();
         }
+
+        // @TODO Send 'VendorEvent' to trigger further processing.
+        // See https://github.com/danskernesdigitalebibliotek/ddb-cover-service/blob/94131ecdfc698084caa7a32c129a95376ac6bf7d/src/Service/VendorService/AbstractBaseVendorService.php#L244-L254
     }
 
     /**

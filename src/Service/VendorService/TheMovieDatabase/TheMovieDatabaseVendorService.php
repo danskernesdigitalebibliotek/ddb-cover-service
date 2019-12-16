@@ -65,7 +65,8 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
         $offset = 1;
         try {
             do {
-                // Search the data well for material with acSource set to "comics plus".
+                // Search the data well for materials.
+                // @TODO We need multiple queries t find all movies so this needs to ba a list of queries we iterate over (Maybe as class constant).
                 $query = 'phrase.type="blu-ray"';
                 [$resultArray, $more, $offset] = $this->dataWell->search($query, $offset);
 
