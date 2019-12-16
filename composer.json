@@ -18,6 +18,7 @@
         "cloudinary/cloudinary_php": "^1.12",
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "eightpoints/guzzle-bundle": "^7.4",
+        "endclothing/prometheus_client_php": "^1.0",
         "enqueue/enqueue-bundle": "^0.8.42",
         "enqueue/redis": "^0.8.42",
         "friendsofsymfony/elastica-bundle": "^5.0",
