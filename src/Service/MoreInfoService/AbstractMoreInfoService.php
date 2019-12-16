@@ -234,6 +234,8 @@ abstract class AbstractMoreInfoService extends SoapClient
         $totalTime = microtime(true);
         $labels = [ 'type' => 'soapRequest' ];
 
+        $this->metricsService->counter('soap_request_total', 'Total requests', 1, $labels);
+
         $this->validateRequestAuthentication($body);
 
         $searchParameters = $this->getSearchParameters($body);
@@ -242,7 +244,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         $query = $this->buildElasticQuery($searchParameters);
         $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
 
-        $this->metricsService->histogram('ESQueryTime', 'Time used to run ES query', $searchResponse->getQueryTime(), $labels);
+        $this->metricsService->histogram('elastica-query-time', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(), $labels);
 
         $results = $searchResponse->getData();
         $results = $this->filterResults($results);
@@ -254,17 +256,17 @@ abstract class AbstractMoreInfoService extends SoapClient
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
             'fileNames' => $this->getImageUrls($results),
-            'ElasticQueryTime' => $this->elasticQueryTime,
+            'elasticQueryTime' => $this->elasticQueryTime,
         ]);
-        $this->metricsService->histogram('StatsTime', 'Time used logging stats', microtime(true) - $time, $labels);
-        
+        $this->metricsService->histogram('stats-logging-time', 'Time used logging stats', microtime(true) - $time, $labels);
+
         $response = $this->buildSoapResponse($searchParameters, $results);
 
         $time = microtime(true);
         $this->registerSearchNoHits($response->identifierInformation);
-        $this->metricsService->histogram('NoHit', 'Time used to registry no-hit event', microtime(true) - $time, $labels);
+        $this->metricsService->histogram('no-hit-event-time', 'Time used to registry no-hit event', microtime(true) - $time, $labels);
 
-        $this->metricsService->histogram('TotalTime', 'Total time used to handel soap request', microtime(true) - $totalTime, $labels);
+        $this->metricsService->histogram('request-time-total', 'Total time used to handel soap request', microtime(true) - $totalTime, $labels);
 
         return $response;
     }
