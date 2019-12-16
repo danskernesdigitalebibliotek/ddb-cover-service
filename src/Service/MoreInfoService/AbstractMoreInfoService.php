@@ -342,6 +342,8 @@ abstract class AbstractMoreInfoService extends SoapClient
         $noHits = $this->getNoHits($identifierInformation);
 
         if (!empty($noHits)) {
+            $this->metricsService->counter('no_hits_total', 'Total number of no-hits', count($noHits), ['type' => 'soapRequest']);
+
             // Defer no hit processing to terminate event after response has
             // been delivered.
             $this->dispatcher->addListener(

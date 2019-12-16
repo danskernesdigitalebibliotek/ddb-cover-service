@@ -13,6 +13,7 @@ namespace App\Api\DataProvider;
 use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\IdentifierFactory;
 use App\Event\SearchNoHitEvent;
+use App\Service\MetricsService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Elastica\Query;
@@ -31,6 +32,7 @@ abstract class AbstractElasticSearchDataProvider
 {
     protected $index;
     protected $statsLogger;
+    protected $metricsService;
     protected $requestStack;
     protected $dispatcher;
     protected $factory;
@@ -44,16 +46,20 @@ abstract class AbstractElasticSearchDataProvider
      *   Symfony request stack
      * @param LoggerInterface $statsLogger
      *   Logger for statistics
+     * @param MetricsService $metricsService
+     *   Log metric information.
      * @param EventDispatcherInterface $dispatcher
      *   Symfony Event Dispatcher
      * @param IdentifierFactory $factory
      *   Factory to create Identifier Data Transfer Objects (DTOs)
      */
-    public function __construct(Type $index, RequestStack $requestStack, LoggerInterface $statsLogger, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
+    public function __construct(Type $index, RequestStack $requestStack, LoggerInterface $statsLogger,
+                                MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
         $this->statsLogger = $statsLogger;
+        $this->metricsService = $metricsService;
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
     }
@@ -75,6 +81,8 @@ abstract class AbstractElasticSearchDataProvider
         }
 
         if (!empty($noHits)) {
+            $this->metricsService->counter('no_hits_total', 'Total number of no-hits', count($noHits), ['type' => 'rest']);
+
             // Defer no hit processing to the kernel terminate event after
             // response has been delivered.
             $this->dispatcher->addListener(
@@ -198,7 +206,6 @@ abstract class AbstractElasticSearchDataProvider
     protected function logStatistics(string $type, array $identifiers, array $results, Request $request): void
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
-
         $this->statsLogger->info('Cover request/response', [
             'service' => $className,
             // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
@@ -208,5 +215,7 @@ abstract class AbstractElasticSearchDataProvider
             'isIdentifiers' => $identifiers,
             'fileNames' => $this->getImageUrls($results),
         ]);
+
+        $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);
     }
 }
