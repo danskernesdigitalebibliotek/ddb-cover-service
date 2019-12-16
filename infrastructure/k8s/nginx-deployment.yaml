@@ -82,24 +82,24 @@ spec:
           ports:
             - containerPort: 80
         - name: nginx-exporter
-            image: nginx/nginx-prometheus-exporter:0.5.0
-            imagePullPolicy: Always
-            resources:
-              requests:
-                memory: "64Mi"
-                cpu: "100m"
-              limits:
-                memory: "96Mi"
-                cpu: "100m"
-            readinessProbe:
-              tcpSocket:
-                port: 9113
-              initialDelaySeconds: 5
-              periodSeconds: 10
-            livenessProbe:
-              tcpSocket:
-                port: 9113
-              initialDelaySeconds: 5
-              periodSeconds: 10
-            ports:
-              - containerPort: 9113
+          image: nginx/nginx-prometheus-exporter:0.5.0
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "96Mi"
+              cpu: "100m"
+          readinessProbe:
+            tcpSocket:
+              port: 9113
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9113
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          ports:
+            - containerPort: 9113

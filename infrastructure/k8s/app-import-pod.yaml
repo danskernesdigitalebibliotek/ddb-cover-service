@@ -59,16 +59,6 @@ spec:
           secretKeyRef:
             name: cover-service-secret
             key: APP_SECRET
-      - name: APP_ELASTIC_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: cover-service-secret
-            key: APP_ELASTIC_USERNAME
-      - name: APP_ELASTIC_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: cover-service-secret
-            key: APP_ELASTIC_PASSWORD
       - name: PHP_MEMORY_LIMIT
         value: "512M"
     envFrom:
