@@ -17,6 +17,7 @@ namespace App\Service\MoreInfoService;
 use App\Event\SearchNoHitEvent;
 use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
+use App\Service\MetricsService;
 use App\Service\MoreInfoService\Exception\MoreInfoException;
 use App\Service\MoreInfoService\Types\AuthenticationType;
 use App\Service\MoreInfoService\Types\FormatType;
@@ -69,6 +70,7 @@ abstract class AbstractMoreInfoService extends SoapClient
 
     private $index;
     private $statsLogger;
+    private $metricsService;
     private $requestStack;
     private $dispatcher;
     private $transformer;
@@ -85,6 +87,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   Elastica index
      * @param LoggerInterface $statsLogger
      *   Statistics logger
+     * @param MetricsService $metricsService
+     *   Metrics service to log stats.
      * @param RequestStack $requestStack
      *   HTTP RequestStack
      * @param eventDispatcherInterface $dispatcher
@@ -96,12 +100,13 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @throws SoapFault
      */
-    public function __construct(Type $index, LoggerInterface $statsLogger, RequestStack $requestStack,
-                                EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer,
-                                array $options = [])
+    public function __construct(Type $index, LoggerInterface $statsLogger, MetricsService $metricsService,
+                                RequestStack $requestStack, EventDispatcherInterface $dispatcher,
+                                CoverStoreTransformationInterface $transformer, array $options = [])
     {
         $this->index = $index;
         $this->statsLogger = $statsLogger;
+        $this->metricsService = $metricsService;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
         $this->transformer = $transformer;
@@ -226,7 +231,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      */
     public function moreInfo($body): MoreInfoResponse
     {
-        $start = microtime(true);
+        $totalTime = microtime(true);
+        $labels = [ 'type' => 'soapRequest' ];
 
         $this->validateRequestAuthentication($body);
 
@@ -236,11 +242,12 @@ abstract class AbstractMoreInfoService extends SoapClient
         $query = $this->buildElasticQuery($searchParameters);
         $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
 
-        $this->elasticQueryTime = $searchResponse->getQueryTime();
+        $this->metricsService->histogram('ESQueryTime', 'Time used to run ES query', $searchResponse->getQueryTime(), $labels);
+
         $results = $searchResponse->getData();
         $results = $this->filterResults($results);
 
-        $statsStart = microtime(true);
+        $time = microtime(true);
         $this->statsLogger->info('Cover request/response', [
             'service' => 'MoreInfoService',
             'clientID' => $body->authentication->authenticationGroup,
@@ -249,20 +256,21 @@ abstract class AbstractMoreInfoService extends SoapClient
             'fileNames' => $this->getImageUrls($results),
             'ElasticQueryTime' => $this->elasticQueryTime,
         ]);
-        $this->statsTime = microtime(true) - $statsStart;
-
+        $this->metricsService->histogram('StatsTime', 'Time used logging stats', microtime(true) - $time, $labels);
+        
         $response = $this->buildSoapResponse($searchParameters, $results);
 
-        $nohitsStart = microtime(true);
+        $time = microtime(true);
         $this->registerSearchNoHits($response->identifierInformation);
-        $this->nohitsTime = microtime(true) - $nohitsStart;
+        $this->metricsService->histogram('NoHit', 'Time used to registry no-hit event', microtime(true) - $time, $labels);
 
-        $this->totalTime = microtime(true) - $start;
+        $this->metricsService->histogram('TotalTime', 'Total time used to handel soap request', microtime(true) - $totalTime, $labels);
 
         return $response;
     }
 
     /**
+<<<<<<< HEAD
      * Get the last registered elasticsearch query time.
      *
      * @return float|null

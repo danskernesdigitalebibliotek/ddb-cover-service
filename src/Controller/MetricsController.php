@@ -11,6 +11,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class MetricsController
+ *
+ * @package App\Controller
+ */
 class MetricsController extends AbstractController {
 
     /**
@@ -26,7 +31,6 @@ class MetricsController extends AbstractController {
      */
     public function metrics(MetricsService $metricsService): Response
     {
-        $metricsService->metrics();
         return new Response($metricsService->render(), Response::HTTP_OK, ['content-type' => 'text/plain']);
     }
 }
