@@ -9,6 +9,7 @@ namespace App\Controller;
 use App\Service\MoreInfoService\AbstractMoreInfoService;
 use App\Service\MoreInfoService\DbcMoreInfoService;
 use App\Service\MoreInfoService\DdbMoreInfoService;
+use App\Service\MoreInfoService\DefaultCoverMoreInfoService;
 use Psr\Log\LoggerInterface;
 use SoapServer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -56,19 +57,36 @@ class SoapController extends AbstractController
     }
 
     /**
+     * @Route("/defaultcover/2.11/", name="default_cover_soap")
+     *
+     * @param Request $request
+     * @param DefaultCoverMoreInfoService $defaultCoverMoreInfoService
+     * @param LoggerInterface $statsLogger
+     * @param $projectDir
+     *
+     * @return Response
+     */
+    public function defaultCoverSoap(Request $request, DefaultCoverMoreInfoService $defaultCoverMoreInfoService, LoggerInterface $statsLogger, $projectDir): Response
+    {
+        $dbcWsdlFile = $projectDir.self::DBC_WSDL_FILE;
+
+        return $this->soap($request, $defaultCoverMoreInfoService, $statsLogger, $dbcWsdlFile);
+    }
+
+    /**
      * Return a SOAP response for the given request.
      *
      * @param Request $request
-     * @param AbstractMoreInfoService $dbcMoreInfoService
+     * @param AbstractMoreInfoService $moreInfoService
      * @param LoggerInterface $statsLogger
      * @param $wsdlFile
      *
      * @return Response
      */
-    private function soap(Request $request, AbstractMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, $wsdlFile): Response
+    private function soap(Request $request, AbstractMoreInfoService $moreInfoService, LoggerInterface $statsLogger, $wsdlFile): Response
     {
         $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_MEMORY]);
-        $soapServer->setObject($dbcMoreInfoService);
+        $soapServer->setObject($moreInfoService);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml; charset=ISO-8859-1');
@@ -87,10 +105,10 @@ class SoapController extends AbstractController
         }
         $response->setContent(ob_get_clean());
 
-        $response->headers->set('X-Elastic-QueryTime', $dbcMoreInfoService->getElasticQueryTime());
-        $response->headers->set('X-Stat-Time', $dbcMoreInfoService->getStatsTime());
-        $response->headers->set('X-NoHits-Time', $dbcMoreInfoService->getNohitsTime());
-        $response->headers->set('X-Total-Time', $dbcMoreInfoService->getTotalTime());
+        $response->headers->set('X-Elastic-QueryTime', $moreInfoService->getElasticQueryTime());
+        $response->headers->set('X-Stat-Time', $moreInfoService->getStatsTime());
+        $response->headers->set('X-NoHits-Time', $moreInfoService->getNohitsTime());
+        $response->headers->set('X-Total-Time', $moreInfoService->getTotalTime());
 
         return $response;
     }

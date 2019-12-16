@@ -119,6 +119,8 @@ abstract class AbstractMoreInfoService extends SoapClient
 
     abstract protected function getWsdl(): string;
 
+    abstract protected function provideDefaultCover(): bool;
+
     /**
      * Service call proxy.
      *
@@ -305,21 +307,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      */
     private function registerSearchNoHits(array $identifierInformation): void
     {
-        $noHits = [];
-
-        foreach ($identifierInformation as $info) {
-            foreach ($info->coverImage as $coverImage) {
-                if (self::FALLBACK_CODE === $coverImage->source) {
-                    foreach ($info->identifier as $isType => $isIdentifier) {
-                        if (!empty($isIdentifier)) {
-                            $noHits[] = new NoHitItem($isType, $isIdentifier);
-                        }
-                    }
-                    // We only set the source to be able to filter no hits
-                    unset($coverImage->source);
-                }
-            }
-        }
+        $noHits = $this->getNoHits($identifierInformation);
 
         if (!empty($noHits)) {
             // Defer no hit processing to terminate event after response has
@@ -332,6 +320,46 @@ abstract class AbstractMoreInfoService extends SoapClient
                 }
             );
         }
+    }
+
+    /**
+     * Get array of identifiers that were a no hit.
+     *
+     * @param array $identifierInformation
+     *
+     * @return array
+     */
+    private function getNoHits(array $identifierInformation): array
+    {
+        $noHits = [];
+
+        if ($this->provideDefaultCover()) {
+            foreach ($identifierInformation as $info) {
+                foreach ($info->coverImage as $coverImage) {
+                    if (self::FALLBACK_CODE === $coverImage->source) {
+                        foreach ($info->identifier as $isType => $isIdentifier) {
+                            if (!empty($isIdentifier)) {
+                                $noHits[] = new NoHitItem($isType, $isIdentifier);
+                            }
+                        }
+                        // We only set the source to be able to filter no hits
+                        unset($coverImage->source);
+                    }
+                }
+            }
+        } else {
+            foreach ($identifierInformation as $info) {
+                if (!$info->identifierKnown) {
+                    foreach ($info->identifier as $isType => $isIdentifier) {
+                        if (!empty($isIdentifier)) {
+                            $noHits[] = new NoHitItem($isType, $isIdentifier);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $noHits;
     }
 
     /**
@@ -506,21 +534,24 @@ abstract class AbstractMoreInfoService extends SoapClient
     private function getDefaultIdentifierInformation(string $isType, string $isIdentifier): IdentifierInformationType
     {
         $identifierInformation = new IdentifierInformationType();
-        $identifierInformation->identifierKnown = true;
+        $identifierInformation->identifierKnown = false;
 
         $identifier = new IdentifierType();
         $identifier->{$isType} = $isIdentifier;
 
         $identifierInformation->identifier = $identifier;
 
-        $image = new ImageType();
-        $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
-        $image->imageSize = 'detail';
-        $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
-        // Set source to fallback code to allow no hits filtering
-        $image->source = self::FALLBACK_CODE;
+        if ($this->provideDefaultCover()) {
+            $image = new ImageType();
+            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
+            $image->imageSize = 'detail';
+            $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
+            // Set source to fallback code to allow no hits filtering
+            $image->source = self::FALLBACK_CODE;
 
-        $identifierInformation->coverImage[] = $image;
+            $identifierInformation->identifierKnown = true;
+            $identifierInformation->coverImage[] = $image;
+        }
 
         return $identifierInformation;
     }
