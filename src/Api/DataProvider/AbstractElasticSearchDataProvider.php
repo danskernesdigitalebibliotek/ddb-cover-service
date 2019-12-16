@@ -173,8 +173,8 @@ abstract class AbstractElasticSearchDataProvider
      *   Array of identifiers of {type}
      * @param array $results
      *   An array of result from an Elastica search
-     * @param Request $request
-     *   The Symfony HTTP Request.
+     * @param request $request
+     *   The Symfony HTTP Request
      */
     protected function logStatistics(string $type, array $identifiers, array $results, Request $request): void
     {

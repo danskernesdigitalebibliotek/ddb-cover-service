@@ -12,12 +12,12 @@ use App\Service\MoreInfoService\DdbMoreInfoService;
 use Psr\Log\LoggerInterface;
 use SoapServer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SoapController extends AbstractController
 {
