@@ -47,9 +47,14 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
      * @param array                         $vendorTmdbQueries
      *   The queries to send to the search service
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager,
-                              LoggerInterface $statsLogger, TheMovieDatabaseSearchService $dataWell, TheMovieDatabaseApiService $api, $vendorTmdbQueries)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $statsLogger,
+        TheMovieDatabaseSearchService $dataWell,
+        TheMovieDatabaseApiService $api,
+        $vendorTmdbQueries
+    ) {
         parent::__construct($eventDispatcher, $entityManager, $statsLogger);
 
         $this->dataWell = $dataWell;
@@ -81,7 +86,12 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
                     $query = $this->queries[$queriesIndex];
                     [$resultArray, $more, $offset] = $this->dataWell->search($query, $offset);
 
-                    $pidArray = array_map(function ($value) { return ''; }, $resultArray);
+                    $pidArray = array_map(
+                        function ($value) {
+                            return '';
+                        },
+                        $resultArray
+                    );
 
                     $batchSize = \count($pidArray);
                     $this->updateOrInsertMaterials($pidArray, IdentifierType::PID, $batchSize);

@@ -36,10 +36,8 @@ class TheMovieDatabaseSearchService
      * @param ClientInterface       $httpClient
      *   The http client
      */
-    public function __construct(
-        ParameterBagInterface $params,
-        ClientInterface $httpClient
-    ) {
+    public function __construct(ParameterBagInterface $params, ClientInterface $httpClient)
+    {
         $this->client = $httpClient;
         $this->agency = $params->get('datawell.vendor.agency');
         $this->profile = $params->get('datawell.vendor.profile');
@@ -106,8 +104,7 @@ class TheMovieDatabaseSearchService
                 'POST',
                 $this->searchURL,
                 [
-                    RequestOptions::BODY =>
-                        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/opensearch">
+                    RequestOptions::BODY => '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/opensearch">
                              <soapenv:Header/>
                              <soapenv:Body>
                                  <open:searchRequest>

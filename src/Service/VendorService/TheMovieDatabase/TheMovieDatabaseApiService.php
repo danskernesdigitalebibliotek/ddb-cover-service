@@ -20,9 +20,9 @@ class TheMovieDatabaseApiService
     /**
      * TheMovieDatabaseApiService constructor.
      *
-     * @param string $apiKey
+     * @param string                      $apiKey
      * @param \GuzzleHttp\ClientInterface $httpClient
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Psr\Log\LoggerInterface    $logger
      */
     public function __construct(string $apiKey, ClientInterface $httpClient, LoggerInterface $logger)
     {
@@ -64,7 +64,7 @@ class TheMovieDatabaseApiService
 
             // Respect api rate limits: https://developers.themoviedb.org/3/getting-started/request-rate-limiting
             // If 429 rate limit has been hit. Retry request after Retry-After.
-            if (429 == $response->getStatusCode()) {
+            if (429 === $response->getStatusCode()) {
                 $retryAfterHeader = $response->getHeader('Retry-After');
                 if (is_numeric($retryAfterHeader)) {
                     $retryAfter = (int) $retryAfterHeader;
