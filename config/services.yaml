@@ -13,6 +13,8 @@ parameters:
     openPlatform.search.ttl: '%env(OPENPLATFORM_SEARCH_TTL)%'
     datawell.vendor.agency: '%env(DATAWELL_VENDOR_AGENCY)%'
     datawell.vendor.profile: '%env(DATAWELL_VENDOR_PROFILE)%'
+    vendor.tmdb.queries:
+        - 'phrase.type="blu-ray"'
 
 services:
     # default configuration for services in *this* file
@@ -29,6 +31,7 @@ services:
             $cloudinaryUrl: '%env(CLOUDINARY_URL)%'
             $cloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
             $httpClient: '@eight_points_guzzle.client.guzzle_client'
+            $vendorTmdbQueries: '%vendor.tmdb.queries%'
 
     _instanceof:
         App\Service\VendorService\AbstractBaseVendorService:

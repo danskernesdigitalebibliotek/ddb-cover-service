@@ -29,22 +29,32 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
 
     private $dataWell;
     private $api;
+    private $queries;
 
     /**
-     * DataWellVendorService constructor.
+     * TheMovieDatabaseVendorService constructor.
      *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface $statsLogger
+     * @param EventDispatcherInterface      $eventDispatcher
+     *   The event dispatcher.
+     * @param EntityManagerInterface        $entityManager
+     *   The entity manager.
+     * @param LoggerInterface               $statsLogger
+     *   The stats logger.
      * @param TheMovieDatabaseSearchService $dataWell
+     *   The search service.
+     * @param TheMovieDatabaseApiService    $api
+     *   The movie api service.
+     * @param array                         $vendorTmdbQueries
+     *   The queries to send to the search service.
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager,
-                              LoggerInterface $statsLogger, TheMovieDatabaseSearchService $dataWell, TheMovieDatabaseApiService $api)
+                              LoggerInterface $statsLogger, TheMovieDatabaseSearchService $dataWell, TheMovieDatabaseApiService $api, $vendorTmdbQueries)
     {
         parent::__construct($eventDispatcher, $entityManager, $statsLogger);
 
         $this->dataWell = $dataWell;
         $this->api = $api;
+        $this->queries = $vendorTmdbQueries;
     }
 
     /**
@@ -63,29 +73,33 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
         $this->progressStart('Search data well for movies');
 
         $offset = 1;
+        $queriesIndex = 0;
         try {
-            do {
-                // Search the data well for materials.
-                // @TODO We need multiple queries t find all movies so this needs to ba a list of queries we iterate over (Maybe as class constant).
-                $query = 'phrase.type="blu-ray"';
-                [$resultArray, $more, $offset] = $this->dataWell->search($query, $offset);
+            while (count($this->queries) > $queriesIndex) {
+                do {
+                    // Search the data well for materials.
+                    $query = $this->queries[$queriesIndex];
+                    [$resultArray, $more, $offset] = $this->dataWell->search($query, $offset);
 
-                $pidArray = array_map(function($value) { return ''; }, $resultArray);
+                    $pidArray = array_map(function($value) { return ''; }, $resultArray);
 
-                $batchSize = \count($pidArray);
-                $this->updateOrInsertMaterials($pidArray, IdentifierType::PID, $batchSize);
+                    $batchSize = \count($pidArray);
+                    $this->updateOrInsertMaterials($pidArray, IdentifierType::PID, $batchSize);
 
-                $event = new ResultEvent($resultArray, IdentifierType::PID, $this->getVendorId());
-                $this->dispatcher->dispatch($event::NAME, $event);
+                    $event = new ResultEvent($resultArray, IdentifierType::PID, $this->getVendorId());
+                    $this->dispatcher->dispatch($event::NAME, $event);
 
-                $this->progressMessageFormatted($this->totalUpdated, $this->totalInserted, $this->totalIsIdentifiers);
-                $this->progressAdvance();
+                    // @TODO: How to handle multiple queries with progress bar.
+                    $this->progressMessageFormatted($this->totalUpdated, $this->totalInserted, $this->totalIsIdentifiers);
+                    $this->progressAdvance();
 
-                if ($limit && $this->totalIsIdentifiers >= $limit) {
-                    $more = false;
-                }
-            } while ($more);
+                    if ($limit && $this->totalIsIdentifiers >= $limit) {
+                        $more = false;
+                    }
+                } while ($more);
 
+                $queriesIndex++;
+            }
             return VendorImportResultMessage::success($this->totalIsIdentifiers, $this->totalUpdated, $this->totalInserted, $this->totalDeleted);
         } catch (\Exception $exception) {
             return VendorImportResultMessage::error($exception->getMessage());

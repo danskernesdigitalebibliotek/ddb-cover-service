@@ -29,7 +29,7 @@ class TheMovieDatabaseSearchService
     private $user;
 
     /**
-     * DataWellSearchService constructor.
+     * TheMovieDatabaseSearchService constructor.
      *
      * @param ParameterBagInterface $params
      * @param ClientInterface $httpClient
