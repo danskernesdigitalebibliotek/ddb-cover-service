@@ -28,6 +28,7 @@ use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
 use Elastica\Query;
+use Elastica\Request;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
@@ -232,11 +233,12 @@ abstract class AbstractMoreInfoService extends SoapClient
         $searchParameters = $this->getSearchParameters($body);
 
         // Build Elastic Query Results
-        $boolQuery = $this->buildElasticQuery($searchParameters);
-        $search = $this->index->search($boolQuery);
+        $query = $this->buildElasticQuery($searchParameters);
+        $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
 
-        $this->elasticQueryTime = $search->getResponse()->getQueryTime();
-        $results = $search->getResults();
+        $this->elasticQueryTime = $searchResponse->getQueryTime();
+        $results = $searchResponse->getData();
+        $results = $this->filterResults($results);
 
         $statsStart = microtime(true);
         $this->statsLogger->info('Cover request/response', [
@@ -298,6 +300,27 @@ abstract class AbstractMoreInfoService extends SoapClient
     public function getTotalTime(): ?float
     {
         return $this->totalTime;
+    }
+
+    /**
+     * Filter raw search result from ES request.
+     *
+     * @param array $results
+     *   Raw search result array
+     * @return array
+     *   The filtered results.
+     */
+    private function filterResults(array $results) : array
+    {
+        $hits = [];
+        if (is_array($results['hits']['hits'])) {
+            $results = $results['hits']['hits'];
+            foreach ($results as $result) {
+                $hits[] = $result['_source'];
+            }
+        }
+
+        return $hits;
     }
 
     /**
@@ -453,27 +476,27 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @param array $searchParameters
      *
-     * @return Query\BoolQuery
+     * @return Query
      */
-    private function buildElasticQuery(array $searchParameters): Query\BoolQuery
+    private function buildElasticQuery(array $searchParameters): Query
     {
-        $masterQuery = new Query\BoolQuery();
+        $boolQuery = new Query\BoolQuery();
 
+        $numberOfIdentifiers = 0;
         foreach ($searchParameters as $isType => $isIdentifiers) {
-            $subQuery = new Query\BoolQuery();
-
-            $identifierFieldTermsQuery = new Query\Terms();
-            $identifierFieldTermsQuery->setTerms('isIdentifier', $isIdentifiers);
-            $subQuery->addMust($identifierFieldTermsQuery);
-
-            $typeFieldTermQuery = new Query\Term();
-            $typeFieldTermQuery->setTerm('isType', $isType);
-            $subQuery->addMust($typeFieldTermQuery);
-
-            $masterQuery->addShould($subQuery);
+            foreach ($isIdentifiers as $identifier) {
+                $identifierFieldTermQuery = new Query\Term();
+                $identifierFieldTermQuery->setTerm('isIdentifier', $identifier);
+                $boolQuery->addShould($identifierFieldTermQuery);
+                $numberOfIdentifiers++;
+            }
         }
 
-        return $masterQuery;
+        $query = new Query();
+        $query->setQuery($boolQuery);
+        $query->setSize($numberOfIdentifiers);
+
+        return $query;
     }
 
     /**
@@ -500,15 +523,13 @@ abstract class AbstractMoreInfoService extends SoapClient
         }
 
         foreach ($results as $result) {
-            $data = $result->getData();
-
-            $identifierInformation = $identifierInformationList[$data['isIdentifier']];
+            $identifierInformation = $identifierInformationList[$result['isIdentifier']];
             $identifierInformation->identifierKnown = true;
 
             $image = new ImageType();
-            $image->_ = $this->transformer->transform($data['imageUrl']);
+            $image->_ = $this->transformer->transform($result['imageUrl']);
             $image->imageSize = 'detail';
-            $image->imageFormat = $this->getImageFormat($data['imageFormat']);
+            $image->imageFormat = $this->getImageFormat($result['imageFormat']);
 
             $identifierInformation->coverImage = [];
             $identifierInformation->coverImage[] = $image;
@@ -566,9 +587,9 @@ abstract class AbstractMoreInfoService extends SoapClient
     private function getImageUrls(array $results)
     {
         $urls = [];
+
         foreach ($results as $result) {
-            $data = $result->getData();
-            $urls[] = $data['imageUrl'];
+            $urls[] = $result['imageUrl'];
         }
 
         return empty($urls) ? null : $urls;

@@ -102,17 +102,15 @@ abstract class AbstractElasticSearchDataProvider
     {
         $boolQuery = new Query\BoolQuery();
 
-        $identifierFieldTermsQuery = new Query\Terms();
-        $identifierFieldTermsQuery->setTerms('isIdentifier', $identifiers);
-        $boolQuery->addMust($identifierFieldTermsQuery);
-
-        $typeFieldTermQuery = new Query\Terms();
-        $typeFieldTermQuery->setTerms('isType', [$type]);
-        $boolQuery->addMust($typeFieldTermQuery);
+        foreach ($identifiers as $identifier) {
+            $identifierFieldTermQuery = new Query\Term();
+            $identifierFieldTermQuery->setTerm('isIdentifier', $identifier);
+            $boolQuery->addShould($identifierFieldTermQuery);
+        }
 
         $query = new Query();
-        $query->addSort(['isIdentifier' => ['order' => 'asc']]);
         $query->setQuery($boolQuery);
+        $query->setSize(count($identifiers));
 
         return $query;
     }
