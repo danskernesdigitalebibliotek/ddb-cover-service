@@ -270,47 +270,6 @@ abstract class AbstractMoreInfoService extends SoapClient
     }
 
     /**
-<<<<<<< HEAD
-     * Get the last registered elasticsearch query time.
-     *
-     * @return float|null
-     */
-    public function getElasticQueryTime(): ?float
-    {
-        return $this->elasticQueryTime;
-    }
-
-    /**
-     * Get the time to log statistics.
-     *
-     * @return mixed
-     */
-    public function getStatsTime(): ?float
-    {
-        return $this->statsTime;
-    }
-
-    /**
-     * Get the time to log no hits.
-     *
-     * @return mixed
-     */
-    public function getNohitsTime(): ?float
-    {
-        return $this->nohitsTime;
-    }
-
-    /**
-     * Get total time for moreInfo call.
-     *
-     * @return mixed
-     */
-    public function getTotalTime(): ?float
-    {
-        return $this->totalTime;
-    }
-
-    /**
      * Filter raw search result from ES request.
      *
      * @param array $results
