@@ -32,7 +32,9 @@ class TheMovieDatabaseSearchService
      * TheMovieDatabaseSearchService constructor.
      *
      * @param ParameterBagInterface $params
-     * @param ClientInterface $httpClient
+     *   The parameter bag
+     * @param ClientInterface       $httpClient
+     *   The http client
      */
     public function __construct(ParameterBagInterface $params, ClientInterface $httpClient)
     {
@@ -45,6 +47,7 @@ class TheMovieDatabaseSearchService
      * Set search url.
      *
      * @param string $searchURL
+     *   The search url
      */
     public function setSearchUrl(string $searchURL): void
     {
@@ -55,6 +58,7 @@ class TheMovieDatabaseSearchService
      * Set user name to access the datawell.
      *
      * @param string $user
+     *   The user
      */
     public function setUser(string $user): void
     {
@@ -65,6 +69,7 @@ class TheMovieDatabaseSearchService
      * Set password for the datawell.
      *
      * @param string $password
+     *   The password
      */
     public function setPassword(string $password): void
     {
@@ -75,7 +80,9 @@ class TheMovieDatabaseSearchService
      * Perform data well search for given ac source.
      *
      * @param string $query
-     * @param int $offset
+     *   The query to send
+     * @param int    $offset
+     *   Result offset
      *
      * @return array
      *

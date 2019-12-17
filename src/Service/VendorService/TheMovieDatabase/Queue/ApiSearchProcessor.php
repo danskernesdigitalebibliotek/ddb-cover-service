@@ -29,9 +29,12 @@ class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
     /**
      * ApiSearchProcessor constructor.
      *
-     * @param \App\Service\VendorService\TheMovieDatabase\TheMovieDatabaseApiService $apiService
-     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+     * @param TheMovieDatabaseApiService $apiService
+     *   The service to search with
+     * @param EntityManagerInterface     $entityManager
+     *   The entity manager
+     * @param EventDispatcherInterface   $dispatcher
+     *   The event dispatcher
      */
     public function __construct(TheMovieDatabaseApiService $apiService, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
     {
