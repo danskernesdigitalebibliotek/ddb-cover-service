@@ -5,8 +5,7 @@ namespace App\Service\VendorService\TheMovieDatabase\Message;
 use App\Service\MoreInfoService\Types\IdentifierType;
 
 /**
- * Class ApiSearchMessage
- * @package App\Service\VendorService\TheMovieDatabase\Message
+ * Class ApiSearchMessage.
  */
 class ApiSearchMessage implements \JsonSerializable
 {

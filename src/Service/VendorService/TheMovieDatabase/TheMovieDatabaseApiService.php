@@ -6,8 +6,7 @@ use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class TheMovieDatabaseApiService
- * @package App\Service\VendorService\TheMovieDatabase
+ * Class TheMovieDatabaseApiService.
  */
 class TheMovieDatabaseApiService
 {
@@ -36,11 +35,13 @@ class TheMovieDatabaseApiService
      * Search in the movie database for a poster url by title and year.
      *
      * @param string $title
-     *   The title of the item.
+     *   The title of the item
      * @param string $year
-     *   The release year of the item.
+     *   The release year of the item
+     *
      * @return string
      *   The poster url or ''
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function searchPosterUrl(string $title, string $year): string
@@ -102,6 +103,7 @@ class TheMovieDatabaseApiService
      *   Array of search results
      * @param string $title
      *   The title of the item
+     *
      * @return \stdClass|null
      *   The matching result or null
      */
@@ -124,6 +126,7 @@ class TheMovieDatabaseApiService
      *
      * @param array $result
      *   The result to create poster url from
+     *
      * @return string|null
      *   The poster url or null
      */

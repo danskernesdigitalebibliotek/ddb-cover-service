@@ -18,8 +18,7 @@ use Karriere\JsonDecoder\JsonDecoder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class ApiSearchProcessor
- * @package App\Service\VendorService\TheMovieDatabase\Queue
+ * Class ApiSearchProcessor.
  */
 class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
 {
