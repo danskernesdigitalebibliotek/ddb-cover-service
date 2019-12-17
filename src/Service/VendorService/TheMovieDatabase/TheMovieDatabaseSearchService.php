@@ -36,8 +36,10 @@ class TheMovieDatabaseSearchService
      * @param ClientInterface       $httpClient
      *   The http client
      */
-    public function __construct(ParameterBagInterface $params, ClientInterface $httpClient)
-    {
+    public function __construct(
+        ParameterBagInterface $params,
+        ClientInterface $httpClient
+    ) {
         $this->client = $httpClient;
         $this->agency = $params->get('datawell.vendor.agency');
         $this->profile = $params->get('datawell.vendor.profile');
@@ -100,30 +102,35 @@ class TheMovieDatabaseSearchService
         $pidArray = [];
 
         try {
-            $response = $this->client->request('POST', $this->searchURL, [
-            RequestOptions::BODY => '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/opensearch">
-                 <soapenv:Header/>
-                 <soapenv:Body>
-                    <open:searchRequest>
-                       <open:query>'.$query.'</open:query>
-                       <open:agency>'.$this->agency.'</open:agency>
-                       <open:profile>'.$this->profile.'</open:profile>
-                       <open:allObjects>0</open:allObjects>
-                       <open:authentication>
-                          <open:groupIdAut>'.$this->agency.'</open:groupIdAut>
-                          <open:passwordAut>'.$this->password.'</open:passwordAut>
-                          <open:userIdAut>'.$this->user.'</open:userIdAut>
-                       </open:authentication>
-                       <open:objectFormat>dkabm</open:objectFormat>
-                       <open:start>'.$offset.'</open:start>
-                       <open:stepValue>'.$this::SEARCH_LIMIT.'</open:stepValue>
-                       <open:allRelations>1</open:allRelations>
-                    <open:relationData>uri</open:relationData>
-                    <outputType>json</outputType>
-                    </open:searchRequest>
-                 </soapenv:Body>
-              </soapenv:Envelope>',
-            ]);
+            $response = $this->client->request(
+                'POST',
+                $this->searchURL,
+                [
+                    RequestOptions::BODY =>
+                        '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/opensearch">
+                             <soapenv:Header/>
+                             <soapenv:Body>
+                                 <open:searchRequest>
+                                     <open:query>'.$query.'</open:query>
+                                     <open:agency>'.$this->agency.'</open:agency>
+                                     <open:profile>'.$this->profile.'</open:profile>
+                                     <open:allObjects>0</open:allObjects>
+                                     <open:authentication>
+                                         <open:groupIdAut>'.$this->agency.'</open:groupIdAut>
+                                         <open:passwordAut>'.$this->password.'</open:passwordAut>
+                                         <open:userIdAut>'.$this->user.'</open:userIdAut>
+                                     </open:authentication>
+                                     <open:objectFormat>dkabm</open:objectFormat>
+                                     <open:start>'.$offset.'</open:start>
+                                     <open:stepValue>'.$this::SEARCH_LIMIT.'</open:stepValue>
+                                     <open:allRelations>1</open:allRelations>
+                                 <open:relationData>uri</open:relationData>
+                                 <outputType>json</outputType>
+                                 </open:searchRequest>
+                             </soapenv:Body>
+                         </soapenv:Envelope>',
+                ]
+            );
 
             $content = $response->getBody()->getContents();
             $jsonResponse = json_decode($content, true);
