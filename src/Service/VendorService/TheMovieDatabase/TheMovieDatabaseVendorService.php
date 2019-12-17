@@ -29,7 +29,7 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
 
     private $dataWell;
     private $api;
-    private $queries;
+    private $queries = ['phrase.type="blu-ray"'];
 
     /**
      * TheMovieDatabaseVendorService constructor.
@@ -100,6 +100,9 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
 
                 $queriesIndex++;
             }
+
+            $this->progressFinish();
+
             return VendorImportResultMessage::success($this->totalIsIdentifiers, $this->totalUpdated, $this->totalInserted, $this->totalDeleted);
         } catch (\Exception $exception) {
             return VendorImportResultMessage::error($exception->getMessage());
