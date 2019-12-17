@@ -77,11 +77,12 @@ abstract class AbstractElasticSearchDataProvider
         if (!empty($noHits)) {
             // Defer no hit processing to the kernel terminate event after
             // response has been delivered.
+            $dispatcher = $this->dispatcher;
             $this->dispatcher->addListener(
                 KernelEvents::TERMINATE,
-                function (TerminateEvent $event) use ($noHits) {
+                function (TerminateEvent $event) use ($noHits, $dispatcher) {
                     $noHitEvent = new SearchNoHitEvent($noHits);
-                    $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
+                    $dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
                 }
             );
         }
@@ -182,17 +183,19 @@ abstract class AbstractElasticSearchDataProvider
 
         // Defer logging to the kernel terminate event after response has
         // been delivered.
+        $clientIp = $request->getClientIp();
+        $imageUrls = $this->getImageUrls($results);
         $this->dispatcher->addListener(
             KernelEvents::TERMINATE,
-            function (TerminateEvent $event) use ($className, $type, $identifiers, $results, $request) {
+            function (TerminateEvent $event) use ($className, $type, $identifiers, $imageUrls, $clientIp) {
                 $this->statsLogger->info('Cover request/response', [
                     'service' => $className,
                     // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
                     'clientID' => 'REST_API',
-                    'remoteIP' => $request->getClientIp(),
+                    'remoteIP' => $clientIp,
                     'isType' => $type,
                     'isIdentifiers' => $identifiers,
-                    'fileNames' => $this->getImageUrls($results),
+                    'fileNames' => $imageUrls,
                 ]);
             }
         );

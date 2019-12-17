@@ -239,16 +239,20 @@ abstract class AbstractMoreInfoService extends SoapClient
         $statsStart = microtime(true);
         // Defer logging to the kernel terminate event after response has been
         // delivered.
+        $imageUrls = $this->getImageUrls($results);
+        $clientIp = $this->requestStack->getCurrentRequest()->getClientIp();
+        $elasticQueryTime = $this->elasticQueryTime;
+        $clientId = $body->authentication->authenticationGroup;
         $this->dispatcher->addListener(
             KernelEvents::TERMINATE,
-            function (TerminateEvent $event) use ($body, $searchParameters, $results) {
+            function (TerminateEvent $event) use ($clientId, $searchParameters, $results, $imageUrls, $clientIp, $elasticQueryTime) {
                 $this->statsLogger->info('Cover request/response', [
                     'service' => 'MoreInfoService',
-                    'clientID' => $body->authentication->authenticationGroup,
-                    'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
+                    'clientID' => $clientId,
+                    'remoteIP' => $clientIp,
                     'searchParameters' => $searchParameters,
-                    'fileNames' => $this->getImageUrls($results),
-                    'ElasticQueryTime' => $this->elasticQueryTime,
+                    'fileNames' => $imageUrls,
+                    'ElasticQueryTime' => $elasticQueryTime,
                 ]);
             }
         );
