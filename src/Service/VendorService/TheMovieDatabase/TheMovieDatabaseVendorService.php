@@ -47,14 +47,8 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
      * @param array                         $vendorTmdbQueries
      *   The queries to send to the search service
      */
-    public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager,
-        LoggerInterface $statsLogger,
-        TheMovieDatabaseSearchService $dataWell,
-        TheMovieDatabaseApiService $api,
-        $vendorTmdbQueries
-    ) {
+    public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager, LoggerInterface $statsLogger, TheMovieDatabaseSearchService $dataWell, TheMovieDatabaseApiService $api, $vendorTmdbQueries)
+    {
         parent::__construct($eventDispatcher, $entityManager, $statsLogger);
 
         $this->dataWell = $dataWell;
