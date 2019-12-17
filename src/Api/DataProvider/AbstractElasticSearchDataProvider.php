@@ -102,19 +102,39 @@ abstract class AbstractElasticSearchDataProvider
     {
         $boolQuery = new Query\BoolQuery();
 
-        $identifierFieldTermsQuery = new Query\Terms();
-        $identifierFieldTermsQuery->setTerms('isIdentifier', $identifiers);
-        $boolQuery->addMust($identifierFieldTermsQuery);
-
-        $typeFieldTermQuery = new Query\Terms();
-        $typeFieldTermQuery->setTerms('isType', [$type]);
-        $boolQuery->addMust($typeFieldTermQuery);
+        foreach ($identifiers as $identifier) {
+            $identifierFieldTermQuery = new Query\Term();
+            $identifierFieldTermQuery->setTerm('isIdentifier', $identifier);
+            $boolQuery->addShould($identifierFieldTermQuery);
+        }
 
         $query = new Query();
-        $query->addSort(['isIdentifier' => ['order' => 'asc']]);
         $query->setQuery($boolQuery);
+        $query->setSize(count($identifiers));
 
         return $query;
+    }
+
+    /**
+     * Filter raw search result from ES request.
+     *
+     * @param array $results
+     *   Raw search result array
+     *
+     * @return array
+     *   The filtered results
+     */
+    protected function filterResults(array $results): array
+    {
+        $hits = [];
+        if (is_array($results['hits']['hits'])) {
+            $results = $results['hits']['hits'];
+            foreach ($results as $result) {
+                $hits[] = $result['_source'];
+            }
+        }
+
+        return $hits;
     }
 
     /**
@@ -130,8 +150,7 @@ abstract class AbstractElasticSearchDataProvider
     {
         $urls = [];
         foreach ($results as $result) {
-            $data = $result->getData();
-            $urls[] = $data['imageUrl'];
+            $urls[] = $result['imageUrl'];
         }
 
         return empty($urls) ? null : $urls;

@@ -13,6 +13,7 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
 use App\Api\Dto\IdentifierInterface;
+use Elastica\Request;
 
 final class CoverItemDataProvider extends AbstractElasticSearchDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -32,15 +33,16 @@ final class CoverItemDataProvider extends AbstractElasticSearchDataProvider impl
         $request = $this->requestStack->getCurrentRequest();
         $type = $this->getIdentifierType($context['request_uri']);
 
-        $elasticQuery = $this->buildElasticQuery($type, [$id]);
-        $search = $this->index->search($elasticQuery);
-        $results = $search->getResults();
+        $query = $this->buildElasticQuery($type, [$id]);
+        $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
+        $results = $searchResponse->getData();
+        $results = $this->filterResults($results);
 
+        // This data provider should always return only one item.
         $result = reset($results);
 
         if ($result) {
-            $data = $result->getData();
-            $identifier = $this->factory->createIdentifierDto($type, $data);
+            $identifier = $this->factory->createIdentifierDto($type, $result);
         }
 
         // @TODO Move logging logic to new EventListener an trigger on POST_READ, https://api-platform.com/docs/core/events/
