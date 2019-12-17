@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Service to help collecting metrics and render them.
+ * Service to help collect metrics and render them.
  */
 
 namespace App\Service;
@@ -41,10 +41,10 @@ class MetricsService
      *   Helper text for the matrices
      * @param int $value
      *   The value to increment with
-     * @param $labels
+     * @param array $labels
      *   Labels to filter by in prometheus. Default empty array.
      */
-    public function counter($name, $help, $value = 1, $labels = [])
+    public function counter($name, $help, $value = 1, array $labels = [])
     {
         try {
             $counter = $this->registry->getOrRegisterCounter($this->namespace, $name, $help, array_keys($labels));

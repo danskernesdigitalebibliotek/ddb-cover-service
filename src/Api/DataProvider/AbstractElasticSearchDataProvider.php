@@ -46,7 +46,7 @@ abstract class AbstractElasticSearchDataProvider
      *   Symfony request stack
      * @param LoggerInterface $statsLogger
      *   Logger for statistics
-     * @param metricsService $metricsService
+     * @param MetricsService $metricsService
      *   Log metric information
      * @param EventDispatcherInterface $dispatcher
      *   Symfony Event Dispatcher
@@ -81,7 +81,7 @@ abstract class AbstractElasticSearchDataProvider
         }
 
         if (!empty($noHits)) {
-            $this->metricsService->counter('no_hits_total', 'Total number of no-hits', count($noHits), ['type' => 'rest']);
+            $this->metricsService->counter('no_hit_event_duration_seconds', 'Total number of no-hits', count($noHits), ['type' => 'rest']);
 
             // Defer no hit processing to the kernel terminate event after
             // response has been delivered.

@@ -41,7 +41,7 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
         $results = $this->filterResults($results);
 
         $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'collection']);
-        $this->metricsService->histogram('elastica_query_time', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(),  ['type' => 'rest']);
+        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(), ['type' => 'rest']);
 
         $foundIdentifiers = [];
 

@@ -87,7 +87,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   Elastica index
      * @param LoggerInterface $statsLogger
      *   Statistics logger
-     * @param metricsService $metricsService
+     * @param MetricsService $metricsService
      *   Metrics service to log stats
      * @param RequestStack $requestStack
      *   HTTP RequestStack
@@ -100,9 +100,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @throws SoapFault
      */
-    public function __construct(Type $index, LoggerInterface $statsLogger, MetricsService $metricsService,
-                                RequestStack $requestStack, EventDispatcherInterface $dispatcher,
-                                CoverStoreTransformationInterface $transformer, array $options = [])
+    public function __construct(Type $index, LoggerInterface $statsLogger, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, array $options = [])
     {
         $this->index = $index;
         $this->statsLogger = $statsLogger;
@@ -231,7 +229,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      */
     public function moreInfo($body): MoreInfoResponse
     {
-        $totalTime = microtime(true);
+        $startTime = microtime(true);
         $labels = ['type' => 'soapRequest'];
 
         $this->validateRequestAuthentication($body);
@@ -242,7 +240,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         $query = $this->buildElasticQuery($searchParameters);
         $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
 
-        $this->metricsService->histogram('elastica_query_time', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(), $labels);
+        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(), $labels);
 
         $results = $searchResponse->getData();
         $results = $this->filterResults($results);
@@ -256,15 +254,15 @@ abstract class AbstractMoreInfoService extends SoapClient
             'fileNames' => $this->getImageUrls($results),
             'elasticQueryTime' => $this->elasticQueryTime,
         ]);
-        $this->metricsService->histogram('stats_logging_time', 'Time used logging stats', microtime(true) - $time, $labels);
+        $this->metricsService->histogram('stats_logging_duration_seconds', 'Time used to log stats', microtime(true) - $time, $labels);
 
         $response = $this->buildSoapResponse($searchParameters, $results);
 
         $time = microtime(true);
         $this->registerSearchNoHits($response->identifierInformation);
-        $this->metricsService->histogram('no_hit_event_time', 'Time used to registry no-hit event', microtime(true) - $time, $labels);
+        $this->metricsService->histogram('no_hit_event_duration_seconds', 'Time used to register no-hit event', microtime(true) - $time, $labels);
 
-        $this->metricsService->histogram('request_time_total', 'Total time used to handel soap request', microtime(true) - $totalTime, $labels);
+        $this->metricsService->histogram('request_duration_total_seconds', 'Total time used to handel soap request', microtime(true) - $startTime, $labels);
 
         return $response;
     }

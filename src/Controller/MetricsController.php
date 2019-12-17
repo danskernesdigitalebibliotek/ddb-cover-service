@@ -21,7 +21,7 @@ class MetricsController extends AbstractController
      *
      * Render metrics collected by the application.
      *
-     * @param metricsService $metricsService
+     * @param MetricsService $metricsService
      *   The service used to collection data in the application
      *
      * @return response
