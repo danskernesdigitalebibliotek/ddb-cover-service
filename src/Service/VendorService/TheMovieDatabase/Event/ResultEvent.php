@@ -24,9 +24,7 @@ class ResultEvent extends Event
     /**
      * VendorEvent constructor.
      *
-     * @param string $type
-     *   The type of event. See VendorState class.
-     * @param array $results
+     * @param array  $results
      *   The identifiers to process
      * @param string $identifierType
      *   The type of identifiers
