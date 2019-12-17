@@ -92,12 +92,12 @@ class SoapController extends AbstractController
         try {
             $soapServer->handle();
         } catch (\Exception $exception) {
-            // Defer logging to the kernel terminate event after response has been delivered.
             $clientIp = $request->getClientIp();
             $exceptionMessage = $exception->getMessage();
             $this->dispatcher->addListener(
                 KernelEvents::TERMINATE,
                 function (TerminateEvent $event) use ($statsLogger, $exceptionMessage, $clientIp) {
+                    // Defer logging to the kernel terminate event after response has been delivered.
                     $statsLogger->error('SOAP endpoint exception', [
                         'service' => 'SoapController',
                         'remoteIP' => $clientIp,

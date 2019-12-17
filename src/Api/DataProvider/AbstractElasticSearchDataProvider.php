@@ -181,16 +181,15 @@ abstract class AbstractElasticSearchDataProvider
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
-        // Defer logging to the kernel terminate event after response has
-        // been delivered.
         $clientIp = $request->getClientIp();
         $imageUrls = $this->getImageUrls($results);
         $this->dispatcher->addListener(
             KernelEvents::TERMINATE,
             function (TerminateEvent $event) use ($className, $type, $identifiers, $imageUrls, $clientIp) {
+                // Defer logging to the kernel terminate event after response has been delivered.
+                // @TODO: Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
                 $this->statsLogger->info('Cover request/response', [
                     'service' => $className,
-                    // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
                     'clientID' => 'REST_API',
                     'remoteIP' => $clientIp,
                     'isType' => $type,
