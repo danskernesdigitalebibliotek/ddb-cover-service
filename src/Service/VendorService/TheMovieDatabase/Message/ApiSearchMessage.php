@@ -4,6 +4,10 @@ namespace App\Service\VendorService\TheMovieDatabase\Message;
 
 use App\Service\MoreInfoService\Types\IdentifierType;
 
+/**
+ * Class ApiSearchMessage
+ * @package App\Service\VendorService\TheMovieDatabase\Message
+ */
 class ApiSearchMessage implements \JsonSerializable
 {
     private $vendorId;
@@ -15,13 +19,13 @@ class ApiSearchMessage implements \JsonSerializable
     /**
      * ApiSearchMessage constructor.
      *
-     * @param int|null $vendorId
+     * @param int|null    $vendorId
      * @param string|null $identifierType
-     * @param null $pid
+     * @param string|null $pid
      * @param string|null $title
      * @param string|null $year
      */
-    public function __construct(int $vendorId = null, string $identifierType = null, $pid = null, string $title = null, string $year = null)
+    public function __construct(int $vendorId = null, string $identifierType = null, string $pid = null, string $title = null, string $year = null)
     {
         $this->vendorId = $vendorId;
         $this->identifierType = $identifierType;

@@ -17,12 +17,23 @@ use Interop\Queue\PsrProcessor;
 use Karriere\JsonDecoder\JsonDecoder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Class ApiSearchProcessor
+ * @package App\Service\VendorService\TheMovieDatabase\Queue
+ */
 class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
 {
     private $apiService;
     private $entityManager;
     private $dispatcher;
 
+    /**
+     * ApiSearchProcessor constructor.
+     *
+     * @param \App\Service\VendorService\TheMovieDatabase\TheMovieDatabaseApiService $apiService
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+     */
     public function __construct(TheMovieDatabaseApiService $apiService, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->apiService = $apiService;

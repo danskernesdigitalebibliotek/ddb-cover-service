@@ -5,6 +5,10 @@ namespace App\Service\VendorService\TheMovieDatabase;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class TheMovieDatabaseApiService
+ * @package App\Service\VendorService\TheMovieDatabase
+ */
 class TheMovieDatabaseApiService
 {
     private const SEARCH_URL = 'https://api.themoviedb.org/3/search/movie';
@@ -14,6 +18,13 @@ class TheMovieDatabaseApiService
     private $client;
     private $logger;
 
+    /**
+     * TheMovieDatabaseApiService constructor.
+     *
+     * @param string $apiKey
+     * @param \GuzzleHttp\ClientInterface $httpClient
+     * @param \Psr\Log\LoggerInterface $logger
+     */
     public function __construct(string $apiKey, ClientInterface $httpClient, LoggerInterface $logger)
     {
         $this->apiKey = $apiKey;
@@ -21,6 +32,17 @@ class TheMovieDatabaseApiService
         $this->logger = $logger;
     }
 
+    /**
+     * Search in the movie database for a poster url by title and year.
+     *
+     * @param string $title
+     *   The title of the item.
+     * @param string $year
+     *   The release year of the item.
+     * @return string
+     *   The poster url or ''
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function searchPosterUrl(string $title, string $year): string
     {
         $posterUrl = '';
@@ -73,6 +95,16 @@ class TheMovieDatabaseApiService
         return $posterUrl;
     }
 
+    /**
+     * Get the first match in the result set.
+     *
+     * @param array  $results
+     *   Array of search results
+     * @param string $title
+     *   The title of the item
+     * @return \stdClass|null
+     *   The matching result or null
+     */
     private function getResultFromSet(array $results, string $title): ?\stdClass
     {
         foreach ($results as $result) {
@@ -87,6 +119,14 @@ class TheMovieDatabaseApiService
         return null;
     }
 
+    /**
+     * Get the poster url for a search result.
+     *
+     * @param array $result
+     *   The result to create poster url from
+     * @return string|null
+     *   The poster url or null
+     */
     private function getPosterUrl($result): string
     {
         return ($result && !empty($result->poster_path)) ? self::BASE_IMAGE_PATH.$result->poster_path : null;
