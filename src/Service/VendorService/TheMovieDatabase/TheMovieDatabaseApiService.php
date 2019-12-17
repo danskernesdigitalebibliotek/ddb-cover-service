@@ -4,7 +4,6 @@ namespace App\Service\VendorService\TheMovieDatabase;
 
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 class TheMovieDatabaseApiService
 {
@@ -42,12 +41,11 @@ class TheMovieDatabaseApiService
 
             // Respect api rate limits: https://developers.themoviedb.org/3/getting-started/request-rate-limiting
             // If 429 rate limit has been hit. Retry request after Retry-After.
-            if ($response->getStatusCode() == 429) {
+            if (429 == $response->getStatusCode()) {
                 $retryAfterHeader = $response->getHeader('Retry-After');
                 if (is_numeric($retryAfterHeader)) {
                     $retryAfter = (int) $retryAfterHeader;
-                }
-                else {
+                } else {
                     $retryAfter = (new \DateTime($retryAfterHeader))->format('U') - time();
                 }
 

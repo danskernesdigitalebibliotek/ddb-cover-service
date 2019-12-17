@@ -6,10 +6,8 @@
 
 namespace App\Service\VendorService\TheMovieDatabase\EventSubscriber;
 
-use App\Service\VendorService\TheMovieDatabase\Message\ApiSearchMessage;
 use App\Service\VendorService\TheMovieDatabase\Event\ResultEvent;
-use App\Utils\Message\ProcessMessage;
-use App\Utils\Types\VendorState;
+use App\Service\VendorService\TheMovieDatabase\Message\ApiSearchMessage;
 use Enqueue\Client\ProducerInterface;
 use Enqueue\Util\JSON;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

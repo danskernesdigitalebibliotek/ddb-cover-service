@@ -69,5 +69,4 @@ class ResultEvent extends Event
     {
         return $this->identifierType;
     }
-
 }

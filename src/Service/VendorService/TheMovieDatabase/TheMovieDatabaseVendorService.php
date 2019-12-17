@@ -35,17 +35,17 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
      * TheMovieDatabaseVendorService constructor.
      *
      * @param EventDispatcherInterface      $eventDispatcher
-     *   The event dispatcher.
+     *   The event dispatcher
      * @param EntityManagerInterface        $entityManager
-     *   The entity manager.
+     *   The entity manager
      * @param LoggerInterface               $statsLogger
-     *   The stats logger.
-     * @param TheMovieDatabaseSearchService $dataWell
-     *   The search service.
+     *   The stats logger
+     * @param theMovieDatabaseSearchService $dataWell
+     *   The search service
      * @param TheMovieDatabaseApiService    $api
-     *   The movie api service.
+     *   The movie api service
      * @param array                         $vendorTmdbQueries
-     *   The queries to send to the search service.
+     *   The queries to send to the search service
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager,
                               LoggerInterface $statsLogger, TheMovieDatabaseSearchService $dataWell, TheMovieDatabaseApiService $api, $vendorTmdbQueries)
@@ -81,7 +81,7 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
                     $query = $this->queries[$queriesIndex];
                     [$resultArray, $more, $offset] = $this->dataWell->search($query, $offset);
 
-                    $pidArray = array_map(function($value) { return ''; }, $resultArray);
+                    $pidArray = array_map(function ($value) { return ''; }, $resultArray);
 
                     $batchSize = \count($pidArray);
                     $this->updateOrInsertMaterials($pidArray, IdentifierType::PID, $batchSize);
@@ -98,7 +98,7 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
                     }
                 } while ($more);
 
-                $queriesIndex++;
+                ++$queriesIndex;
             }
 
             $this->progressFinish();
