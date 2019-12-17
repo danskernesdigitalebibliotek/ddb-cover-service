@@ -38,6 +38,9 @@ final class CoverItemDataProvider extends AbstractElasticSearchDataProvider impl
         $results = $searchResponse->getData();
         $results = $this->filterResults($results);
 
+        $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'single']);
+        $this->metricsService->histogram('elastica_query_time', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(),  ['type' => 'rest']);
+
         // This data provider should always return only one item.
         $result = reset($results);
 
