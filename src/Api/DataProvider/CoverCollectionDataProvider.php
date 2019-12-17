@@ -35,17 +35,17 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
 
         $isIdentifiers = $this->getIdentifiers($request);
 
-        $elasticQuery = $this->buildElasticQuery($identifierType, $isIdentifiers);
-        $search = $this->index->search($elasticQuery);
-        $results = $search->getResults();
+        $query = $this->buildElasticQuery($identifierType, $isIdentifiers);
+        $searchResponse = $this->index->request('_search', \Elastica\Request::POST, $query->toArray());
+        $results = $searchResponse->getData();
+        $results = $this->filterResults($results);
 
         $foundIdentifiers = [];
 
         foreach ($results as $result) {
-            $data = $result->getData();
-            $foundIdentifiers[] = $data['isIdentifier'];
+            $foundIdentifiers[] = $result['isIdentifier'];
 
-            yield $this->factory->createIdentifierDto($identifierType, $data);
+            yield $this->factory->createIdentifierDto($identifierType, $result);
         }
 
         // @TODO Move logging logic to new EventListener an trigger on POST_READ, https://api-platform.com/docs/core/events/

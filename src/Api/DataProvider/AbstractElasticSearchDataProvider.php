@@ -116,6 +116,27 @@ abstract class AbstractElasticSearchDataProvider
     }
 
     /**
+     * Filter raw search result from ES request.
+     *
+     * @param array $results
+     *   Raw search result array
+     * @return array
+     *   The filtered results.
+     */
+    protected function filterResults(array $results) : array
+    {
+        $hits = [];
+        if (is_array($results['hits']['hits'])) {
+            $results = $results['hits']['hits'];
+            foreach ($results as $result) {
+                $hits[] = $result['_source'];
+            }
+        }
+
+        return $hits;
+    }
+
+    /**
      * Get image URLs from search result.
      *
      * @param array $results
@@ -128,8 +149,7 @@ abstract class AbstractElasticSearchDataProvider
     {
         $urls = [];
         foreach ($results as $result) {
-            $data = $result->getData();
-            $urls[] = $data['imageUrl'];
+            $urls[] = $result['imageUrl'];
         }
 
         return empty($urls) ? null : $urls;
