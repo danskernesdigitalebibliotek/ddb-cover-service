@@ -120,10 +120,11 @@ abstract class AbstractElasticSearchDataProvider
      *
      * @param array $results
      *   Raw search result array
+     *
      * @return array
-     *   The filtered results.
+     *   The filtered results
      */
-    protected function filterResults(array $results) : array
+    protected function filterResults(array $results): array
     {
         $hits = [];
         if (is_array($results['hits']['hits'])) {

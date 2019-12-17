@@ -307,10 +307,11 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @param array $results
      *   Raw search result array
+     *
      * @return array
-     *   The filtered results.
+     *   The filtered results
      */
-    private function filterResults(array $results) : array
+    private function filterResults(array $results): array
     {
         $hits = [];
         if (is_array($results['hits']['hits'])) {
@@ -488,7 +489,7 @@ abstract class AbstractMoreInfoService extends SoapClient
                 $identifierFieldTermQuery = new Query\Term();
                 $identifierFieldTermQuery->setTerm('isIdentifier', $identifier);
                 $boolQuery->addShould($identifierFieldTermQuery);
-                $numberOfIdentifiers++;
+                ++$numberOfIdentifiers;
             }
         }
 
