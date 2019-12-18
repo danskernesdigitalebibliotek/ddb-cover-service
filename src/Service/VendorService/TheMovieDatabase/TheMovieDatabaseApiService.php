@@ -36,7 +36,7 @@ class TheMovieDatabaseApiService
      *
      * @param string $title
      *   The title of the item
-     * @param string $year
+     * @param string $originalYear
      *   The release year of the item
      *
      * @return string
@@ -44,7 +44,7 @@ class TheMovieDatabaseApiService
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function searchPosterUrl(string $title, string $year): string
+    public function searchPosterUrl(string $title, string $originalYear, string $director): string
     {
         $posterUrl = '';
 
@@ -52,7 +52,7 @@ class TheMovieDatabaseApiService
             $query = [
                 'query' => [
                     'query' => $title,
-                    'year' => $year,
+                    'year' => $originalYear,
                     'api_key' => $this->apiKey,
                     'page' => '1',
                     'include_adult' => 'false',
@@ -109,16 +109,19 @@ class TheMovieDatabaseApiService
      */
     private function getResultFromSet(array $results, string $title): ?\stdClass
     {
+        $chosenResult = null;
+
         foreach ($results as $result) {
-            if (strtolower($result->title) === strtolower($title)) {
-                return $result;
-            }
-            if (strtolower($result->original_title) === strtolower($title)) {
+            if (strtolower($result->title) === strtolower($title) || strtolower($result->original_title) === strtolower($title)) {
+                // @TODO: Validate director.
+
                 return $result;
             }
         }
 
-        return null;
+        // @TODO: Confirm only one match. Else give up.
+
+        return $chosenResult;
     }
 
     /**

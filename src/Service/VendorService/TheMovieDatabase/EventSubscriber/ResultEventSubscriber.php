@@ -52,7 +52,7 @@ class ResultEventSubscriber implements EventSubscriberInterface
         $results = $event->getResults();
 
         foreach ($results as $pid => $meta) {
-            $message = new ApiSearchMessage($event->getVendorId(), $event->getIdentifierType(), $pid, $meta['title'], $meta['date']);
+            $message = new ApiSearchMessage($event->getVendorId(), $event->getIdentifierType(), $pid, $meta);
 
             $this->producer->sendEvent('ApiSearchTopic', JSON::encode($message));
         }

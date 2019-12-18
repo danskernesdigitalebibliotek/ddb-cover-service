@@ -14,23 +14,26 @@ class ApiSearchMessage implements \JsonSerializable
     private $pid;
     private $title;
     private $year;
+    private $originalYear;
+    private $director;
 
     /**
      * ApiSearchMessage constructor.
      *
-     * @param int|null    $vendorId
+     * @param int|null $vendorId
      * @param string|null $identifierType
      * @param string|null $pid
-     * @param string|null $title
-     * @param string|null $year
+     * @param array $meta
      */
-    public function __construct(int $vendorId = null, string $identifierType = null, string $pid = null, string $title = null, string $year = null)
+    public function __construct(int $vendorId = null, string $identifierType = null, string $pid = null, array $meta = [])
     {
         $this->vendorId = $vendorId;
         $this->identifierType = $identifierType;
         $this->pid = $pid;
-        $this->title = $title;
-        $this->year = $year;
+        $this->title = $meta['title'] ?? null;
+        $this->year = $meta['year'] ?? null;
+        $this->originalYear = $meta['originalYear'] ?? null;
+        $this->director = $meta['director'] ?? null;
     }
 
     /**
@@ -127,4 +130,37 @@ class ApiSearchMessage implements \JsonSerializable
     {
         $this->year = $year;
     }
+
+    /**
+     * @return string
+     */
+    public function getOriginalYear(): string
+    {
+        return $this->originalYear;
+    }
+
+    /**
+     * @param string $originalYear
+     */
+    public function setOriginalYear(string $originalYear): void
+    {
+        $this->originalYear = $originalYear;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDirector(): string
+    {
+        return $this->director;
+    }
+
+    /**
+     * @param string $director
+     */
+    public function setDirector(string $director): void
+    {
+        $this->director = $director;
+    }
+
 }

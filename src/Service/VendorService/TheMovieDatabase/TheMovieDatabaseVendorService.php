@@ -29,7 +29,10 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
 
     private $dataWell;
     private $api;
-    private $queries = ['phrase.type="blu-ray"'];
+    private $queries = [
+//        'phrase.type="blu-ray" and facet.typeCategory="film"',
+        'facet.typeCategory="film"',
+    ];
 
     /**
      * TheMovieDatabaseVendorService constructor.
@@ -44,16 +47,13 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
      *   The search service
      * @param TheMovieDatabaseApiService    $api
      *   The movie api service
-     * @param array                         $vendorTmdbQueries
-     *   The queries to send to the search service
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager, LoggerInterface $statsLogger, TheMovieDatabaseSearchService $dataWell, TheMovieDatabaseApiService $api, $vendorTmdbQueries)
+    public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager, LoggerInterface $statsLogger, TheMovieDatabaseSearchService $dataWell, TheMovieDatabaseApiService $api)
     {
         parent::__construct($eventDispatcher, $entityManager, $statsLogger);
 
         $this->dataWell = $dataWell;
         $this->api = $api;
-        $this->queries = $vendorTmdbQueries;
     }
 
     /**

@@ -152,32 +152,55 @@ class TheMovieDatabaseSearchService
     /**
      * Extract data from response.
      *
-     * @param array $json
+     * @param array $result
      *   Array of the json decoded data
      *
      * @return array
      *   Array of all pid => url pairs found in response
      */
-    public function extractData(array $json): array
+    private function extractData(array $result): array
     {
         $data = [];
 
-        foreach ($json['searchResponse']['result']['searchResult'] as $item) {
+        foreach ($result['searchResponse']['result']['searchResult'] as $item) {
             foreach ($item['collection']['object'] as $object) {
                 $pid = $object['identifier']['$'];
                 $record = $object['record'];
 
                 $title = array_key_exists('title', $record) ? $object['record']['title'][0]['$'] : null;
                 $date = array_key_exists('date', $record) ? $object['record']['date'][0]['$'] : null;
+                $description = array_key_exists('description', $record) ? $object['record']['description'][0]['$'] : null;
+                $originalYear = $this->getOriginalYear($description);
+                $creators = array_key_exists('creator', $record) ? $object['record']['creator'] : null;
+                $director = $this->getDirector($creators);
 
                 if ($title && $date) {
                     $data[$pid] = [];
                     $data[$pid]['title'] = $title;
                     $data[$pid]['date'] = $date;
+                    $data[$pid]['originalYear'] = $originalYear;
+                    $data[$pid]['director'] = $director;
                 }
             }
         }
 
         return $data;
+    }
+
+    private function getOriginalYear(string $description): ?string
+    {
+        // @TODO
+        //preg_match_all('')
+
+            // Find 4 numbers
+            // Validate between 1900 -> now + 2 years
+            // If only one return it
+    }
+
+    private function getDirector(array $result): ?string
+    {
+        // @TODO
+        // find dkdcplud:drt
+        // Avoid ,
     }
 }

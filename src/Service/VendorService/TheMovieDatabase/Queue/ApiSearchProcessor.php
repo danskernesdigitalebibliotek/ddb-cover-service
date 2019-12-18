@@ -51,6 +51,8 @@ class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
         $sourceRepo = $this->entityManager->getRepository(Source::class);
 
         $jsonDecoder = new JsonDecoder(true);
+
+        /* @var ApiSearchMessage $apiSearchMessage */
         $apiSearchMessage = $jsonDecoder->decode($message->getBody(), ApiSearchMessage::class);
 
         $vendorId = $apiSearchMessage->getVendorId();
@@ -64,7 +66,7 @@ class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
         ]);
 
         // Get poster url.
-        $posterUrl = $this->apiService->searchPosterUrl($apiSearchMessage->getTitle(), $apiSearchMessage->getYear());
+        $posterUrl = $this->apiService->searchPosterUrl($apiSearchMessage->getTitle(), $apiSearchMessage->getOriginalYear(), $apiSearchMessage->getDirector());
 
         // Set poster url of source.
         if ($source && $posterUrl) {
