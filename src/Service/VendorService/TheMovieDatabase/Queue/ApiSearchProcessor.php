@@ -70,11 +70,11 @@ class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
         if ($source && $posterUrl) {
             $source->setOriginalFile($posterUrl);
             $this->entityManager->flush();
-        }
 
-        // Create vendor event.
-        $event = new VendorEvent(VendorState::INSERT, [$source->getMatchId()], $source->getMatchType(), $source->getVendor()->getId());
-        $this->dispatcher->dispatch($event::NAME, $event);
+            // Create vendor event.
+            $event = new VendorEvent(VendorState::INSERT, [$source->getMatchId()], $source->getMatchType(), $source->getVendor()->getId());
+            $this->dispatcher->dispatch($event::NAME, $event);
+        }
 
         return self::ACK;
     }
