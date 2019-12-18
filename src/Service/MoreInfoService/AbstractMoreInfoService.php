@@ -29,6 +29,7 @@ use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
 use App\Service\NoHitService;
 use App\Service\StatsLoggingService;
+use Elastica\JSON;
 use Elastica\Query;
 use Elastica\Request;
 use Elastica\Type;
@@ -72,11 +73,6 @@ abstract class AbstractMoreInfoService extends SoapClient
     private $dispatcher;
     private $transformer;
     private $noHitService;
-
-    protected $elasticQueryTime;
-    protected $statsTime;
-    protected $nohitsTime;
-    protected $totalTime;
 
     /**
      * MoreInfoService constructor.
@@ -239,12 +235,32 @@ abstract class AbstractMoreInfoService extends SoapClient
 
         // Build Elastic Query Results
         $query = $this->buildElasticQuery($searchParameters);
-        $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
 
-        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(), $labels);
+        // Note that we here don't uses the elastica request function to post the request to elasticsearch has we have
+        // had strange performance issues with it. We get information about the index and create the curl call by hand.
+        // We can do this as we now the complete setup and what should be taken into consideration.
+        $index = $this->index->getIndex();
+        $connection = $index->getClient()->getConnection();
+        $path = $index->getName().'/search/_search';
+        $url = $connection->hasConfig('url') ? $connection->getConfig('url') : '';
+        $json_query = JSON::stringify($query->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $results = $searchResponse->getData();
+        $startQueryTime = microtime(true);
+        $ch = curl_init($url.$path);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_query);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: '.strlen($json_query),
+        ]);
+        $response = curl_exec($ch);
+        $queryTime = microtime(true) - $startQueryTime;
+
+        $results = JSON::parse($response);
         $results = $this->filterResults($results);
+
+        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, $labels);
 
         $time = microtime(true);
         $this->statsLoggingService->info('Cover request/response', [
@@ -253,7 +269,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
             'fileNames' => $this->getImageUrls($results),
-            'elasticQueryTime' => $this->elasticQueryTime,
+            'elasticQueryTime' => $queryTime,
         ]);
         $this->metricsService->histogram('stats_logging_duration_seconds', 'Time used to log stats', microtime(true) - $time, $labels);
 

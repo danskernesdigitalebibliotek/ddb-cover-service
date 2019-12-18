@@ -12,6 +12,7 @@ use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
 use App\Api\Exception\RequiredParameterMissingException;
+use Elastica\JSON;
 use Symfony\Component\HttpFoundation\Request;
 
 final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
@@ -36,12 +37,33 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
         $isIdentifiers = $this->getIdentifiers($request);
 
         $query = $this->buildElasticQuery($identifierType, $isIdentifiers);
-        $searchResponse = $this->index->request('_search', \Elastica\Request::POST, $query->toArray());
-        $results = $searchResponse->getData();
+
+        // Note that we here don't uses the elastica request function to post the request to elasticsearch has we have
+        // had strange performance issues with it. We get information about the index and create the curl call by hand.
+        // We can do this as we now the complete setup and what should be taken into consideration.
+        $index = $this->index->getIndex();
+        $connection = $index->getClient()->getConnection();
+        $path = $index->getName().'/search/_search';
+        $url = $connection->hasConfig('url') ? $connection->getConfig('url') : '';
+        $json_query = JSON::stringify($query->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $startQueryTime = microtime(true);
+        $ch = curl_init($url.$path);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_query);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: '.strlen($json_query),
+        ]);
+        $response = curl_exec($ch);
+        $queryTime = microtime(true) - $startQueryTime;
+
+        $results = JSON::parse($response);
         $results = $this->filterResults($results);
 
         $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'collection']);
-        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(), ['type' => 'rest']);
+        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, ['type' => 'rest']);
 
         $foundIdentifiers = [];
 
