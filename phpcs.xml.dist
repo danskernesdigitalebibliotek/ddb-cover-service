@@ -19,6 +19,10 @@
         <exclude-pattern>*</exclude-pattern>
     </rule>
 
+    <rule ref="Symfony.Commenting.License.Warning">
+        <exclude-pattern>*</exclude-pattern>
+    </rule>
+
     <rule ref="Symfony.Commenting.FunctionComment.SpacingAfterParamType">
         <exclude-pattern>*</exclude-pattern>
     </rule>

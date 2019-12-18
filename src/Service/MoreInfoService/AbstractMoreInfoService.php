@@ -96,9 +96,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @throws SoapFault
      */
-    public function __construct(Type $index, StatsLoggingService $statsLoggingService, RequestStack $requestStack,
-                                EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer,
-                                array $options = [])
+    public function __construct(Type $index, StatsLoggingService $statsLoggingService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, array $options = [])
     {
         $this->index = $index;
         $this->statsLoggingService = $statsLoggingService;
