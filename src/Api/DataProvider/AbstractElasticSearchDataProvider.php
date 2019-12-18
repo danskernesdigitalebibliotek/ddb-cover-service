@@ -14,11 +14,11 @@ use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\IdentifierFactory;
 use App\Service\MetricsService;
 use App\Service\NoHitService;
+use App\Service\StatsLoggingService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Elastica\Query;
 use Elastica\Type;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 abstract class AbstractElasticSearchDataProvider
 {
     protected $index;
-    protected $statsLogger;
+    protected $statsLoggingService;
     protected $metricsService;
     protected $requestStack;
     protected $dispatcher;
@@ -43,8 +43,8 @@ abstract class AbstractElasticSearchDataProvider
      *   Elastica index search type
      * @param RequestStack $requestStack
      *   Symfony request stack
-     * @param LoggerInterface $statsLogger
-     *   Logger for statistics
+     * @param StatsLoggingService $statsLoggingService
+     *   Statistics logging service
      * @param MetricsService $metricsService
      *   Log metric information
      * @param EventDispatcherInterface $dispatcher
@@ -54,11 +54,11 @@ abstract class AbstractElasticSearchDataProvider
      * @param \App\Service\NoHitService $noHitService
      *   Service for registering no hits
      */
-    public function __construct(Type $index, RequestStack $requestStack, LoggerInterface $statsLogger, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService)
+    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
-        $this->statsLogger = $statsLogger;
+        $this->statsLoggingService = $statsLoggingService;
         $this->metricsService = $metricsService;
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
@@ -199,9 +199,9 @@ abstract class AbstractElasticSearchDataProvider
     protected function logStatistics(string $type, array $identifiers, array $results, Request $request): void
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
-        $this->statsLogger->info('Cover request/response', [
+
+        $this->statsLoggingService->info('Cover request/response', [
             'service' => $className,
-            // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
             'clientID' => 'REST_API',
             'remoteIP' => $request->getClientIp(),
             'isType' => $type,

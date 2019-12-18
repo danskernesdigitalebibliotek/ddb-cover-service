@@ -28,10 +28,10 @@ use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
 use App\Service\NoHitService;
+use App\Service\StatsLoggingService;
 use Elastica\Query;
 use Elastica\Request;
 use Elastica\Type;
-use Psr\Log\LoggerInterface;
 use ReflectionException;
 use SoapClient;
 use SoapHeader;
@@ -66,7 +66,7 @@ abstract class AbstractMoreInfoService extends SoapClient
     ];
 
     private $index;
-    private $statsLogger;
+    private $statsLoggingService;
     private $metricsService;
     private $requestStack;
     private $dispatcher;
@@ -83,8 +83,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @param Type $index
      *   Elastica index
-     * @param LoggerInterface $statsLogger
-     *   Statistics logger
+     * @param StatsLoggingService $statsLoggingService
+     *   Statistics logging service
      * @param MetricsService $metricsService
      *   Metrics service to log stats
      * @param RequestStack $requestStack
@@ -100,10 +100,10 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @throws \SoapFault
      */
-    public function __construct(Type $index, LoggerInterface $statsLogger, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, NoHitService $noHitService, array $options = [])
+    public function __construct(Type $index, StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, NoHitService $noHitService, array $options = [])
     {
         $this->index = $index;
-        $this->statsLogger = $statsLogger;
+        $this->statsLoggingService = $statsLoggingService;
         $this->metricsService = $metricsService;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
@@ -247,7 +247,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         $results = $this->filterResults($results);
 
         $time = microtime(true);
-        $this->statsLogger->info('Cover request/response', [
+        $this->statsLoggingService->info('Cover request/response', [
             'service' => 'MoreInfoService',
             'clientID' => $body->authentication->authenticationGroup,
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
