@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "ext-imagick": "*",
         "ext-json": "*",
+        "ext-zend-opcache": "*",
         "ext-redis": "*",
         "ext-soap": "*",
         "ext-xmlreader": "*",

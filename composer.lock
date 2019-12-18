@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5872b80f905ade1f77664b55cec15a6",
+    "content-hash": "d7f8ed717b60419a246abb219ce083bf",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -10785,6 +10785,7 @@
         "ext-iconv": "*",
         "ext-imagick": "*",
         "ext-json": "*",
+        "ext-zend-opcache": "*",
         "ext-redis": "*",
         "ext-soap": "*",
         "ext-xmlreader": "*",
