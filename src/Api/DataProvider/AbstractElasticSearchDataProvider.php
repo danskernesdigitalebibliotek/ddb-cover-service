@@ -12,8 +12,8 @@ namespace App\Api\DataProvider;
 
 use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\IdentifierFactory;
-use App\Event\SearchNoHitEvent;
 use App\Service\MetricsService;
+use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Elastica\Query;
@@ -22,8 +22,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\TerminateEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Class AbstractElasticSearchDataProvider.
@@ -36,6 +34,7 @@ abstract class AbstractElasticSearchDataProvider
     protected $requestStack;
     protected $dispatcher;
     protected $factory;
+    protected $noHitService;
 
     /**
      * SearchCollectionDataProvider constructor.
@@ -52,9 +51,10 @@ abstract class AbstractElasticSearchDataProvider
      *   Symfony Event Dispatcher
      * @param IdentifierFactory $factory
      *   Factory to create Identifier Data Transfer Objects (DTOs)
+     * @param \App\Service\NoHitService $noHitService
+     *   Service for registering no hits
      */
-    public function __construct(Type $index, RequestStack $requestStack, LoggerInterface $statsLogger,
-                                MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
+    public function __construct(Type $index, RequestStack $requestStack, LoggerInterface $statsLogger, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
@@ -62,6 +62,7 @@ abstract class AbstractElasticSearchDataProvider
         $this->metricsService = $metricsService;
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
+        $this->noHitService = $noHitService;
     }
 
     /**
@@ -83,15 +84,7 @@ abstract class AbstractElasticSearchDataProvider
         if (!empty($noHits)) {
             $this->metricsService->counter('no_hit_event_duration_seconds', 'Total number of no-hits', count($noHits), ['type' => 'rest']);
 
-            // Defer no hit processing to the kernel terminate event after
-            // response has been delivered.
-            $this->dispatcher->addListener(
-                KernelEvents::TERMINATE,
-                function (TerminateEvent $event) use ($noHits) {
-                    $noHitEvent = new SearchNoHitEvent($noHits);
-                    $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
-                }
-            );
+            $this->noHitService->registerNoHits($noHits);
         }
     }
 

@@ -14,7 +14,6 @@
 
 namespace App\Service\MoreInfoService;
 
-use App\Event\SearchNoHitEvent;
 use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
 use App\Service\MetricsService;
@@ -28,19 +27,17 @@ use App\Service\MoreInfoService\Types\MoreInfoRequest;
 use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
+use App\Service\NoHitService;
 use Elastica\Query;
 use Elastica\Request;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 use SoapClient;
-use SoapFault;
 use SoapHeader;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\TerminateEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * moreInfoService class.
@@ -74,6 +71,7 @@ abstract class AbstractMoreInfoService extends SoapClient
     private $requestStack;
     private $dispatcher;
     private $transformer;
+    private $noHitService;
 
     protected $elasticQueryTime;
     protected $statsTime;
@@ -95,12 +93,14 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   Dispatch events
      * @param coverStoreTransformationInterface $transformer
      *   URL transformation service
+     * @param \App\Service\NoHitService $noHitService
+     *   Service for registering no hits
      * @param array $options
      *   Any additional parameters to add to the service
      *
-     * @throws SoapFault
+     * @throws \SoapFault
      */
-    public function __construct(Type $index, LoggerInterface $statsLogger, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, array $options = [])
+    public function __construct(Type $index, LoggerInterface $statsLogger, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, NoHitService $noHitService, array $options = [])
     {
         $this->index = $index;
         $this->statsLogger = $statsLogger;
@@ -108,6 +108,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
         $this->transformer = $transformer;
+        $this->noHitService = $noHitService;
 
         // Add the classmap to the options.
         foreach (self::$classMap as $serviceClassName => $mappedClassName) {
@@ -301,15 +302,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         if (!empty($noHits)) {
             $this->metricsService->counter('no_hits_total', 'Total number of no-hits', count($noHits), ['type' => 'soapRequest']);
 
-            // Defer no hit processing to terminate event after response has
-            // been delivered.
-            $this->dispatcher->addListener(
-                KernelEvents::TERMINATE,
-                function (TerminateEvent $event) use ($noHits) {
-                    $noHitEvent = new SearchNoHitEvent($noHits);
-                    $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
-                }
-            );
+            $this->noHitService->registerNoHits($noHits);
         }
     }
 
