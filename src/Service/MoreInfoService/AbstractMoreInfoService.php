@@ -29,6 +29,7 @@ use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
 use App\Service\StatsLoggingService;
 use Elastica\Query;
+use Elastica\Request;
 use Elastica\Type;
 use ReflectionException;
 use SoapClient;
@@ -118,6 +119,8 @@ abstract class AbstractMoreInfoService extends SoapClient
     abstract protected function getNameSpace(): string;
 
     abstract protected function getWsdl(): string;
+
+    abstract protected function provideDefaultCover(): bool;
 
     /**
      * Service call proxy.
@@ -230,11 +233,12 @@ abstract class AbstractMoreInfoService extends SoapClient
         $searchParameters = $this->getSearchParameters($body);
 
         // Build Elastic Query Results
-        $boolQuery = $this->buildElasticQuery($searchParameters);
-        $search = $this->index->search($boolQuery);
+        $query = $this->buildElasticQuery($searchParameters);
+        $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
 
-        $this->elasticQueryTime = $search->getResponse()->getQueryTime();
-        $results = $search->getResults();
+        $this->elasticQueryTime = $searchResponse->getQueryTime();
+        $results = $searchResponse->getData();
+        $results = $this->filterResults($results);
 
         $statsStart = microtime(true);
         $this->statsLoggingService->info('Cover request/response', [
@@ -299,27 +303,35 @@ abstract class AbstractMoreInfoService extends SoapClient
     }
 
     /**
+     * Filter raw search result from ES request.
+     *
+     * @param array $results
+     *   Raw search result array
+     *
+     * @return array
+     *   The filtered results
+     */
+    private function filterResults(array $results): array
+    {
+        $hits = [];
+        if (is_array($results['hits']['hits'])) {
+            $results = $results['hits']['hits'];
+            foreach ($results as $result) {
+                $hits[] = $result['_source'];
+            }
+        }
+
+        return $hits;
+    }
+
+    /**
      * Send event to register identifiers that gave no search results.
      *
      * @param array $identifierInformation
      */
     private function registerSearchNoHits(array $identifierInformation): void
     {
-        $noHits = [];
-
-        foreach ($identifierInformation as $info) {
-            foreach ($info->coverImage as $coverImage) {
-                if (self::FALLBACK_CODE === $coverImage->source) {
-                    foreach ($info->identifier as $isType => $isIdentifier) {
-                        if (!empty($isIdentifier)) {
-                            $noHits[] = new NoHitItem($isType, $isIdentifier);
-                        }
-                    }
-                    // We only set the source to be able to filter no hits
-                    unset($coverImage->source);
-                }
-            }
-        }
+        $noHits = $this->getNoHits($identifierInformation);
 
         if (!empty($noHits)) {
             // Defer no hit processing to terminate event after response has
@@ -332,6 +344,46 @@ abstract class AbstractMoreInfoService extends SoapClient
                 }
             );
         }
+    }
+
+    /**
+     * Get array of identifiers that were a no hit.
+     *
+     * @param array $identifierInformation
+     *
+     * @return array
+     */
+    private function getNoHits(array $identifierInformation): array
+    {
+        $noHits = [];
+
+        if ($this->provideDefaultCover()) {
+            foreach ($identifierInformation as $info) {
+                foreach ($info->coverImage as $coverImage) {
+                    if (self::FALLBACK_CODE === $coverImage->source) {
+                        foreach ($info->identifier as $isType => $isIdentifier) {
+                            if (!empty($isIdentifier)) {
+                                $noHits[] = new NoHitItem($isType, $isIdentifier);
+                            }
+                        }
+                        // We only set the source to be able to filter no hits
+                        unset($coverImage->source);
+                    }
+                }
+            }
+        } else {
+            foreach ($identifierInformation as $info) {
+                if (!$info->identifierKnown) {
+                    foreach ($info->identifier as $isType => $isIdentifier) {
+                        if (!empty($isIdentifier)) {
+                            $noHits[] = new NoHitItem($isType, $isIdentifier);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $noHits;
     }
 
     /**
@@ -425,27 +477,27 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @param array $searchParameters
      *
-     * @return Query\BoolQuery
+     * @return Query
      */
-    private function buildElasticQuery(array $searchParameters): Query\BoolQuery
+    private function buildElasticQuery(array $searchParameters): Query
     {
-        $masterQuery = new Query\BoolQuery();
+        $boolQuery = new Query\BoolQuery();
 
+        $numberOfIdentifiers = 0;
         foreach ($searchParameters as $isType => $isIdentifiers) {
-            $subQuery = new Query\BoolQuery();
-
-            $identifierFieldTermsQuery = new Query\Terms();
-            $identifierFieldTermsQuery->setTerms('isIdentifier', $isIdentifiers);
-            $subQuery->addMust($identifierFieldTermsQuery);
-
-            $typeFieldTermQuery = new Query\Term();
-            $typeFieldTermQuery->setTerm('isType', $isType);
-            $subQuery->addMust($typeFieldTermQuery);
-
-            $masterQuery->addShould($subQuery);
+            foreach ($isIdentifiers as $identifier) {
+                $identifierFieldTermQuery = new Query\Term();
+                $identifierFieldTermQuery->setTerm('isIdentifier', $identifier);
+                $boolQuery->addShould($identifierFieldTermQuery);
+                ++$numberOfIdentifiers;
+            }
         }
 
-        return $masterQuery;
+        $query = new Query();
+        $query->setQuery($boolQuery);
+        $query->setSize($numberOfIdentifiers);
+
+        return $query;
     }
 
     /**
@@ -472,15 +524,13 @@ abstract class AbstractMoreInfoService extends SoapClient
         }
 
         foreach ($results as $result) {
-            $data = $result->getData();
-
-            $identifierInformation = $identifierInformationList[$data['isIdentifier']];
+            $identifierInformation = $identifierInformationList[$result['isIdentifier']];
             $identifierInformation->identifierKnown = true;
 
             $image = new ImageType();
-            $image->_ = $this->transformer->transform($data['imageUrl']);
+            $image->_ = $this->transformer->transform($result['imageUrl']);
             $image->imageSize = 'detail';
-            $image->imageFormat = $this->getImageFormat($data['imageFormat']);
+            $image->imageFormat = $this->getImageFormat($result['imageFormat']);
 
             $identifierInformation->coverImage = [];
             $identifierInformation->coverImage[] = $image;
@@ -506,21 +556,24 @@ abstract class AbstractMoreInfoService extends SoapClient
     private function getDefaultIdentifierInformation(string $isType, string $isIdentifier): IdentifierInformationType
     {
         $identifierInformation = new IdentifierInformationType();
-        $identifierInformation->identifierKnown = true;
+        $identifierInformation->identifierKnown = false;
 
         $identifier = new IdentifierType();
         $identifier->{$isType} = $isIdentifier;
 
         $identifierInformation->identifier = $identifier;
 
-        $image = new ImageType();
-        $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
-        $image->imageSize = 'detail';
-        $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
-        // Set source to fallback code to allow no hits filtering
-        $image->source = self::FALLBACK_CODE;
+        if ($this->provideDefaultCover()) {
+            $image = new ImageType();
+            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
+            $image->imageSize = 'detail';
+            $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
+            // Set source to fallback code to allow no hits filtering
+            $image->source = self::FALLBACK_CODE;
 
-        $identifierInformation->coverImage[] = $image;
+            $identifierInformation->identifierKnown = true;
+            $identifierInformation->coverImage[] = $image;
+        }
 
         return $identifierInformation;
     }
@@ -535,9 +588,9 @@ abstract class AbstractMoreInfoService extends SoapClient
     private function getImageUrls(array $results)
     {
         $urls = [];
+
         foreach ($results as $result) {
-            $data = $result->getData();
-            $urls[] = $data['imageUrl'];
+            $urls[] = $result['imageUrl'];
         }
 
         return empty($urls) ? null : $urls;

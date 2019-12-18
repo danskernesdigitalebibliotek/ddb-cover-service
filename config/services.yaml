@@ -60,6 +60,11 @@ services:
         arguments:
             $index: '@fos_elastica.index.app.search'
 
+    App\Service\MoreInfoService\DefaultCoverMoreInfoService:
+        autoconfigure: false
+        arguments:
+            $index: '@fos_elastica.index.app.search'
+
     App\Api\DataProvider\CoverCollectionDataProvider:
         tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
         autoconfigure: false
