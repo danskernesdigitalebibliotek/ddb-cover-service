@@ -6,6 +6,7 @@
 
 namespace App\Controller;
 
+use App\Service\MetricsService;
 use App\Service\MoreInfoService\AbstractMoreInfoService;
 use App\Service\MoreInfoService\DbcMoreInfoService;
 use App\Service\MoreInfoService\DdbMoreInfoService;
@@ -43,12 +44,16 @@ class SoapController extends AbstractController
      * @param DdbMoreInfoService $ddbMoreInfoService
      * @param StatsLoggingService $statsLoggingService
      *    Statistics logging service
+     * @param MetricsService $metricsService
      * @param $projectDir
      *
      * @return Response
      */
-    public function ddbSoap(Request $request, DdbMoreInfoService $ddbMoreInfoService, StatsLoggingService $statsLoggingService, $projectDir): Response
+    public function ddbSoap(Request $request, DdbMoreInfoService $ddbMoreInfoService, StatsLoggingService $statsLoggingService, MetricsService $metricsService, $projectDir): Response
     {
+        $labels = ['type' => 'ddbSoap'];
+        $metricsService->counter('soap_requests_total', 'Total soap requests', 1, $labels);
+
         $dbcWsdlFile = $projectDir.self::DDB_WSDL_FILE;
 
         return $this->soap($request, $ddbMoreInfoService, $statsLoggingService, $dbcWsdlFile);
@@ -61,12 +66,16 @@ class SoapController extends AbstractController
      * @param DbcMoreInfoService $dbcMoreInfoService
      * @param StatsLoggingService $statsLoggingService
      *    Statistics logging service
+     * @param MetricsService $metricsService
      * @param $projectDir
      *
      * @return Response
      */
-    public function fbsSoap(Request $request, DbcMoreInfoService $dbcMoreInfoService, StatsLoggingService $statsLoggingService, $projectDir): Response
+    public function fbsSoap(Request $request, DbcMoreInfoService $dbcMoreInfoService, StatsLoggingService $statsLoggingService, MetricsService $metricsService, $projectDir): Response
     {
+        $labels = ['type' => 'fbsSoap'];
+        $metricsService->counter('soap_requests_total', 'Total soap requests', 1, $labels);
+
         $dbcWsdlFile = $projectDir.self::DBC_WSDL_FILE;
 
         return $this->soap($request, $dbcMoreInfoService, $statsLoggingService, $dbcWsdlFile);
@@ -78,12 +87,16 @@ class SoapController extends AbstractController
      * @param Request $request
      * @param DefaultCoverMoreInfoService $defaultCoverMoreInfoService
      * @param StatsLoggingService $statsLoggingService
+     * @param MetricsService $metricsService
      * @param $projectDir
      *
      * @return Response
      */
-    public function defaultCoverSoap(Request $request, DefaultCoverMoreInfoService $defaultCoverMoreInfoService, StatsLoggingService $statsLoggingService, $projectDir): Response
+    public function defaultCoverSoap(Request $request, DefaultCoverMoreInfoService $defaultCoverMoreInfoService, StatsLoggingService $statsLoggingService, MetricsService $metricsService, $projectDir): Response
     {
+        $labels = ['type' => 'defaultCoverSoap'];
+        $metricsService->counter('soap_requests_total', 'Total soap requests', 1, $labels);
+
         $dbcWsdlFile = $projectDir.self::DBC_WSDL_FILE;
 
         return $this->soap($request, $defaultCoverMoreInfoService, $statsLoggingService, $dbcWsdlFile);
@@ -120,11 +133,6 @@ class SoapController extends AbstractController
             $soapServer->fault('Sender', $exception->getMessage());
         }
         $response->setContent(ob_get_clean());
-
-        $response->headers->set('X-Elastic-QueryTime', $moreInfoService->getElasticQueryTime());
-        $response->headers->set('X-Stat-Time', $moreInfoService->getStatsTime());
-        $response->headers->set('X-NoHits-Time', $moreInfoService->getNohitsTime());
-        $response->headers->set('X-Total-Time', $moreInfoService->getTotalTime());
 
         return $response;
     }

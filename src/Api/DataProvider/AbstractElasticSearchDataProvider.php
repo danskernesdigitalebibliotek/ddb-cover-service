@@ -14,6 +14,7 @@ use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\IdentifierFactory;
 use App\Event\SearchNoHitEvent;
 use App\Service\StatsLoggingService;
+use App\Service\MetricsService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Elastica\Query;
@@ -31,6 +32,7 @@ abstract class AbstractElasticSearchDataProvider
 {
     protected $index;
     protected $statsLoggingService;
+    protected $metricsService;
     protected $requestStack;
     protected $dispatcher;
     protected $factory;
@@ -44,16 +46,19 @@ abstract class AbstractElasticSearchDataProvider
      *   Symfony request stack
      * @param StatsLoggingService $statsLoggingService
      *   Statistics logging service
+     * @param MetricsService $metricsService
+     *   Log metric information
      * @param EventDispatcherInterface $dispatcher
      *   Symfony Event Dispatcher
      * @param IdentifierFactory $factory
      *   Factory to create Identifier Data Transfer Objects (DTOs)
      */
-    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
+    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
         $this->statsLoggingService = $statsLoggingService;
+        $this->metricsService = $metricsService;
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
     }
@@ -75,6 +80,8 @@ abstract class AbstractElasticSearchDataProvider
         }
 
         if (!empty($noHits)) {
+            $this->metricsService->counter('no_hit_event_duration_seconds', 'Total number of no-hits', count($noHits), ['type' => 'rest']);
+
             // Defer no hit processing to the kernel terminate event after
             // response has been delivered.
             $dispatcher = $this->dispatcher;
@@ -208,5 +215,7 @@ abstract class AbstractElasticSearchDataProvider
             'isIdentifiers' => $identifiers,
             'fileNames' => $this->getImageUrls($results),
         ]);
+
+        $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);
     }
 }

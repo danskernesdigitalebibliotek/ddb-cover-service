@@ -158,6 +158,9 @@
     "elasticsearch/elasticsearch": {
         "version": "v6.0.1"
     },
+    "endclothing/prometheus_client_php": {
+        "version": "1.0.1"
+    },
     "enqueue/async-event-dispatcher": {
         "version": "0.7",
         "recipe": {
@@ -571,6 +574,9 @@
     },
     "symfony/orm-pack": {
         "version": "v1.0.5"
+    },
+    "symfony/polyfill-apcu": {
+        "version": "v1.13.1"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.13.1"
