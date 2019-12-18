@@ -11,6 +11,7 @@ use App\Service\MoreInfoService\DbcMoreInfoService;
 use App\Service\MoreInfoService\DdbMoreInfoService;
 use App\Service\MoreInfoService\DefaultCoverMoreInfoService;
 use App\Service\StatsLoggingService;
+use Psr\Log\LoggerInterface;
 use SoapServer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -93,13 +94,12 @@ class SoapController extends AbstractController
      *
      * @param Request $request
      * @param AbstractMoreInfoService $moreInfoService
-     * @param StatsLoggingService $statsLoggingService
-     *    Statistics logging service
+     * @param LoggerInterface $statsLoggingService
      * @param $wsdlFile
      *
      * @return Response
      */
-    private function soap(Request $request, AbstractMoreInfoService $moreInfoService, StatsLoggingService $statsLoggingService, $wsdlFile): Response
+    private function soap(Request $request, AbstractMoreInfoService $moreInfoService, LoggerInterface $statsLoggingService, $wsdlFile): Response
     {
         $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_MEMORY]);
         $soapServer->setObject($moreInfoService);

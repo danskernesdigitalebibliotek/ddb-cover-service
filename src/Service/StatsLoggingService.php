@@ -1,8 +1,14 @@
 <?php
 
+/**
+ * @file
+ * Contains the statistics logger.
+ */
+
 namespace App\Service;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -10,17 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Class StatsLoggingService.
  */
-class StatsLoggingService implements LoggerInterface
+class StatsLoggingService extends LogLevel implements LoggerInterface
 {
-    const EMERGENCY = 'emergency';
-    const ALERT = 'alert';
-    const CRITICAL = 'critical';
-    const ERROR = 'error';
-    const WARNING = 'warning';
-    const NOTICE = 'notice';
-    const INFO = 'info';
-    const DEBUG = 'debug';
-
     private $logger;
     private $dispatcher;
 
