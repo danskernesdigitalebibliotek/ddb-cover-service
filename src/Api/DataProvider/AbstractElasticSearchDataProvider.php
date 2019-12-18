@@ -20,6 +20,7 @@ use App\Utils\Types\NoHitItem;
 use Elastica\JSON;
 use Elastica\Query;
 use Elastica\Type;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,6 +37,7 @@ abstract class AbstractElasticSearchDataProvider
     protected $dispatcher;
     protected $factory;
     protected $noHitService;
+    protected $logger;
 
     /**
      * SearchCollectionDataProvider constructor.
@@ -52,10 +54,12 @@ abstract class AbstractElasticSearchDataProvider
      *   Symfony Event Dispatcher
      * @param IdentifierFactory $factory
      *   Factory to create Identifier Data Transfer Objects (DTOs)
-     * @param \App\Service\NoHitService $noHitService
+     * @param NoHitService $noHitService
      *   Service for registering no hits
+     * @param LoggerInterface $logger
+     *   Standard logger.
      */
-    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService)
+    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService, LoggerInterface $logger)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
@@ -64,6 +68,7 @@ abstract class AbstractElasticSearchDataProvider
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
         $this->noHitService = $noHitService;
+        $this->logger = $logger;
     }
 
     /**
@@ -118,6 +123,8 @@ abstract class AbstractElasticSearchDataProvider
     }
 
     protected function search(Query $query) {
+        $results = [];
+
         // Note that we here don't uses the elastica request function to post the request to elasticsearch because we
         // have had strange performance issues with it. We get information about the index and create the curl call by
         // hand. We can do this as we know the complete setup and what should be taken into consideration.
@@ -139,8 +146,14 @@ abstract class AbstractElasticSearchDataProvider
         $response = curl_exec($ch);
         $queryTime = microtime(true) - $startQueryTime;
 
-        $results = JSON::parse($response);
-        $results = $this->filterResults($results);
+        if (false === $response) {
+            $this->logger->error('Curl ES query error: ' . curl_error($ch));
+        }
+        else {
+            $results = JSON::parse($response);
+            $results = $this->filterResults($results);
+        }
+        curl_close($ch);
 
         $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, ['type' => 'rest']);
 

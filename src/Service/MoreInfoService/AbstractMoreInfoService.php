@@ -33,6 +33,7 @@ use Elastica\JSON;
 use Elastica\Query;
 use Elastica\Request;
 use Elastica\Type;
+use Psr\Log\LoggerInterface;
 use ReflectionException;
 use SoapClient;
 use SoapHeader;
@@ -73,6 +74,7 @@ abstract class AbstractMoreInfoService extends SoapClient
     private $dispatcher;
     private $transformer;
     private $noHitService;
+    protected $logger;
 
     /**
      * MoreInfoService constructor.
@@ -96,7 +98,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @throws \SoapFault
      */
-    public function __construct(Type $index, StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, NoHitService $noHitService, array $options = [])
+    public function __construct(Type $index, StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, NoHitService $noHitService, LoggerInterface $logger, array $options = [])
     {
         $this->index = $index;
         $this->statsLoggingService = $statsLoggingService;
@@ -105,6 +107,7 @@ abstract class AbstractMoreInfoService extends SoapClient
         $this->dispatcher = $dispatcher;
         $this->transformer = $transformer;
         $this->noHitService = $noHitService;
+        $this->logger = $logger;
 
         // Add the classmap to the options.
         foreach (self::$classMap as $serviceClassName => $mappedClassName) {
@@ -257,8 +260,15 @@ abstract class AbstractMoreInfoService extends SoapClient
         $response = curl_exec($ch);
         $queryTime = microtime(true) - $startQueryTime;
 
-        $results = JSON::parse($response);
-        $results = $this->filterResults($results);
+        $results = [];
+        if (false === $response) {
+            $this->logger->error('Curl ES query error: ' . curl_error($ch));
+        }
+        else {
+            $results = JSON::parse($response);
+            $results = $this->filterResults($results);
+        }
+        curl_close($ch);
 
         $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, $labels);
 
