@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Class StatsLoggingService.
  */
-class StatsLoggingService extends LogLevel implements LoggerInterface
+class StatsLoggingService implements LoggerInterface
 {
     private $logger;
     private $dispatcher;
@@ -46,28 +46,28 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
             KernelEvents::TERMINATE,
             function (TerminateEvent $event) use ($level, $logger, $message, $context) {
                 switch ($level) {
-                    case self::EMERGENCY:
+                    case LogLevel::EMERGENCY:
                         $logger->emergency($message, $context);
                         break;
-                    case self::ALERT:
+                    case LogLevel::ALERT:
                         $logger->alert($message, $context);
                         break;
-                    case self::CRITICAL:
+                    case LogLevel::CRITICAL:
                         $logger->critical($message, $context);
                         break;
-                    case self::ERROR:
+                    case LogLevel::ERROR:
                         $logger->error($message, $context);
                         break;
-                    case self::WARNING:
+                    case LogLevel::WARNING:
                         $logger->warning($message, $context);
                         break;
-                    case self::NOTICE:
+                    case LogLevel::NOTICE:
                         $logger->notice($message, $context);
                         break;
-                    case self::INFO:
+                    case LogLevel::INFO:
                         $logger->info($message, $context);
                         break;
-                    case self::DEBUG:
+                    case LogLevel::DEBUG:
                         $logger->debug($message, $context);
                         break;
                 }
@@ -80,7 +80,7 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function emergency($message, array $context = [])
     {
-        $this->log(self::EMERGENCY, $message, $context);
+        $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
     /**
@@ -88,7 +88,7 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function alert($message, array $context = [])
     {
-        $this->log(self::ALERT, $message, $context);
+        $this->log(LogLevel::ALERT, $message, $context);
     }
 
     /**
@@ -96,7 +96,7 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function critical($message, array $context = [])
     {
-        $this->log(self::CRITICAL, $message, $context);
+        $this->log(LogLevel::CRITICAL, $message, $context);
     }
 
     /**
@@ -104,7 +104,7 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function error($message, array $context = [])
     {
-        $this->log(self::ERROR, $message, $context);
+        $this->log(LogLevel::ERROR, $message, $context);
     }
 
     /**
@@ -112,7 +112,7 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function warning($message, array $context = [])
     {
-        $this->log(self::WARNING, $message, $context);
+        $this->log(LogLevel::WARNING, $message, $context);
     }
 
     /**
@@ -120,7 +120,7 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function notice($message, array $context = [])
     {
-        $this->log(self::NOTICE, $message, $context);
+        $this->log(LogLevel::NOTICE, $message, $context);
     }
 
     /**
@@ -128,7 +128,7 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function info($message, array $context = [])
     {
-        $this->log(self::INFO, $message, $context);
+        $this->log(LogLevel::INFO, $message, $context);
     }
 
     /**
@@ -136,6 +136,6 @@ class StatsLoggingService extends LogLevel implements LoggerInterface
      */
     public function debug($message, array $context = [])
     {
-        $this->log(self::DEBUG, $message, $context);
+        $this->log(LogLevel::DEBUG, $message, $context);
     }
 }
