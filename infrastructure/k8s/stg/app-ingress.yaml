@@ -22,6 +22,6 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: nginx-cover-service
+              serviceName: cover-service
               servicePort: 80
             path: /

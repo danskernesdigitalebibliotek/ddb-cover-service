@@ -322,7 +322,7 @@ kubectl apply -f app-secret.yaml -f letsencrypt-clusterissuer.yaml
 
 Get the main application up and running.
 ```sh
-kubectl apply -f redis-deployment.yaml -f app-deployment.yaml -f nginx-deployment.yaml -f app-ingress.yaml
+kubectl apply -f redis-deployment.yaml -f app-deployment.yaml -f app-ingress.yaml
 ```
 
 # TODO

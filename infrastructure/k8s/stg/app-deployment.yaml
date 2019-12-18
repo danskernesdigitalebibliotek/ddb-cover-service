@@ -17,6 +17,16 @@ data:
 
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: cover-service
+  name: nginx-config
+data:
+  PHP_FPM_SERVER: '127.0.0.1'
+  PHP_FPM_SERVER_PORT: '9000'
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   namespace: cover-service
@@ -29,7 +39,7 @@ spec:
     tier: frontend
   ports:
     - protocol: TCP
-      port: 9000
+      port: 80
   type: ClusterIP
 
 ---
@@ -55,7 +65,6 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
-        prometheus.io/port: "9253"
         prometheus.io/scheme: "http"
     spec:
       imagePullSecrets:
@@ -130,3 +139,51 @@ spec:
               name: cover-service-config
         ports:
           - containerPort: 9000
+          - containerPort: 9253
+      - name: nginx
+        image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "96Mi"
+            cpu: "300m"
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        envFrom:
+          - configMapRef:
+              name: nginx-config
+        ports:
+          - containerPort: 80
+      - name: nginx-exporter
+        image: nginx/nginx-prometheus-exporter:0.5.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "96Mi"
+            cpu: "100m"
+        readinessProbe:
+          tcpSocket:
+            port: 9113
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 9113
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        ports:
+          - containerPort: 9113

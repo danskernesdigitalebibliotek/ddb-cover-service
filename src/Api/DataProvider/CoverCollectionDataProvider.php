@@ -29,6 +29,8 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
      */
     public function getCollection(string $resourceClass, string $operationName = null): \Traversable
     {
+        $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'collection']);
+
         $request = $this->requestStack->getCurrentRequest();
 
         $identifierType = $this->getIdentifierType($request->getPathInfo());
@@ -36,12 +38,9 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
         $isIdentifiers = $this->getIdentifiers($request);
 
         $query = $this->buildElasticQuery($identifierType, $isIdentifiers);
-        $searchResponse = $this->index->request('_search', \Elastica\Request::POST, $query->toArray());
-        $results = $searchResponse->getData();
-        $results = $this->filterResults($results);
+        $results = $this->search($query);
 
         $foundIdentifiers = [];
-
         foreach ($results as $result) {
             $foundIdentifiers[] = $result['isIdentifier'];
 

@@ -12,17 +12,18 @@ namespace App\Api\DataProvider;
 
 use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\IdentifierFactory;
-use App\Event\SearchNoHitEvent;
+use App\Service\MetricsService;
+use App\Service\NoHitService;
+use App\Service\StatsLoggingService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
+use Elastica\JSON;
 use Elastica\Query;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\TerminateEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Class AbstractElasticSearchDataProvider.
@@ -30,10 +31,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 abstract class AbstractElasticSearchDataProvider
 {
     protected $index;
-    protected $statsLogger;
+    protected $statsLoggingService;
+    protected $metricsService;
     protected $requestStack;
     protected $dispatcher;
     protected $factory;
+    protected $noHitService;
+    protected $logger;
 
     /**
      * SearchCollectionDataProvider constructor.
@@ -42,20 +46,29 @@ abstract class AbstractElasticSearchDataProvider
      *   Elastica index search type
      * @param RequestStack $requestStack
      *   Symfony request stack
-     * @param LoggerInterface $statsLogger
-     *   Logger for statistics
+     * @param StatsLoggingService $statsLoggingService
+     *   Statistics logging service
+     * @param MetricsService $metricsService
+     *   Log metric information
      * @param EventDispatcherInterface $dispatcher
      *   Symfony Event Dispatcher
      * @param IdentifierFactory $factory
      *   Factory to create Identifier Data Transfer Objects (DTOs)
+     * @param NoHitService $noHitService
+     *   Service for registering no hits
+     * @param loggerInterface $logger
+     *   Standard logger
      */
-    public function __construct(Type $index, RequestStack $requestStack, LoggerInterface $statsLogger, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
+    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService, LoggerInterface $logger)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
-        $this->statsLogger = $statsLogger;
+        $this->statsLoggingService = $statsLoggingService;
+        $this->metricsService = $metricsService;
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
+        $this->noHitService = $noHitService;
+        $this->logger = $logger;
     }
 
     /**
@@ -75,15 +88,9 @@ abstract class AbstractElasticSearchDataProvider
         }
 
         if (!empty($noHits)) {
-            // Defer no hit processing to the kernel terminate event after
-            // response has been delivered.
-            $this->dispatcher->addListener(
-                KernelEvents::TERMINATE,
-                function (TerminateEvent $event) use ($noHits) {
-                    $noHitEvent = new SearchNoHitEvent($noHits);
-                    $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
-                }
-            );
+            $this->metricsService->counter('no_hit_event_duration_seconds', 'Total number of no-hits', count($noHits), ['type' => 'rest']);
+
+            $this->noHitService->registerNoHits($noHits);
         }
     }
 
@@ -113,6 +120,44 @@ abstract class AbstractElasticSearchDataProvider
         $query->setSize(count($identifiers));
 
         return $query;
+    }
+
+    protected function search(Query $query)
+    {
+        $results = [];
+
+        // Note that we here don't uses the elastica request function to post the request to elasticsearch because we
+        // have had strange performance issues with it. We get information about the index and create the curl call by
+        // hand. We can do this as we know the complete setup and what should be taken into consideration.
+        $index = $this->index->getIndex();
+        $connection = $index->getClient()->getConnection();
+        $path = $index->getName().'/search/_search';
+        $url = $connection->hasConfig('url') ? $connection->getConfig('url') : '';
+        $jsonQuery = JSON::stringify($query->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $startQueryTime = microtime(true);
+        $ch = curl_init($url.$path);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonQuery);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: '.strlen($jsonQuery),
+        ]);
+        $response = curl_exec($ch);
+        $queryTime = microtime(true) - $startQueryTime;
+
+        if (false === $response) {
+            $this->logger->error('Curl ES query error: '.curl_error($ch));
+        } else {
+            $results = JSON::parse($response);
+            $results = $this->filterResults($results);
+        }
+        curl_close($ch);
+
+        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, ['type' => 'rest']);
+
+        return $results;
     }
 
     /**
@@ -199,14 +244,15 @@ abstract class AbstractElasticSearchDataProvider
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
-        $this->statsLogger->info('Cover request/response', [
+        $this->statsLoggingService->info('Cover request/response', [
             'service' => $className,
-            // @TODO Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
             'clientID' => 'REST_API',
             'remoteIP' => $request->getClientIp(),
             'isType' => $type,
             'isIdentifiers' => $identifiers,
             'fileNames' => $this->getImageUrls($results),
         ]);
+
+        $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);
     }
 }
