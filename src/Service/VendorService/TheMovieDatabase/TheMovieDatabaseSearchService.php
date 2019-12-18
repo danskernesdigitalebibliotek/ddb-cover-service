@@ -169,10 +169,10 @@ class TheMovieDatabaseSearchService
 
                 $title = array_key_exists('title', $record) ? $object['record']['title'][0]['$'] : null;
                 $date = array_key_exists('date', $record) ? $object['record']['date'][0]['$'] : null;
-                $description = array_key_exists('description', $record) ? $object['record']['description'][0]['$'] : null;
-                $originalYear = $this->getOriginalYear($description);
+                $description = array_key_exists('description', $record) ? $object['record']['description'] : null;
+                $originalYear = $this->getOriginalYear(array_column($description ?? [], '$'));
                 $creators = array_key_exists('creator', $record) ? $object['record']['creator'] : null;
-                $director = $this->getDirector($creators);
+                $director = $this->getDirector($creators ?? []);
 
                 if ($title && $date) {
                     $data[$pid] = [];
@@ -187,20 +187,68 @@ class TheMovieDatabaseSearchService
         return $data;
     }
 
-    private function getOriginalYear(string $description): ?string
+    /**
+     * Extract the original year from the descriptions.
+     *
+     * @param array $descriptions
+     *   Search array of descriptions.
+     * @return string|null
+     */
+    private function getOriginalYear(array $descriptions): ?string
     {
-        // @TODO
-        //preg_match_all('')
+        $matches = [];
 
-            // Find 4 numbers
-            // Validate between 1900 -> now + 2 years
-            // If only one return it
+        foreach ($descriptions as $description) {
+            $descriptionMatches = [];
+            $match = preg_match('/(\d{4})/u', $description, $descriptionMatches);
+
+            if ($match) {
+                $matches = array_unique(array_merge($matches, $descriptionMatches));
+            }
+        }
+
+        $upperYear = (int) date("Y") + 2;
+        $confirmedMatches = [];
+
+        foreach ($matches as $matchString) {
+            $match = $match = (int) $matchString;
+
+            if ($match > 1850 && $match < $upperYear) {
+                $confirmedMatches[] = $matchString;
+            }
+        }
+
+        if (count($confirmedMatches) == 1) {
+            return $confirmedMatches[0];
+        }
+
+        return false;
     }
 
-    private function getDirector(array $result): ?string
+    /**
+     * Extract the director from the creators.
+     *
+     * @param array $creators
+     *   Search array of creators.
+     * @return string|null
+     */
+    private function getDirector(array $creators): ?string
     {
-        // @TODO
-        // find dkdcplud:drt
-        // Avoid ,
+        $directors = [];
+
+        foreach ($creators as $creator) {
+            if (isset($creator["@type"]["$"]) && $creator["@type"]["$"] === 'dkdcplus:drt') {
+                if (isset($creator['$'])) {
+                    $directors[] = $creator['$'];
+                }
+            }
+        }
+
+        // @TODO: Can there be more directors?
+        if (count($directors) > 0) {
+            return $directors[0];
+        }
+
+        return null;
     }
 }

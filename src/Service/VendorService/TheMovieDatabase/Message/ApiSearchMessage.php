@@ -134,7 +134,7 @@ class ApiSearchMessage implements \JsonSerializable
     /**
      * @return string
      */
-    public function getOriginalYear(): string
+    public function getOriginalYear(): ?string
     {
         return $this->originalYear;
     }
@@ -150,7 +150,7 @@ class ApiSearchMessage implements \JsonSerializable
     /**
      * @return string
      */
-    public function getDirector(): string
+    public function getDirector(): ?string
     {
         return $this->director;
     }

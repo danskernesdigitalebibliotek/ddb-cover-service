@@ -30,8 +30,8 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
     private $dataWell;
     private $api;
     private $queries = [
-//        'phrase.type="blu-ray" and facet.typeCategory="film"',
-        'facet.typeCategory="film"',
+        'phrase.type="blu-ray" and facet.typeCategory="film"',
+        'phrase.type="dvd" and facet.typeCategory="film"',
     ];
 
     /**

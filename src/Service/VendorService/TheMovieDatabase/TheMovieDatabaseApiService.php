@@ -3,6 +3,7 @@
 namespace App\Service\VendorService\TheMovieDatabase;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -39,14 +40,19 @@ class TheMovieDatabaseApiService
      * @param string $originalYear
      *   The release year of the item
      *
+     * @param string|null $director
      * @return string
      *   The poster url or ''
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function searchPosterUrl(string $title, string $originalYear, string $director): string
+    public function searchPosterUrl(string $title = null, string $originalYear = null, string $director = null): ?string
     {
-        $posterUrl = '';
+        $posterUrl = null;
+
+        if ($title == null || $originalYear == null || $director == null) {
+            return $posterUrl;
+        }
 
         try {
             $query = [
@@ -60,31 +66,9 @@ class TheMovieDatabaseApiService
                 ],
             ];
 
-            $response = $this->client->request('GET', self::SEARCH_URL, $query);
+            $responseData = $this->sendRequest(self::SEARCH_URL, $query);
 
-            // Respect api rate limits: https://developers.themoviedb.org/3/getting-started/request-rate-limiting
-            // If 429 rate limit has been hit. Retry request after Retry-After.
-            if (429 === $response->getStatusCode()) {
-                $retryAfterHeader = $response->getHeader('Retry-After');
-                if (is_numeric($retryAfterHeader)) {
-                    $retryAfter = (int) $retryAfterHeader;
-                } else {
-                    $retryAfter = (new \DateTime($retryAfterHeader))->format('U') - time();
-                }
-
-                // Rate limit hit. Wait until 'Retry-After' header, then retry.
-                $this->logger(sprintf('Rate limit hit. Sleeping for %d seconds', $retryAfter));
-
-                sleep($retryAfter);
-
-                // Retry request.
-                $response = $this->client->request('GET', self::SEARCH_URL, $query);
-            }
-
-            $content = $response->getBody()->getContents();
-            $jsonResponse = json_decode($content, false);
-
-            $result = $this->getResultFromSet($jsonResponse->results, $title);
+            $result = $this->getResultFromSet($responseData->results, $title, $director);
 
             if ($result) {
                 $posterUrl = $this->getPosterUrl($result);
@@ -99,7 +83,7 @@ class TheMovieDatabaseApiService
     /**
      * Get the first match in the result set.
      *
-     * @param array  $results
+     * @param array $results
      *   Array of search results
      * @param string $title
      *   The title of the item
@@ -107,19 +91,36 @@ class TheMovieDatabaseApiService
      * @return \stdClass|null
      *   The matching result or null
      */
-    private function getResultFromSet(array $results, string $title): ?\stdClass
+    private function getResultFromSet(array $results, string $title, string $director): ?\stdClass
     {
         $chosenResult = null;
 
         foreach ($results as $result) {
             if (strtolower($result->title) === strtolower($title) || strtolower($result->original_title) === strtolower($title)) {
-                // @TODO: Validate director.
+                // Validate director.
+                try {
+                    $queryUrl = 'https://api.themoviedb.org/3/movie/'.$result->id.'/credits';
+                    $responseData = $this->sendRequest($queryUrl);
 
-                return $result;
+                    $directors = array_reduce($responseData->crew, function ($carry, $item) {
+                        if ($item->job === 'Director') {
+                            $carry[] = $item->name;
+                        }
+                        return $carry;
+                    }, []);
+
+                    if (in_array($director, $directors)) {
+                        if ($chosenResult != null) {
+                            return null;
+                        }
+                        $chosenResult = $result;
+                    }
+                }
+                catch (GuzzleException $e) {
+                    // Ignore error.
+                }
             }
         }
-
-        // @TODO: Confirm only one match. Else give up.
 
         return $chosenResult;
     }
@@ -127,14 +128,59 @@ class TheMovieDatabaseApiService
     /**
      * Get the poster url for a search result.
      *
-     * @param array $result
+     * @param \stdClass $result
      *   The result to create poster url from
      *
      * @return string|null
      *   The poster url or null
      */
-    private function getPosterUrl($result): string
+    private function getPosterUrl(\stdClass $result): string
     {
         return ($result && !empty($result->poster_path)) ? self::BASE_IMAGE_PATH.$result->poster_path : null;
+    }
+
+    /**
+     * Send request to the movie database api.
+     *
+     * @param $searchUrl
+     * @param array $query
+     * @param string $method
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function sendRequest($searchUrl, $query = null, $method = 'GET')
+    {
+        if ($query == null) {
+            $query = [
+                'query' => [
+                    'api_key' => $this->apiKey,
+                ],
+            ];
+        }
+
+        $response = $this->client->request($method,$searchUrl, $query);
+
+        // Respect api rate limits: https://developers.themoviedb.org/3/getting-started/request-rate-limiting
+        // If 429 rate limit has been hit. Retry request after Retry-After.
+        if (429 === $response->getStatusCode()) {
+            $retryAfterHeader = $response->getHeader('Retry-After');
+            if (is_numeric($retryAfterHeader)) {
+                $retryAfter = (int) $retryAfterHeader;
+            } else {
+                $retryAfter = (new \DateTime($retryAfterHeader))->format('U') - time();
+            }
+
+            // Rate limit hit. Wait until 'Retry-After' header, then retry.
+            $this->logger->alert(sprintf('Rate limit hit. Sleeping for %d seconds', $retryAfter));
+
+            sleep($retryAfter);
+
+            // Retry request.
+            $response = $this->client->request($method, $searchUrl, $query);
+        }
+
+        $content = $response->getBody()->getContents();
+
+        return json_decode($content, false);
     }
 }
