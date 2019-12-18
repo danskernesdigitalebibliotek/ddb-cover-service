@@ -12,7 +12,6 @@ use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
 use App\Api\Exception\RequiredParameterMissingException;
-use Elastica\JSON;
 use Symfony\Component\HttpFoundation\Request;
 
 final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface

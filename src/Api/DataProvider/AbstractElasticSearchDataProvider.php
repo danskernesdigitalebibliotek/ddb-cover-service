@@ -56,8 +56,8 @@ abstract class AbstractElasticSearchDataProvider
      *   Factory to create Identifier Data Transfer Objects (DTOs)
      * @param NoHitService $noHitService
      *   Service for registering no hits
-     * @param LoggerInterface $logger
-     *   Standard logger.
+     * @param loggerInterface $logger
+     *   Standard logger
      */
     public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService, LoggerInterface $logger)
     {
@@ -122,7 +122,8 @@ abstract class AbstractElasticSearchDataProvider
         return $query;
     }
 
-    protected function search(Query $query) {
+    protected function search(Query $query)
+    {
         $results = [];
 
         // Note that we here don't uses the elastica request function to post the request to elasticsearch because we
@@ -147,9 +148,8 @@ abstract class AbstractElasticSearchDataProvider
         $queryTime = microtime(true) - $startQueryTime;
 
         if (false === $response) {
-            $this->logger->error('Curl ES query error: ' . curl_error($ch));
-        }
-        else {
+            $this->logger->error('Curl ES query error: '.curl_error($ch));
+        } else {
             $results = JSON::parse($response);
             $results = $this->filterResults($results);
         }
