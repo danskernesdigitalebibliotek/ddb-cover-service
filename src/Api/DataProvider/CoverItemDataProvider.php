@@ -13,7 +13,6 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
 use App\Api\Dto\IdentifierInterface;
-use Elastica\Request;
 
 final class CoverItemDataProvider extends AbstractElasticSearchDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -30,20 +29,16 @@ final class CoverItemDataProvider extends AbstractElasticSearchDataProvider impl
      */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?IdentifierInterface
     {
+        $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'single']);
+
         $request = $this->requestStack->getCurrentRequest();
         $type = $this->getIdentifierType($context['request_uri']);
 
         $query = $this->buildElasticQuery($type, [$id]);
-        $searchResponse = $this->index->request('_search', Request::POST, $query->toArray());
-        $results = $searchResponse->getData();
-        $results = $this->filterResults($results);
-
-        $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'single']);
-        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $searchResponse->getQueryTime(), ['type' => 'rest']);
+        $results = $this->search($query);
 
         // This data provider should always return only one item.
         $result = reset($results);
-
         if ($result) {
             $identifier = $this->factory->createIdentifierDto($type, $result);
         }
