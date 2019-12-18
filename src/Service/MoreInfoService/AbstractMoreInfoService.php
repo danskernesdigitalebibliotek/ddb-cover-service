@@ -27,6 +27,7 @@ use App\Service\MoreInfoService\Types\MoreInfoRequest;
 use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
+use App\Service\StatsLoggingService;
 use Elastica\Query;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
@@ -67,7 +68,7 @@ abstract class AbstractMoreInfoService extends SoapClient
     ];
 
     private $index;
-    private $statsLogger;
+    private $statsLoggingService;
     private $requestStack;
     private $dispatcher;
     private $transformer;
@@ -82,8 +83,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @param Type $index
      *   Elastica index
-     * @param LoggerInterface $statsLogger
-     *   Statistics logger
+     * @param StatsLoggingService $statsLoggingService
+     *   Statistics logging service
      * @param RequestStack $requestStack
      *   HTTP RequestStack
      * @param eventDispatcherInterface $dispatcher
@@ -95,12 +96,12 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @throws SoapFault
      */
-    public function __construct(Type $index, LoggerInterface $statsLogger, RequestStack $requestStack,
+    public function __construct(Type $index, StatsLoggingService $statsLoggingService, RequestStack $requestStack,
                                 EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer,
                                 array $options = [])
     {
         $this->index = $index;
-        $this->statsLogger = $statsLogger;
+        $this->statsLoggingService = $statsLoggingService;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
         $this->transformer = $transformer;
@@ -237,25 +238,14 @@ abstract class AbstractMoreInfoService extends SoapClient
         $results = $search->getResults();
 
         $statsStart = microtime(true);
-        // Defer logging to the kernel terminate event after response has been
-        // delivered.
-        $imageUrls = $this->getImageUrls($results);
-        $clientIp = $this->requestStack->getCurrentRequest()->getClientIp();
-        $elasticQueryTime = $this->elasticQueryTime;
-        $clientId = $body->authentication->authenticationGroup;
-        $this->dispatcher->addListener(
-            KernelEvents::TERMINATE,
-            function (TerminateEvent $event) use ($clientId, $searchParameters, $results, $imageUrls, $clientIp, $elasticQueryTime) {
-                $this->statsLogger->info('Cover request/response', [
-                    'service' => 'MoreInfoService',
-                    'clientID' => $clientId,
-                    'remoteIP' => $clientIp,
-                    'searchParameters' => $searchParameters,
-                    'fileNames' => $imageUrls,
-                    'ElasticQueryTime' => $elasticQueryTime,
-                ]);
-            }
-        );
+        $this->statsLoggingService->info('Cover request/response', [
+            'service' => 'MoreInfoService',
+            'clientID' => $body->authentication->authenticationGroup,
+            'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
+            'searchParameters' => $searchParameters,
+            'fileNames' => $this->getImageUrls($results),
+            'ElasticQueryTime' => $this->elasticQueryTime,
+        ]);
         $this->statsTime = microtime(true) - $statsStart;
 
         $response = $this->buildSoapResponse($searchParameters, $results);

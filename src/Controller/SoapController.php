@@ -9,14 +9,12 @@ namespace App\Controller;
 use App\Service\MoreInfoService\AbstractMoreInfoService;
 use App\Service\MoreInfoService\DbcMoreInfoService;
 use App\Service\MoreInfoService\DdbMoreInfoService;
-use Psr\Log\LoggerInterface;
+use App\Service\StatsLoggingService;
 use SoapServer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\TerminateEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SoapController extends AbstractController
@@ -41,16 +39,17 @@ class SoapController extends AbstractController
      *
      * @param Request $request
      * @param DdbMoreInfoService $ddbMoreInfoService
-     * @param LoggerInterface $statsLogger
+     * @param StatsLoggingService $statsLoggingService
+     *    Statistics logging service
      * @param $projectDir
      *
      * @return Response
      */
-    public function ddbSoap(Request $request, DdbMoreInfoService $ddbMoreInfoService, LoggerInterface $statsLogger, $projectDir): Response
+    public function ddbSoap(Request $request, DdbMoreInfoService $ddbMoreInfoService, StatsLoggingService $statsLoggingService, $projectDir): Response
     {
         $dbcWsdlFile = $projectDir.self::DDB_WSDL_FILE;
 
-        return $this->soap($request, $ddbMoreInfoService, $statsLogger, $dbcWsdlFile);
+        return $this->soap($request, $ddbMoreInfoService, $statsLoggingService, $dbcWsdlFile);
     }
 
     /**
@@ -58,16 +57,17 @@ class SoapController extends AbstractController
      *
      * @param Request $request
      * @param DbcMoreInfoService $dbcMoreInfoService
-     * @param LoggerInterface $statsLogger
+     * @param StatsLoggingService $statsLoggingService
+     *    Statistics logging service
      * @param $projectDir
      *
      * @return Response
      */
-    public function fbsSoap(Request $request, DbcMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, $projectDir): Response
+    public function fbsSoap(Request $request, DbcMoreInfoService $dbcMoreInfoService, StatsLoggingService $statsLoggingService, $projectDir): Response
     {
         $dbcWsdlFile = $projectDir.self::DBC_WSDL_FILE;
 
-        return $this->soap($request, $dbcMoreInfoService, $statsLogger, $dbcWsdlFile);
+        return $this->soap($request, $dbcMoreInfoService, $statsLoggingService, $dbcWsdlFile);
     }
 
     /**
@@ -75,12 +75,13 @@ class SoapController extends AbstractController
      *
      * @param Request $request
      * @param AbstractMoreInfoService $dbcMoreInfoService
-     * @param LoggerInterface $statsLogger
+     * @param StatsLoggingService $statsLoggingService
+     *    Statistics logging service
      * @param $wsdlFile
      *
      * @return Response
      */
-    private function soap(Request $request, AbstractMoreInfoService $dbcMoreInfoService, LoggerInterface $statsLogger, $wsdlFile): Response
+    private function soap(Request $request, AbstractMoreInfoService $dbcMoreInfoService, StatsLoggingService $statsLoggingService, $wsdlFile): Response
     {
         $soapServer = new SoapServer($wsdlFile, ['cache_wsdl' => WSDL_CACHE_MEMORY]);
         $soapServer->setObject($dbcMoreInfoService);
@@ -92,19 +93,11 @@ class SoapController extends AbstractController
         try {
             $soapServer->handle();
         } catch (\Exception $exception) {
-            $clientIp = $request->getClientIp();
-            $exceptionMessage = $exception->getMessage();
-            $this->dispatcher->addListener(
-                KernelEvents::TERMINATE,
-                function (TerminateEvent $event) use ($statsLogger, $exceptionMessage, $clientIp) {
-                    // Defer logging to the kernel terminate event after response has been delivered.
-                    $statsLogger->error('SOAP endpoint exception', [
-                        'service' => 'SoapController',
-                        'remoteIP' => $clientIp,
-                        'message' => $exceptionMessage,
-                    ]);
-                }
-            );
+            $statsLoggingService->error('SOAP endpoint exception', [
+                'service' => 'SoapController',
+                'remoteIP' => $request->getClientIp(),
+                'message' => $exception->getMessage(),
+            ]);
 
             $soapServer->fault('Sender', $exception->getMessage());
         }

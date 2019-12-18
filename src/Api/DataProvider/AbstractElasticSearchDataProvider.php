@@ -13,11 +13,11 @@ namespace App\Api\DataProvider;
 use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\IdentifierFactory;
 use App\Event\SearchNoHitEvent;
+use App\Service\StatsLoggingService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Elastica\Query;
 use Elastica\Type;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 abstract class AbstractElasticSearchDataProvider
 {
     protected $index;
-    protected $statsLogger;
+    protected $statsLoggingService;
     protected $requestStack;
     protected $dispatcher;
     protected $factory;
@@ -42,18 +42,18 @@ abstract class AbstractElasticSearchDataProvider
      *   Elastica index search type
      * @param RequestStack $requestStack
      *   Symfony request stack
-     * @param LoggerInterface $statsLogger
-     *   Logger for statistics
+     * @param StatsLoggingService $statsLoggingService
+     *   Statistics logging service
      * @param EventDispatcherInterface $dispatcher
      *   Symfony Event Dispatcher
      * @param IdentifierFactory $factory
      *   Factory to create Identifier Data Transfer Objects (DTOs)
      */
-    public function __construct(Type $index, RequestStack $requestStack, LoggerInterface $statsLogger, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
+    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
-        $this->statsLogger = $statsLogger;
+        $this->statsLoggingService = $statsLoggingService;
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
     }
@@ -181,22 +181,13 @@ abstract class AbstractElasticSearchDataProvider
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
-        $clientIp = $request->getClientIp();
-        $imageUrls = $this->getImageUrls($results);
-        $this->dispatcher->addListener(
-            KernelEvents::TERMINATE,
-            function (TerminateEvent $event) use ($className, $type, $identifiers, $imageUrls, $clientIp) {
-                // Defer logging to the kernel terminate event after response has been delivered.
-                // @TODO: Log clientID when authentication implemented, log 'REST_API' for now to allow stats filtering on REST.
-                $this->statsLogger->info('Cover request/response', [
-                    'service' => $className,
-                    'clientID' => 'REST_API',
-                    'remoteIP' => $clientIp,
-                    'isType' => $type,
-                    'isIdentifiers' => $identifiers,
-                    'fileNames' => $imageUrls,
-                ]);
-            }
-        );
+        $this->statsLoggingService->info('Cover request/response', [
+            'service' => $className,
+            'clientID' => 'REST_API',
+            'remoteIP' => $request->getClientIp(),
+            'isType' => $type,
+            'isIdentifiers' => $identifiers,
+            'fileNames' => $this->getImageUrls($results),
+        ]);
     }
 }
