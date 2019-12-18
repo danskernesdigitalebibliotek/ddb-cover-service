@@ -30,7 +30,6 @@ use App\Service\MoreInfoService\Utils\NoHitItem;
 use App\Service\StatsLoggingService;
 use Elastica\Query;
 use Elastica\Type;
-use Psr\Log\LoggerInterface;
 use ReflectionException;
 use SoapClient;
 use SoapFault;
