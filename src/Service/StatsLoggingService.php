@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Class StatsLoggingService.
  */
-class StatsLoggingService
+class StatsLoggingService implements LoggerInterface
 {
     const EMERGENCY = 'emergency';
     const ALERT = 'alert';
@@ -39,16 +39,9 @@ class StatsLoggingService
     }
 
     /**
-     * Log message deferred until after response has been sent.
-     *
-     * @param string     $level
-     *   Logging level
-     * @param string     $message
-     *   Logging message
-     * @param array|null $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function log($level, $message, $context = null)
+    public function log($level, $message, array $context = [])
     {
         $logger = $this->logger;
 
@@ -86,105 +79,65 @@ class StatsLoggingService
     }
 
     /**
-     * Log emergency deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function emergency($message, $context)
+    public function emergency($message, array $context = [])
     {
         $this->log(self::EMERGENCY, $message, $context);
     }
 
     /**
-     * Log alert deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function alert($message, $context)
+    public function alert($message, array $context = [])
     {
         $this->log(self::ALERT, $message, $context);
     }
 
     /**
-     * Log critical deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function critical($message, $context)
+    public function critical($message, array $context = [])
     {
         $this->log(self::CRITICAL, $message, $context);
     }
 
     /**
-     * Log error deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function error($message, $context)
+    public function error($message, array $context = [])
     {
         $this->log(self::ERROR, $message, $context);
     }
 
     /**
-     * Log warning deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function warning($message, $context)
+    public function warning($message, array $context = [])
     {
         $this->log(self::WARNING, $message, $context);
     }
 
     /**
-     * Log notice deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function notice($message, $context)
+    public function notice($message, array $context = [])
     {
         $this->log(self::NOTICE, $message, $context);
     }
 
     /**
-     * Log info deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function info($message, $context)
+    public function info($message, array $context = [])
     {
         $this->log(self::INFO, $message, $context);
     }
 
     /**
-     * Log debug deferred until after response has been sent.
-     *
-     * @param string $message
-     *   Logging message
-     * @param array  $context
-     *   Array of context data
+     * {@inheritdoc}
      */
-    public function debug($message, $context)
+    public function debug($message, array $context = [])
     {
         $this->log(self::DEBUG, $message, $context);
     }
