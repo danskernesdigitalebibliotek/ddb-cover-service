@@ -19,7 +19,7 @@ class MoreInfoResponse
     public $requestStatus;
 
     /**
-     * @var MoreInfoService_IdentifierInformationType
+     * @var array MoreInfoService_IdentifierInformationType
      */
     public $identifierInformation;
 }
