@@ -220,7 +220,7 @@ class TheMovieDatabaseSearchService
             }
         }
 
-        if (1 == count($confirmedMatches)) {
+        if (1 === count($confirmedMatches)) {
             return $confirmedMatches[0];
         }
 

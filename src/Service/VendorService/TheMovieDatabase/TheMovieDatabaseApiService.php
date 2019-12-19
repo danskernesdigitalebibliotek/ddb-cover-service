@@ -57,7 +57,7 @@ class TheMovieDatabaseApiService
         $posterUrl = null;
 
         // Bail out if the required information is not supplied.
-        if (null == $title || null == $originalYear || null == $director) {
+        if (null === $title || null === $originalYear || null === $director) {
             return $posterUrl;
         }
 
@@ -122,7 +122,7 @@ class TheMovieDatabaseApiService
                     }, []);
 
                     if (in_array($director, $directors)) {
-                        if (null != $chosenResult) {
+                        if (null !== $chosenResult) {
                             return null;
                         }
                         $chosenResult = $result;
@@ -170,7 +170,7 @@ class TheMovieDatabaseApiService
     private function sendRequest(string $queryUrl, array $query = null, string $method = 'GET'): array
     {
         // Default to always supplying the api key in the query.
-        if (null == $query) {
+        if (null === $query) {
             $query = [
                 'query' => [
                     'api_key' => $this->apiKey,
