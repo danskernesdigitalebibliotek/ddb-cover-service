@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains VendorInsertedEvent.
+ * Contains ResultEvent.
  */
 
 namespace App\Service\VendorService\TheMovieDatabase\Event;
@@ -10,7 +10,7 @@ namespace App\Service\VendorService\TheMovieDatabase\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class VendorInsertedEvent.
+ * Class ResultEvent.
  *
  * Vendor event thrown when a new material is inserted into the database.
  */

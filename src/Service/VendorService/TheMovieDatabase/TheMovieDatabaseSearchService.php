@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Class SearchService.
+ *
+ * @TODO: Refactor this to only have one extendable service that searches in the data well.
  */
 class TheMovieDatabaseSearchService
 {

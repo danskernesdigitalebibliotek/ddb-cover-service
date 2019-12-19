@@ -61,18 +61,18 @@ class TheMovieDatabaseApiService
             return $posterUrl;
         }
 
-        try {
-            $query = [
-                'query' => [
-                    'query' => $title,
-                    'year' => $originalYear,
-                    'api_key' => $this->apiKey,
-                    'page' => '1',
-                    'include_adult' => 'false',
-                    'language' => 'da_DK',
-                ],
-            ];
+        $query = [
+            'query' => [
+                'query' => $title,
+                'year' => $originalYear,
+                'api_key' => $this->apiKey,
+                'page' => '1',
+                'include_adult' => 'false',
+                'language' => 'da_DK',
+            ],
+        ];
 
+        try {
             $responseData = $this->sendRequest(self::SEARCH_URL, $query);
 
             $result = $this->getResultFromSet($responseData->results, $title, $director);
@@ -81,6 +81,7 @@ class TheMovieDatabaseApiService
                 $posterUrl = $this->getPosterUrl($result);
             }
         } catch (\Exception $e) {
+            // Catch all exceptions to avoid crashing.
             $posterUrl = null;
         }
 
@@ -122,13 +123,12 @@ class TheMovieDatabaseApiService
                     }, []);
 
                     if (in_array($director, $directors)) {
+                        // If more that one director, bail out.
                         if (null !== $chosenResult) {
                             return null;
                         }
                         $chosenResult = $result;
                     }
-                } catch (GuzzleException $e) {
-                    // Ignore error.
                 } catch (\Exception $e) {
                     // Ignore error.
                 }
@@ -206,7 +206,7 @@ class TheMovieDatabaseApiService
         try {
             return json_decode($content, false, 512, JSON_THROW_ON_ERROR);
         } catch (\Exception $exception) {
-            return (object) [];
+            return new \stdClass;
         }
     }
 }
