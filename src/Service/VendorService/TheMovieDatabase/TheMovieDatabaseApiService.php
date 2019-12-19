@@ -147,7 +147,7 @@ class TheMovieDatabaseApiService
      * @return string|null
      *   The poster url or null
      */
-    private function getPosterUrl(\stdClass $result): string
+    private function getPosterUrl(\stdClass $result): ?string
     {
         return ($result && !empty($result->poster_path)) ? self::BASE_IMAGE_PATH.$result->poster_path : null;
     }
