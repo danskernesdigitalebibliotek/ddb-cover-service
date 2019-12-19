@@ -162,12 +162,12 @@ class TheMovieDatabaseApiService
      * @param string $method
      *   The request method
      *
-     * @return array
+     * @return \stdClass
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
      */
-    private function sendRequest(string $queryUrl, array $query = null, string $method = 'GET'): array
+    private function sendRequest(string $queryUrl, array $query = null, string $method = 'GET'): \stdClass
     {
         // Default to always supplying the api key in the query.
         if (null === $query) {
@@ -206,7 +206,7 @@ class TheMovieDatabaseApiService
         try {
             return json_decode($content, false, 512, JSON_THROW_ON_ERROR);
         } catch (\Exception $exception) {
-            return [];
+            return (object) [];
         }
     }
 }
