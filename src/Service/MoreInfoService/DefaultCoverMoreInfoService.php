@@ -2,11 +2,11 @@
 
 namespace App\Service\MoreInfoService;
 
-class DbcMoreInfoService extends AbstractMoreInfoService
+class DefaultCoverMoreInfoService extends AbstractMoreInfoService
 {
     private const SERVICE_NAMESPACE = 'http://oss.dbc.dk/ns/moreinfo';
     private const WSDL = __DIR__.'/Schemas/DBC/moreInfoService.wsdl';
-    private const PROVIDE_DEFAULT_COVER = false;
+    private const PROVIDE_DEFAULT_COVER = true;
 
     protected function getNameSpace(): string
     {

@@ -29,18 +29,18 @@ final class CoverItemDataProvider extends AbstractElasticSearchDataProvider impl
      */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?IdentifierInterface
     {
+        $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'single']);
+
         $request = $this->requestStack->getCurrentRequest();
         $type = $this->getIdentifierType($context['request_uri']);
 
-        $elasticQuery = $this->buildElasticQuery($type, [$id]);
-        $search = $this->index->search($elasticQuery);
-        $results = $search->getResults();
+        $query = $this->buildElasticQuery($type, [$id]);
+        $results = $this->search($query);
 
+        // This data provider should always return only one item.
         $result = reset($results);
-
         if ($result) {
-            $data = $result->getData();
-            $identifier = $this->factory->createIdentifierDto($type, $data);
+            $identifier = $this->factory->createIdentifierDto($type, $result);
         }
 
         // @TODO Move logging logic to new EventListener an trigger on POST_READ, https://api-platform.com/docs/core/events/

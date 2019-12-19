@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0c160b0c656ac80cf19d6be7e7a1035",
+    "content-hash": "6745d2cb2e72f3c792f34374e6159165",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -1644,6 +1644,51 @@
                 "search"
             ],
             "time": "2019-07-19T14:48:24+00:00"
+        },
+        {
+            "name": "endclothing/prometheus_client_php",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endclothing/prometheus_client_php.git",
+                "reference": "ae61369d8667343cfff70fec648b3448a2076778"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endclothing/prometheus_client_php/zipball/ae61369d8667343cfff70fec648b3448a2076778",
+                "reference": "ae61369d8667343cfff70fec648b3448a2076778",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "php": "^7.1",
+                "symfony/polyfill-apcu": "^1.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5"
+            },
+            "suggest": {
+                "ext-apc": "Required if using APCu.",
+                "ext-redis": "Required if using Redis."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Prometheus\\": "src/Prometheus/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Noel-Davies",
+                    "email": "Daniel.Noel-Davies@endclothing.com"
+                }
+            ],
+            "time": "2019-10-04T10:46:29+00:00"
         },
         {
             "name": "enqueue/async-event-dispatcher",
@@ -5455,6 +5500,62 @@
             ],
             "description": "A pack for the Doctrine ORM",
             "time": "2019-10-18T05:41:09+00:00"
+        },
+        {
+            "name": "symfony/polyfill-apcu",
+            "version": "v1.13.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-apcu.git",
+                "reference": "a8e961c841b9ec52927a87914f8820a1ad8f8116"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-apcu/zipball/a8e961c841b9ec52927a87914f8820a1ad8f8116",
+                "reference": "a8e961c841b9ec52927a87914f8820a1ad8f8116",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.13-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Apcu\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting apcu_* functions to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "apcu",
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2019-11-27T13:56:44+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
@@ -10738,9 +10839,11 @@
     "platform": {
         "php": "^7.1.3",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
         "ext-imagick": "*",
         "ext-json": "*",
+        "ext-zend-opcache": "*",
         "ext-redis": "*",
         "ext-soap": "*",
         "ext-xmlreader": "*",

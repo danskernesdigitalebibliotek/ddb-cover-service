@@ -29,23 +29,22 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
      */
     public function getCollection(string $resourceClass, string $operationName = null): \Traversable
     {
+        $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'collection']);
+
         $request = $this->requestStack->getCurrentRequest();
 
         $identifierType = $this->getIdentifierType($request->getPathInfo());
 
         $isIdentifiers = $this->getIdentifiers($request);
 
-        $elasticQuery = $this->buildElasticQuery($identifierType, $isIdentifiers);
-        $search = $this->index->search($elasticQuery);
-        $results = $search->getResults();
+        $query = $this->buildElasticQuery($identifierType, $isIdentifiers);
+        $results = $this->search($query);
 
         $foundIdentifiers = [];
-
         foreach ($results as $result) {
-            $data = $result->getData();
-            $foundIdentifiers[] = $data['isIdentifier'];
+            $foundIdentifiers[] = $result['isIdentifier'];
 
-            yield $this->factory->createIdentifierDto($identifierType, $data);
+            yield $this->factory->createIdentifierDto($identifierType, $result);
         }
 
         // @TODO Move logging logic to new EventListener an trigger on POST_READ, https://api-platform.com/docs/core/events/

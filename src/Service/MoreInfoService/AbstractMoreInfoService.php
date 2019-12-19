@@ -14,9 +14,9 @@
 
 namespace App\Service\MoreInfoService;
 
-use App\Event\SearchNoHitEvent;
 use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
+use App\Service\MetricsService;
 use App\Service\MoreInfoService\Exception\MoreInfoException;
 use App\Service\MoreInfoService\Types\AuthenticationType;
 use App\Service\MoreInfoService\Types\FormatType;
@@ -27,18 +27,19 @@ use App\Service\MoreInfoService\Types\MoreInfoRequest;
 use App\Service\MoreInfoService\Types\MoreInfoResponse;
 use App\Service\MoreInfoService\Types\RequestStatusType;
 use App\Service\MoreInfoService\Utils\NoHitItem;
+use App\Service\NoHitService;
+use App\Service\StatsLoggingService;
+use Elastica\JSON;
 use Elastica\Query;
+use Elastica\Request;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 use SoapClient;
-use SoapFault;
 use SoapHeader;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\TerminateEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * moreInfoService class.
@@ -67,43 +68,46 @@ abstract class AbstractMoreInfoService extends SoapClient
     ];
 
     private $index;
-    private $statsLogger;
+    private $statsLoggingService;
+    private $metricsService;
     private $requestStack;
     private $dispatcher;
     private $transformer;
-
-    protected $elasticQueryTime;
-    protected $statsTime;
-    protected $nohitsTime;
-    protected $totalTime;
+    private $noHitService;
+    protected $logger;
 
     /**
      * MoreInfoService constructor.
      *
      * @param Type $index
      *   Elastica index
-     * @param LoggerInterface $statsLogger
-     *   Statistics logger
+     * @param StatsLoggingService $statsLoggingService
+     *   Statistics logging service
+     * @param MetricsService $metricsService
+     *   Metrics service to log stats
      * @param RequestStack $requestStack
      *   HTTP RequestStack
      * @param eventDispatcherInterface $dispatcher
      *   Dispatch events
      * @param coverStoreTransformationInterface $transformer
      *   URL transformation service
+     * @param \App\Service\NoHitService $noHitService
+     *   Service for registering no hits
      * @param array $options
      *   Any additional parameters to add to the service
      *
-     * @throws SoapFault
+     * @throws \SoapFault
      */
-    public function __construct(Type $index, LoggerInterface $statsLogger, RequestStack $requestStack,
-                                EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer,
-                                array $options = [])
+    public function __construct(Type $index, StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, EventDispatcherInterface $dispatcher, CoverStoreTransformationInterface $transformer, NoHitService $noHitService, LoggerInterface $logger, array $options = [])
     {
         $this->index = $index;
-        $this->statsLogger = $statsLogger;
+        $this->statsLoggingService = $statsLoggingService;
+        $this->metricsService = $metricsService;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
         $this->transformer = $transformer;
+        $this->noHitService = $noHitService;
+        $this->logger = $logger;
 
         // Add the classmap to the options.
         foreach (self::$classMap as $serviceClassName => $mappedClassName) {
@@ -118,6 +122,8 @@ abstract class AbstractMoreInfoService extends SoapClient
     abstract protected function getNameSpace(): string;
 
     abstract protected function getWsdl(): string;
+
+    abstract protected function provideDefaultCover(): bool;
 
     /**
      * Service call proxy.
@@ -223,79 +229,90 @@ abstract class AbstractMoreInfoService extends SoapClient
      */
     public function moreInfo($body): MoreInfoResponse
     {
-        $start = microtime(true);
+        $startTime = microtime(true);
+        $labels = ['type' => 'soapRequest'];
 
         $this->validateRequestAuthentication($body);
 
         $searchParameters = $this->getSearchParameters($body);
 
         // Build Elastic Query Results
-        $boolQuery = $this->buildElasticQuery($searchParameters);
-        $search = $this->index->search($boolQuery);
+        $query = $this->buildElasticQuery($searchParameters);
 
-        $this->elasticQueryTime = $search->getResponse()->getQueryTime();
-        $results = $search->getResults();
+        // Note that we here don't uses the elastica request function to post the request to elasticsearch because we have
+        // had strange performance issues with it. We get information about the index and create the curl call by hand.
+        // We can do this as we know the complete setup and what should be taken into consideration.
+        $index = $this->index->getIndex();
+        $connection = $index->getClient()->getConnection();
+        $path = $index->getName().'/search/_search';
+        $url = $connection->hasConfig('url') ? $connection->getConfig('url') : '';
+        $jsonQuery = JSON::stringify($query->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $statsStart = microtime(true);
-        $this->statsLogger->info('Cover request/response', [
+        $startQueryTime = microtime(true);
+        $ch = curl_init($url.$path);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonQuery);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: '.strlen($jsonQuery),
+        ]);
+        $response = curl_exec($ch);
+        $queryTime = microtime(true) - $startQueryTime;
+
+        $results = [];
+        if (false === $response) {
+            $this->logger->error('Curl ES query error: '.curl_error($ch));
+        } else {
+            $results = JSON::parse($response);
+            $results = $this->filterResults($results);
+        }
+        curl_close($ch);
+
+        $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, $labels);
+
+        $time = microtime(true);
+        $this->statsLoggingService->info('Cover request/response', [
             'service' => 'MoreInfoService',
             'clientID' => $body->authentication->authenticationGroup,
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
             'fileNames' => $this->getImageUrls($results),
-            'ElasticQueryTime' => $this->elasticQueryTime,
+            'elasticQueryTime' => $queryTime,
         ]);
-        $this->statsTime = microtime(true) - $statsStart;
+        $this->metricsService->histogram('stats_logging_duration_seconds', 'Time used to log stats', microtime(true) - $time, $labels);
 
         $response = $this->buildSoapResponse($searchParameters, $results);
 
-        $nohitsStart = microtime(true);
+        $time = microtime(true);
         $this->registerSearchNoHits($response->identifierInformation);
-        $this->nohitsTime = microtime(true) - $nohitsStart;
+        $this->metricsService->histogram('no_hit_event_duration_seconds', 'Time used to register no-hit event', microtime(true) - $time, $labels);
 
-        $this->totalTime = microtime(true) - $start;
+        $this->metricsService->histogram('request_duration_total_seconds', 'Total time used to handel soap request', microtime(true) - $startTime, $labels);
 
         return $response;
     }
 
     /**
-     * Get the last registered elasticsearch query time.
+     * Filter raw search result from ES request.
      *
-     * @return float|null
+     * @param array $results
+     *   Raw search result array
+     *
+     * @return array
+     *   The filtered results
      */
-    public function getElasticQueryTime(): ?float
+    private function filterResults(array $results): array
     {
-        return $this->elasticQueryTime;
-    }
+        $hits = [];
+        if (is_array($results['hits']['hits'])) {
+            $results = $results['hits']['hits'];
+            foreach ($results as $result) {
+                $hits[] = $result['_source'];
+            }
+        }
 
-    /**
-     * Get the time to log statistics.
-     *
-     * @return mixed
-     */
-    public function getStatsTime(): ?float
-    {
-        return $this->statsTime;
-    }
-
-    /**
-     * Get the time to log no hits.
-     *
-     * @return mixed
-     */
-    public function getNohitsTime(): ?float
-    {
-        return $this->nohitsTime;
-    }
-
-    /**
-     * Get total time for moreInfo call.
-     *
-     * @return mixed
-     */
-    public function getTotalTime(): ?float
-    {
-        return $this->totalTime;
+        return $hits;
     }
 
     /**
@@ -305,33 +322,53 @@ abstract class AbstractMoreInfoService extends SoapClient
      */
     private function registerSearchNoHits(array $identifierInformation): void
     {
+        $noHits = $this->getNoHits($identifierInformation);
+
+        if (!empty($noHits)) {
+            $this->metricsService->counter('no_hits_total', 'Total number of no-hits', count($noHits), ['type' => 'soapRequest']);
+
+            $this->noHitService->registerNoHits($noHits);
+        }
+    }
+
+    /**
+     * Get array of identifiers that were a no hit.
+     *
+     * @param array $identifierInformation
+     *
+     * @return array
+     */
+    private function getNoHits(array $identifierInformation): array
+    {
         $noHits = [];
 
-        foreach ($identifierInformation as $info) {
-            foreach ($info->coverImage as $coverImage) {
-                if (self::FALLBACK_CODE === $coverImage->source) {
+        if ($this->provideDefaultCover()) {
+            foreach ($identifierInformation as $info) {
+                foreach ($info->coverImage as $coverImage) {
+                    if (self::FALLBACK_CODE === $coverImage->source) {
+                        foreach ($info->identifier as $isType => $isIdentifier) {
+                            if (!empty($isIdentifier)) {
+                                $noHits[] = new NoHitItem($isType, $isIdentifier);
+                            }
+                        }
+                        // We only set the source to be able to filter no hits
+                        unset($coverImage->source);
+                    }
+                }
+            }
+        } else {
+            foreach ($identifierInformation as $info) {
+                if (!$info->identifierKnown) {
                     foreach ($info->identifier as $isType => $isIdentifier) {
                         if (!empty($isIdentifier)) {
                             $noHits[] = new NoHitItem($isType, $isIdentifier);
                         }
                     }
-                    // We only set the source to be able to filter no hits
-                    unset($coverImage->source);
                 }
             }
         }
 
-        if (!empty($noHits)) {
-            // Defer no hit processing to terminate event after response has
-            // been delivered.
-            $this->dispatcher->addListener(
-                KernelEvents::TERMINATE,
-                function (TerminateEvent $event) use ($noHits) {
-                    $noHitEvent = new SearchNoHitEvent($noHits);
-                    $this->dispatcher->dispatch($noHitEvent::NAME, $noHitEvent);
-                }
-            );
-        }
+        return $noHits;
     }
 
     /**
@@ -425,27 +462,27 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @param array $searchParameters
      *
-     * @return Query\BoolQuery
+     * @return Query
      */
-    private function buildElasticQuery(array $searchParameters): Query\BoolQuery
+    private function buildElasticQuery(array $searchParameters): Query
     {
-        $masterQuery = new Query\BoolQuery();
+        $boolQuery = new Query\BoolQuery();
 
+        $numberOfIdentifiers = 0;
         foreach ($searchParameters as $isType => $isIdentifiers) {
-            $subQuery = new Query\BoolQuery();
-
-            $identifierFieldTermsQuery = new Query\Terms();
-            $identifierFieldTermsQuery->setTerms('isIdentifier', $isIdentifiers);
-            $subQuery->addMust($identifierFieldTermsQuery);
-
-            $typeFieldTermQuery = new Query\Term();
-            $typeFieldTermQuery->setTerm('isType', $isType);
-            $subQuery->addMust($typeFieldTermQuery);
-
-            $masterQuery->addShould($subQuery);
+            foreach ($isIdentifiers as $identifier) {
+                $identifierFieldTermQuery = new Query\Term();
+                $identifierFieldTermQuery->setTerm('isIdentifier', $identifier);
+                $boolQuery->addShould($identifierFieldTermQuery);
+                ++$numberOfIdentifiers;
+            }
         }
 
-        return $masterQuery;
+        $query = new Query();
+        $query->setQuery($boolQuery);
+        $query->setSize($numberOfIdentifiers);
+
+        return $query;
     }
 
     /**
@@ -472,15 +509,13 @@ abstract class AbstractMoreInfoService extends SoapClient
         }
 
         foreach ($results as $result) {
-            $data = $result->getData();
-
-            $identifierInformation = $identifierInformationList[$data['isIdentifier']];
+            $identifierInformation = $identifierInformationList[$result['isIdentifier']];
             $identifierInformation->identifierKnown = true;
 
             $image = new ImageType();
-            $image->_ = $this->transformer->transform($data['imageUrl']);
+            $image->_ = $this->transformer->transform($result['imageUrl']);
             $image->imageSize = 'detail';
-            $image->imageFormat = $this->getImageFormat($data['imageFormat']);
+            $image->imageFormat = $this->getImageFormat($result['imageFormat']);
 
             $identifierInformation->coverImage = [];
             $identifierInformation->coverImage[] = $image;
@@ -506,21 +541,24 @@ abstract class AbstractMoreInfoService extends SoapClient
     private function getDefaultIdentifierInformation(string $isType, string $isIdentifier): IdentifierInformationType
     {
         $identifierInformation = new IdentifierInformationType();
-        $identifierInformation->identifierKnown = true;
+        $identifierInformation->identifierKnown = false;
 
         $identifier = new IdentifierType();
         $identifier->{$isType} = $isIdentifier;
 
         $identifierInformation->identifier = $identifier;
 
-        $image = new ImageType();
-        $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
-        $image->imageSize = 'detail';
-        $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
-        // Set source to fallback code to allow no hits filtering
-        $image->source = self::FALLBACK_CODE;
+        if ($this->provideDefaultCover()) {
+            $image = new ImageType();
+            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
+            $image->imageSize = 'detail';
+            $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
+            // Set source to fallback code to allow no hits filtering
+            $image->source = self::FALLBACK_CODE;
 
-        $identifierInformation->coverImage[] = $image;
+            $identifierInformation->identifierKnown = true;
+            $identifierInformation->coverImage[] = $image;
+        }
 
         return $identifierInformation;
     }
@@ -535,9 +573,9 @@ abstract class AbstractMoreInfoService extends SoapClient
     private function getImageUrls(array $results)
     {
         $urls = [];
+
         foreach ($results as $result) {
-            $data = $result->getData();
-            $urls[] = $data['imageUrl'];
+            $urls[] = $result['imageUrl'];
         }
 
         return empty($urls) ? null : $urls;

@@ -62,7 +62,7 @@ spec:
                   value: http
             - name: elasticsearch-exporter
               image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/elasticsearch_exporter
-              imagePullPolicy: Always
+              imagePullPolicy: IfNotPresent
               resources:
                 requests:
                   memory: "64Mi"

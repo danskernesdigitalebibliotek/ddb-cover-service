@@ -78,7 +78,7 @@ class SearchService
     /**
      * Search the data well through the open platform.
      *
-     * Note: that cache is utilized, henc the result may not be fresh.
+     * Note: that cache is utilized, hence the result may not be fresh.
      *
      * @param $identifier
      *   The identifier to search for

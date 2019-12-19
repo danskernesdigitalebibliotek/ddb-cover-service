@@ -19,11 +19,19 @@
         <exclude-pattern>*</exclude-pattern>
     </rule>
 
+    <rule ref="Zend.NamingConventions.ValidVariableName.NotCamelCaps">
+        <exclude-pattern>*</exclude-pattern>
+    </rule>
+
     <rule ref="Symfony.Commenting.License.Warning">
         <exclude-pattern>*</exclude-pattern>
     </rule>
 
-    <rule ref="Zend.NamingConventions.ValidVariableName.NotCamelCaps">
+    <rule ref="Symfony.Commenting.FunctionComment.SpacingAfterParamType">
+        <exclude-pattern>*</exclude-pattern>
+    </rule>
+
+    <rule ref="Symfony.Errors.ExceptionMessage.Invalid">
         <exclude-pattern>*</exclude-pattern>
     </rule>
 </ruleset>
