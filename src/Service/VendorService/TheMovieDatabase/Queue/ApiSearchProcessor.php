@@ -74,7 +74,7 @@ class ApiSearchProcessor implements PsrProcessor, TopicSubscriberInterface
         $posterUrl = $this->apiService->searchPosterUrl($apiSearchMessage->getTitle(), $apiSearchMessage->getOriginalYear(), $apiSearchMessage->getDirector());
 
         // Set poster url of source.
-        if ($source !== null && $posterUrl !== null) {
+        if (null !== $source && null !== $posterUrl) {
             $source->setOriginalFile($posterUrl);
             $this->entityManager->flush();
 

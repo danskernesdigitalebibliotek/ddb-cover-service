@@ -8,7 +8,6 @@
 namespace App\Service\VendorService\TheMovieDatabase;
 
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -206,7 +205,7 @@ class TheMovieDatabaseApiService
         try {
             return json_decode($content, false, 512, JSON_THROW_ON_ERROR);
         } catch (\Exception $exception) {
-            return new \stdClass;
+            return new \stdClass();
         }
     }
 }
