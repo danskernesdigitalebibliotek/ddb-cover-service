@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ * Contains ApiSearchMessage that contains data about a search from the data
+ * well.
+ */
+
 namespace App\Service\VendorService\TheMovieDatabase\Message;
 
 use App\Service\MoreInfoService\Types\IdentifierType;
@@ -20,10 +26,14 @@ class ApiSearchMessage implements \JsonSerializable
     /**
      * ApiSearchMessage constructor.
      *
-     * @param int|null $vendorId
+     * @param int|null    $vendorId
+     *   The vendor id
      * @param string|null $identifierType
+     *   The identifier type
      * @param string|null $pid
-     * @param array $meta
+     *   The pid identifier
+     * @param array       $meta
+     *   A meta array containing title, year, originalYear, director
      */
     public function __construct(int $vendorId = null, string $identifierType = null, string $pid = null, array $meta = [])
     {
@@ -162,5 +172,4 @@ class ApiSearchMessage implements \JsonSerializable
     {
         $this->director = $director;
     }
-
 }

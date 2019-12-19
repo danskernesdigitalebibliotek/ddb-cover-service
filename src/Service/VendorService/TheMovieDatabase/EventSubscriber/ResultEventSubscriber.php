@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains ResultEventSubscriber.
  */
 
 namespace App\Service\VendorService\TheMovieDatabase\EventSubscriber;
@@ -13,7 +14,7 @@ use Enqueue\Util\JSON;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class VendorEventSubscriber.
+ * Class ResultEventSubscriber.
  */
 class ResultEventSubscriber implements EventSubscriberInterface
 {
@@ -32,8 +33,6 @@ class ResultEventSubscriber implements EventSubscriberInterface
 
     /**
      * {@inheritdoc}
-     *
-     * Defines the events that we subscribes to.
      */
     public static function getSubscribedEvents()
     {
@@ -45,7 +44,8 @@ class ResultEventSubscriber implements EventSubscriberInterface
     /**
      * Event handler.
      *
-     * @param ResultEvent $event
+     * @param resultEvent $event
+     *   The event to handle
      */
     public function onDataWellSearchEvent(ResultEvent $event)
     {

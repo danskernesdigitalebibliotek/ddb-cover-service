@@ -119,7 +119,7 @@ class TheMovieDatabaseSearchService
                                      </open:authentication>
                                      <open:objectFormat>dkabm</open:objectFormat>
                                      <open:start>'.$offset.'</open:start>
-                                     <open:stepValue>'.$this::SEARCH_LIMIT.'</open:stepValue>
+                                     <open:stepValue>'.self::SEARCH_LIMIT.'</open:stepValue>
                                      <open:allRelations>1</open:allRelations>
                                  <open:relationData>uri</open:relationData>
                                  <outputType>json</outputType>
@@ -146,7 +146,7 @@ class TheMovieDatabaseSearchService
             throw new DataWellVendorException($exception->getMessage(), $exception->getCode());
         }
 
-        return [$pidArray, $more, $offset + $this::SEARCH_LIMIT];
+        return [$pidArray, $more, $offset + self::SEARCH_LIMIT];
     }
 
     /**
@@ -191,8 +191,10 @@ class TheMovieDatabaseSearchService
      * Extract the original year from the descriptions.
      *
      * @param array $descriptions
-     *   Search array of descriptions.
+     *   Search array of descriptions
+     *
      * @return string|null
+     *   The original year or null
      */
     private function getOriginalYear(array $descriptions): ?string
     {
@@ -207,7 +209,7 @@ class TheMovieDatabaseSearchService
             }
         }
 
-        $upperYear = (int) date("Y") + 2;
+        $upperYear = (int) date('Y') + 2;
         $confirmedMatches = [];
 
         foreach ($matches as $matchString) {
@@ -218,7 +220,7 @@ class TheMovieDatabaseSearchService
             }
         }
 
-        if (count($confirmedMatches) == 1) {
+        if (1 == count($confirmedMatches)) {
             return $confirmedMatches[0];
         }
 
@@ -229,15 +231,17 @@ class TheMovieDatabaseSearchService
      * Extract the director from the creators.
      *
      * @param array $creators
-     *   Search array of creators.
+     *   Search array of creators
+     *
      * @return string|null
+     *   The director or null
      */
     private function getDirector(array $creators): ?string
     {
         $directors = [];
 
         foreach ($creators as $creator) {
-            if (isset($creator["@type"]["$"]) && $creator["@type"]["$"] === 'dkdcplus:drt') {
+            if (isset($creator['@type']['$']) && 'dkdcplus:drt' === $creator['@type']['$']) {
                 if (isset($creator['$'])) {
                     $directors[] = $creator['$'];
                 }

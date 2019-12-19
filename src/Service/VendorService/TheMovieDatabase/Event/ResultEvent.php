@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains VendorInsertedEvent.
  */
 
 namespace App\Service\VendorService\TheMovieDatabase\Event;
@@ -61,7 +62,10 @@ class ResultEvent extends Event
     }
 
     /**
+     * Get the identifier type.
+     *
      * @return string
+     *   Identifier type
      */
     public function getIdentifierType(): string
     {

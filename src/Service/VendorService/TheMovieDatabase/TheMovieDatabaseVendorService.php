@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Use a library's data well access to get comic+ covers.
+ * Use a library's data well access to get movies.
  */
 
 namespace App\Service\VendorService\TheMovieDatabase;

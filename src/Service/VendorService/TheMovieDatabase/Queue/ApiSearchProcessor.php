@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains ApiSearchProcessor for processing search messages.
+ */
+
 namespace App\Service\VendorService\TheMovieDatabase\Queue;
 
 use App\Entity\Source;

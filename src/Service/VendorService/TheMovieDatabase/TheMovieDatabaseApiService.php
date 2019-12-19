@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains TheMovieDatabaseApiService for searching in TheMovieDatabase.
+ */
+
 namespace App\Service\VendorService\TheMovieDatabase;
 
 use GuzzleHttp\ClientInterface;
@@ -33,16 +38,17 @@ class TheMovieDatabaseApiService
     }
 
     /**
-     * Search in the movie database for a poster url by title and year.
+     * Search in the movie database for a poster url by title, year and director.
      *
      * @param string $title
      *   The title of the item
      * @param string $originalYear
      *   The release year of the item
-     *
      * @param string|null $director
+     *   The director of the movie
+     *
      * @return string
-     *   The poster url or ''
+     *   The poster url or null
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -50,7 +56,8 @@ class TheMovieDatabaseApiService
     {
         $posterUrl = null;
 
-        if ($title == null || $originalYear == null || $director == null) {
+        // Bail out if the required information is not supplied.
+        if (null == $title || null == $originalYear || null == $director) {
             return $posterUrl;
         }
 
@@ -74,7 +81,7 @@ class TheMovieDatabaseApiService
                 $posterUrl = $this->getPosterUrl($result);
             }
         } catch (\Exception $e) {
-            // @TODO: Ignore errors?
+            $posterUrl = null;
         }
 
         return $posterUrl;
@@ -87,6 +94,8 @@ class TheMovieDatabaseApiService
      *   Array of search results
      * @param string $title
      *   The title of the item
+     * @param string $director
+     *   The director of the item
      *
      * @return \stdClass|null
      *   The matching result or null
@@ -96,27 +105,31 @@ class TheMovieDatabaseApiService
         $chosenResult = null;
 
         foreach ($results as $result) {
+            // Validate title againt result->title or result->original_title.
             if (strtolower($result->title) === strtolower($title) || strtolower($result->original_title) === strtolower($title)) {
                 // Validate director.
                 try {
+                    // https://developers.themoviedb.org/3/movies/get-movie-credits
                     $queryUrl = 'https://api.themoviedb.org/3/movie/'.$result->id.'/credits';
                     $responseData = $this->sendRequest($queryUrl);
 
                     $directors = array_reduce($responseData->crew, function ($carry, $item) {
-                        if ($item->job === 'Director') {
+                        if ('Director' === $item->job) {
                             $carry[] = $item->name;
                         }
+
                         return $carry;
                     }, []);
 
                     if (in_array($director, $directors)) {
-                        if ($chosenResult != null) {
+                        if (null != $chosenResult) {
                             return null;
                         }
                         $chosenResult = $result;
                     }
-                }
-                catch (GuzzleException $e) {
+                } catch (GuzzleException $e) {
+                    // Ignore error.
+                } catch (\Exception $e) {
                     // Ignore error.
                 }
             }
@@ -142,15 +155,22 @@ class TheMovieDatabaseApiService
     /**
      * Send request to the movie database api.
      *
-     * @param $searchUrl
-     * @param array $query
+     * @param string $queryUrl
+     *   The query url
+     * @param array  $query
+     *   The query. Remember to add the api key to the query
      * @param string $method
-     * @return mixed
+     *   The request method
+     *
+     * @return array
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
-    private function sendRequest($searchUrl, $query = null, $method = 'GET')
+    private function sendRequest(string $queryUrl, array $query = null, string $method = 'GET'): array
     {
-        if ($query == null) {
+        // Default to always supplying the api key in the query.
+        if (null == $query) {
             $query = [
                 'query' => [
                     'api_key' => $this->apiKey,
@@ -158,7 +178,8 @@ class TheMovieDatabaseApiService
             ];
         }
 
-        $response = $this->client->request($method,$searchUrl, $query);
+        // Send the request to The Movie Database.
+        $response = $this->client->request($method, $queryUrl, $query);
 
         // Respect api rate limits: https://developers.themoviedb.org/3/getting-started/request-rate-limiting
         // If 429 rate limit has been hit. Retry request after Retry-After.
@@ -167,20 +188,25 @@ class TheMovieDatabaseApiService
             if (is_numeric($retryAfterHeader)) {
                 $retryAfter = (int) $retryAfterHeader;
             } else {
-                $retryAfter = (new \DateTime($retryAfterHeader))->format('U') - time();
+                $retryAfter = (int) ((new \DateTime($retryAfterHeader))->format('U')) - time();
             }
 
             // Rate limit hit. Wait until 'Retry-After' header, then retry.
-            $this->logger->alert(sprintf('Rate limit hit. Sleeping for %d seconds', $retryAfter));
+            $this->logger->alert(sprintf('Rate limit hit. Sleeping for %d seconds', $retryAfter + 1));
 
             sleep($retryAfter);
 
             // Retry request.
-            $response = $this->client->request($method, $searchUrl, $query);
+            $response = $this->client->request($method, $queryUrl, $query);
         }
 
+        // Get the response content.
         $content = $response->getBody()->getContents();
 
-        return json_decode($content, false);
+        try {
+            return json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+        } catch (\Exception $exception) {
+            return [];
+        }
     }
 }
