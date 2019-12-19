@@ -8,6 +8,7 @@
 namespace App\Service\VendorService\TheMovieDatabase;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -102,11 +103,14 @@ class TheMovieDatabaseApiService
      */
     private function getResultFromSet(array $results, string $title, string $director): ?\stdClass
     {
+        $lowercaseResultTitle = mb_strtolower($title, 'UTF-8');
+        $lowercaseDirector = mb_strtolower($director, 'UTF-8');
+
         $chosenResult = null;
 
         foreach ($results as $result) {
             // Validate title againt result->title or result->original_title.
-            if (strtolower($result->title) === strtolower($title) || strtolower($result->original_title) === strtolower($title)) {
+            if (mb_strtolower($result->title, 'UTF-8') === $lowercaseResultTitle || mb_strtolower($result->original_title, 'UTF-8') === $lowercaseResultTitle) {
                 // Validate director.
                 try {
                     // https://developers.themoviedb.org/3/movies/get-movie-credits
@@ -115,19 +119,21 @@ class TheMovieDatabaseApiService
 
                     $directors = array_reduce($responseData->crew, function ($carry, $item) {
                         if ('Director' === $item->job) {
-                            $carry[] = $item->name;
+                            $carry[] = mb_strtolower($item->name, 'UTF-8');
                         }
 
                         return $carry;
                     }, []);
 
-                    if (in_array($director, $directors)) {
+                    if (in_array($lowercaseDirector, $directors)) {
                         // If more that one director, bail out.
                         if (null !== $chosenResult) {
                             return null;
                         }
                         $chosenResult = $result;
                     }
+                } catch (GuzzleException $e) {
+                    // Ignore error.
                 } catch (\Exception $e) {
                     // Ignore error.
                 }
