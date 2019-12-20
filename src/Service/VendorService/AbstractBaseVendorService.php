@@ -193,7 +193,7 @@ abstract class AbstractBaseVendorService
      * @throws UnknownVendorServiceException
      * @throws QueryException
      */
-    private function processBatch(array $batch, SourceRepository $sourceRepo, string $identifierType): array
+    protected function processBatch(array $batch, SourceRepository $sourceRepo, string $identifierType): array
     {
         // Split into to results arrays (updated and inserted).
         $updatedIdentifiers = [];

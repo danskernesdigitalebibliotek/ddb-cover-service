@@ -316,6 +316,14 @@ This will create an entry for each defined vendor service that extends
 `AbstractBaseVendorService`. However you must manually add the relevant
 credentials to each row in the database.
 
+Note: the vendor "TheMovieDatabase" uses queues doing cover imports and needs 
+these to run. Also TheMovieDatabase is rate limited in the API, so keep the 
+number of processed covers below 200 pr. min. 
+```sh
+bin/console enqueue:consume --env=prod --setup-broker --quiet --receive-timeout 5000 default
+bin/console enqueue:consume --env=prod --quiet --receive-timeout 5000 ApiSearchQueue
+```
+
 #### Vendor event
 
 This command will fire an insert event an place an job into the message queue
