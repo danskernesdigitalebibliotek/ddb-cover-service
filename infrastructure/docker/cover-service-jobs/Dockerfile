@@ -1,7 +1,7 @@
 FROM php:7.3-alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION="1.1.8
+ARG APP_VERSION="1.1.8"
 ENV APP_PATH=/var/www/html
 
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
