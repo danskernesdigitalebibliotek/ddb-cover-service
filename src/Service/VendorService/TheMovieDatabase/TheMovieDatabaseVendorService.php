@@ -92,7 +92,7 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
                     $batchSize = \count($pidArray);
 
                     // @TODO: this should be handled in updateOrInsertMaterials, which should take which event and job
-                    //        it should call default is now CoverStore (upload image), which we don't known yet.
+                    //        it should call. Default is now CoverStore (upload image), which we do not know yet.
                     $sourceRepo = $this->em->getRepository(Source::class);
                     $offset = 0;
                     while ($offset < $batchSize) {
@@ -102,7 +102,7 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
                         $offset += $batchSize;
                     }
 
-                    // @TODO: Find the once thats update/insert base on the identifier arrays above.
+                    // @TODO: Find the one that update/insert base on the identifier arrays above.
                     $event = new ResultEvent($resultArray, IdentifierType::PID, $this->getVendorId());
                     $this->dispatcher->dispatch($event::NAME, $event);
 
