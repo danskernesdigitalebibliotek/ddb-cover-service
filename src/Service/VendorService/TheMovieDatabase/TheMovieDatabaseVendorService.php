@@ -94,12 +94,12 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
                     // @TODO: this should be handled in updateOrInsertMaterials, which should take which event and job
                     //        it should call. Default is now CoverStore (upload image), which we do not know yet.
                     $sourceRepo = $this->em->getRepository(Source::class);
-                    $offset = 0;
-                    while ($offset < $batchSize) {
-                        $batch = \array_slice($pidArray, $offset, self::BATCH_SIZE, true);
+                    $batchOffset = 0;
+                    while ($batchOffset < $batchSize) {
+                        $batch = \array_slice($pidArray, $batchOffset, self::BATCH_SIZE, true);
                         [$updatedIdentifiers, $insertedIdentifiers] = $this->processBatch($batch, $sourceRepo, IdentifierType::PID);
 
-                        $offset += $batchSize;
+                        $batchOffset += $batchSize;
                     }
 
                     // @TODO: Find the one that update/insert base on the identifier arrays above.
