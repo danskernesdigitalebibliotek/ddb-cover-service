@@ -7,6 +7,7 @@
 
 namespace App\Service\VendorService\TheMovieDatabase;
 
+use App\Entity\Source;
 use App\Exception\IllegalVendorServiceException;
 use App\Exception\UnknownVendorServiceException;
 use App\Service\VendorService\AbstractBaseVendorService;
@@ -89,8 +90,19 @@ class TheMovieDatabaseVendorService extends AbstractBaseVendorService
                     );
 
                     $batchSize = \count($pidArray);
-                    $this->updateOrInsertMaterials($pidArray, IdentifierType::PID, $batchSize);
 
+                    // @TODO: this should be handled in updateOrInsertMaterials, which should take which event and job
+                    //        it should call default is now CoverStore (upload image), which we don't known yet.
+                    $sourceRepo = $this->em->getRepository(Source::class);
+                    $offset = 0;
+                    while ($offset < $batchSize) {
+                        $batch = \array_slice($pidArray, $offset, self::BATCH_SIZE, true);
+                        [$updatedIdentifiers, $insertedIdentifiers] = $this->processBatch($batch, $sourceRepo, IdentifierType::PID);
+
+                        $offset += $batchSize;
+                    }
+
+                    // @TODO: Find the once thats update/insert base on the identifier arrays above.
                     $event = new ResultEvent($resultArray, IdentifierType::PID, $this->getVendorId());
                     $this->dispatcher->dispatch($event::NAME, $event);
 

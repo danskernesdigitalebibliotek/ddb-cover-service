@@ -9,6 +9,7 @@ namespace App\Service\VendorService\TheMovieDatabase\Queue;
 
 use App\Entity\Source;
 use App\Entity\Vendor;
+use App\Event\IndexReadyEvent;
 use App\Event\VendorEvent;
 use App\Service\VendorService\TheMovieDatabase\Message\ApiSearchMessage;
 use App\Service\VendorService\TheMovieDatabase\TheMovieDatabaseApiService;
@@ -16,6 +17,7 @@ use App\Utils\Types\IdentifierType;
 use App\Utils\Types\VendorState;
 use Doctrine\ORM\EntityManagerInterface;
 use Enqueue\Client\TopicSubscriberInterface;
+use Enqueue\Util\JSON;
 use Interop\Queue\PsrContext;
 use Interop\Queue\PsrMessage;
 use Interop\Queue\PsrProcessor;
