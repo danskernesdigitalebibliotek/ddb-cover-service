@@ -109,7 +109,7 @@ class TheMovieDatabaseApiService
         $chosenResult = null;
 
         foreach ($results as $result) {
-            // Validate title againt result->title or result->original_title.
+            // Validate title against result->title or result->original_title.
             if (mb_strtolower($result->title, 'UTF-8') === $lowercaseResultTitle || mb_strtolower($result->original_title, 'UTF-8') === $lowercaseResultTitle) {
                 // Validate director.
                 try {

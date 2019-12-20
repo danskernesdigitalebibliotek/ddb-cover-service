@@ -151,7 +151,7 @@ class TheMovieDatabaseSearchService
         return [$pidArray, $more, $offset + self::SEARCH_LIMIT];
     }
 
-    /**
+    /**$$
      * Extract data from response.
      *
      * @param array $result
