@@ -14,6 +14,7 @@ data:
   APP_REDIS_CACHE_PORT: '6379'
   APP_REDIS_CACHE_DB: '10'
   APP_ELASTIC_URL: 'http://elasticsearch-es-http:9200/'
+  APP_ENABLE_NO_HITS: 'false'
 
 ---
 apiVersion: v1
