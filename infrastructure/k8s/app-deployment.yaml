@@ -95,7 +95,7 @@ spec:
         - name: github-registry
       containers:
       - name: coverservice
-        image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.9
+        image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.10
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -170,7 +170,7 @@ spec:
           - containerPort: 9000
           - containerPort: 9253
       - name: nginx
-        image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx:1.1.9
+        image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx:1.1.10
         imagePullPolicy: IfNotPresent
         resources:
           requests:
