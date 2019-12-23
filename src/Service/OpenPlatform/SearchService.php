@@ -98,7 +98,7 @@ class SearchService
     public function search($identifier, $type, $refresh = false): Material
     {
         // Try getting item from cache.
-        $item = $this->cache->getItem('openplatform.search_query'.$identifier);
+        $item = $this->cache->getItem('openplatform.search_query'.str_replace(':', '', $identifier));
 
         // We return the material object and not the $item->get() as that
         // prevents proper testing of the service.
