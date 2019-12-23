@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Enqueue\Client\ProducerInterface;
 use Enqueue\Util\JSON;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -35,7 +36,8 @@ class SearchReindexCommand extends Command
      */
     protected function configure()
     {
-        $this->setDescription('Reindex search table');
+        $this->setDescription('Reindex search table')
+            ->addArgument('vendorid', InputArgument::OPTIONAL, 'Limit the re-index to vendor with this id number');
     }
 
     /**
@@ -43,11 +45,17 @@ class SearchReindexCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $vendorId = $input->getArgument('vendorid');
+
         $batchSize = 50;
         $i = 0;
 
         // @TODO: Move into repository and use query builder.
-        $query = $this->em->createQuery('SELECT s FROM App\Entity\Source s WHERE s.image IS NOT NULL');
+        $query = 'SELECT s FROM App\Entity\Source s WHERE s.image IS NOT NULL';
+        if ($vendorId) {
+            $query .= ' AND s.vendor = '.$vendorId;
+        }
+        $query = $this->em->createQuery($query);
         $iterableResult = $query->iterate();
         foreach ($iterableResult as $row) {
             $source = $row[0];
