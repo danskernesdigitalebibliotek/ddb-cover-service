@@ -6,8 +6,6 @@
 
 namespace App\Command\Search;
 
-use App\Entity\Vendor;
-use App\Service\VendorService\VendorServiceFactory;
 use App\Utils\Message\ProcessMessage;
 use App\Utils\Types\VendorState;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,7 +53,7 @@ class SearchReindexCommand extends Command
         // @TODO: Move into repository and use query builder.
         $query = 'SELECT s FROM App\Entity\Source s WHERE s.image IS NOT NULL';
         if ($vendorId) {
-            $query .= ' AND s.vendor = ' . $vendorId;
+            $query .= ' AND s.vendor = '.$vendorId;
         }
         $query = $this->em->createQuery($query);
         $iterableResult = $query->iterate();

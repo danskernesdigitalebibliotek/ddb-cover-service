@@ -235,7 +235,7 @@ class SearchService
      * @param string $identifier
      *   The identifier to search for
      * @param string $type
-     *   The identifier type.
+     *   The identifier type
      * @param int $offset
      *   The offset to start getting results
      * @param array $results
@@ -252,7 +252,7 @@ class SearchService
     {
         $token = $this->authenticationService->getAccessToken();
         $query = $this->searchIndex.'='.$identifier;
-        if ($type == IdentifierType::PID) {
+        if (IdentifierType::PID == $type) {
             // If this is a search after a pid simply search for it and not in the search index.
             $query = $identifier;
         }
