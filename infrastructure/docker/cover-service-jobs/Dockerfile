@@ -1,7 +1,7 @@
 FROM php:7.3-alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION="1.1.10"
+ARG APP_VERSION="1.1.11"
 ENV APP_PATH=/var/www/html
 
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
@@ -48,7 +48,7 @@ COPY etc/php/conf.d/opcache.ini /usr/local/etc/php/conf.d/20-opcache.ini
 COPY etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/20-php.ini
 
 # Copy application.
-COPY --from=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.10 ${APP_PATH}/ ${APP_PATH}/
+COPY --from=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.11 ${APP_PATH}/ ${APP_PATH}/
 
 # Install configuration template handler
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
