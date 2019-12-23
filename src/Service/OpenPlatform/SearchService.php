@@ -108,7 +108,7 @@ class SearchService
         // process.
         if ($refresh || !$item->isHit()) {
             try {
-                $res = $this->recursiveSearch($identifier);
+                $res = $this->recursiveSearch($identifier, $type);
             } catch (GuzzleException $exception) {
                 throw new PlatformSearchException($exception->getMessage(), $exception->getCode());
             }
@@ -234,6 +234,8 @@ class SearchService
      *
      * @param string $identifier
      *   The identifier to search for
+     * @param string $type
+     *   The identifier type.
      * @param int $offset
      *   The offset to start getting results
      * @param array $results
@@ -246,16 +248,21 @@ class SearchService
      * @throws \App\Exception\PlatformAuthException
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function recursiveSearch(string $identifier, int $offset = 0, array $results = []): array
+    private function recursiveSearch(string $identifier, string $type, int $offset = 0, array $results = []): array
     {
         $token = $this->authenticationService->getAccessToken();
+        $query = $this->searchIndex.'='.$identifier;
+        if ($type == IdentifierType::PID) {
+            // If this is a search after a pid simply search for it and not in the search index.
+            $query = $identifier;
+        }
         $response = $this->client->request('POST', $this->searchURL, [
             RequestOptions::JSON => [
                 'fields' => $this->fields,
                 'access_token' => $token,
                 'pretty' => false,
                 'timings' => false,
-                'q' => $this->searchIndex.'='.$identifier,
+                'q' => $query,
                 'offset' => $offset,
                 'limit' => $this::SEARCH_LIMIT,
             ],
@@ -270,7 +277,7 @@ class SearchService
 
         // If there are more results get the next chunk.
         if (isset($json['hitCount']) && false !== $json['more']) {
-            $this->recursiveSearch($identifier, $offset + $this::SEARCH_LIMIT, $results);
+            $this->recursiveSearch($identifier, $type, $offset + $this::SEARCH_LIMIT, $results);
         }
 
         return $results;
