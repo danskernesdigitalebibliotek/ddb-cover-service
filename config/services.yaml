@@ -51,6 +51,11 @@ services:
             $local: '@oneup_flysystem.local_filesystem'
             $ftp: '@oneup_flysystem.bogportalen_ftp_filesystem'
 
+    App\Service\VendorService\RbDigital\RbDigitalVendorService:
+        arguments:
+            $local: '@oneup_flysystem.local_filesystem'
+            $ftp: '@oneup_flysystem.rbdigital_ftp_filesystem'
+
     App\Service\VendorService\TheMovieDatabase\TheMovieDatabaseApiService:
         arguments:
             $apiKey: '%env(THEMOVIEDATABASE_APIKEY)%'
