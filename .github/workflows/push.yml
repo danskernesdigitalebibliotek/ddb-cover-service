@@ -1,0 +1,54 @@
+---
+on:
+  push:
+    branch:
+      - release
+name: Release (stg)
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  ORG_NAME: cableman
+  NAMESPACE: cover-service
+  
+jobs:
+  build:
+    name: Staging deploy
+    runs-on: ubuntu-latest
+    if: (github.ref == 'refs/heads/release') && !github.event.deleted
+    steps:
+      - uses: actions/checkout@master
+      - name: Login to github package registry
+        run: docker login docker.pkg.github.com -u publisher -p "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Build CoverService image
+        run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:latest" --file="infrastructure/docker/cover-service/Dockerfile" .
+
+      - name: Build nginx sidecar image
+        run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:latest" --file="infrastructure/docker/nginx/Dockerfile" .
+
+      - name: Build CoverServiceJobs image
+        run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service-jobs:latest" --file="infrastructure/docker/cover-service-jobs/Dockerfile" .
+
+      - name: Push CoverService image
+        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service:latest
+      - name: Push CoverService Nginx image
+        run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/nginx:latest
+      - name: Push CoverServiceJobs image
+        run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service-jobs:latest
+
+      # Set the target Azure Kubernetes Service (AKS) cluster. 
+      - uses: azure/aks-set-context@v1
+        name: Set AKS Context (stg)
+        if: github.ref == 'refs/heads/release'
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ddb-cover-service-stg
+          resource-group: CoverServiceStg
+
+      - name: Deployment
+        run: kubectl -n ${{ env.NAMESPACE }} apply -f infrastructure/k8s/stg/app-deployment.yaml
