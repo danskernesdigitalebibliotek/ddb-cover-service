@@ -33,8 +33,8 @@ trait ProgressBarTrait
     private function progressStart(string $message): void
     {
         if ($this->progressBar) {
-            $this->progressBar->start();
             $this->progressMessage($message);
+            $this->progressBar->start();
             $this->progressBar->advance();
         }
     }
