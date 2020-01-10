@@ -51,7 +51,7 @@ services:
             $local: '@oneup_flysystem.local_filesystem'
             $ftp: '@oneup_flysystem.bogportalen_ftp_filesystem'
 
-    App\Service\VendorService\RbDigital\RbDigitalVendorService:
+    App\Service\VendorService\RbDigital\RbDigitalBooksVendorService:
         arguments:
             $local: '@oneup_flysystem.local_filesystem'
             $ftp: '@oneup_flysystem.rbdigital_ftp_filesystem'

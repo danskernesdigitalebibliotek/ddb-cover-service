@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Service for updating book covers from 'RB Digital'.
+ */
 
 namespace App\Service\VendorService\RbDigital;
 
@@ -17,6 +21,9 @@ use Scriptotek\Marc\Collection;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Class RbDigitalBooksVendorService.
+ */
 class RbDigitalBooksVendorService extends AbstractBaseVendorService
 {
     use ProgressBarTrait;
@@ -39,20 +46,18 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
      *
      * @param eventDispatcherInterface $eventDispatcher
      *   Dispatcher to trigger async jobs on import
-     * @param filesystem $local
+     * @param Filesystem $local
      *   Flysystem adapter for local filesystem
-     * @param filesystem $ftp
+     * @param Filesystem $ftp
      *   Flysystem adapter for remote ftp server
-     * @param entityManagerInterface $entityManager
+     * @param EntityManagerInterface $entityManager
      *   Doctrine entity manager
-     * @param loggerInterface $statsLogger
+     * @param LoggerInterface $statsLogger
      *   Logger object to send stats to ES
      * @param AdapterInterface $cache
      *   Cache adapter for the application
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, Filesystem $local,
-                                Filesystem $ftp, EntityManagerInterface $entityManager,
-                                LoggerInterface $statsLogger, AdapterInterface $cache)
+    public function __construct(EventDispatcherInterface $eventDispatcher, Filesystem $local, Filesystem $ftp, EntityManagerInterface $entityManager, LoggerInterface $statsLogger, AdapterInterface $cache)
     {
         parent::__construct($eventDispatcher, $entityManager, $statsLogger);
 
@@ -73,23 +78,23 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
         // We're lazy loading the config to avoid errors from missing config values on dependency injection
         $this->loadConfig();
 
-        $mrcFiles = [];
-        foreach (self::VENDOR_ARCHIVES_DIRECTORIES as $VENDOR_ARCHIVES_DIRECTORY) {
-            foreach ($this->ftp->listContents($VENDOR_ARCHIVES_DIRECTORY) as $content) {
-                $mrcFiles[] = $content['path'];
+        $mrcFileNames = [];
+        foreach (self::VENDOR_ARCHIVES_DIRECTORIES as $directory) {
+            foreach ($this->ftp->listContents($directory) as $content) {
+                $mrcFileNames[] = $content['path'];
             }
         }
 
         $this->progressStart('Checking for updated archives');
 
-        foreach ($mrcFiles as $mrcFile) {
-            $this->progressMessage('Checking for updated archive: "'.$mrcFile.'"');
+        foreach ($mrcFileNames as $mrcFileName) {
+            $this->progressMessage('Checking for updated archive: "'.$mrcFileName.'"');
             try {
-                if ($this->archiveHasUpdate($mrcFile)) {
+                if ($this->archiveHasUpdate($mrcFileName)) {
                     $this->progressMessage('New archive found, Downloading....');
                     $this->progressAdvance();
 
-                    $this->updateArchive($mrcFile);
+                    $this->updateArchive($mrcFileName);
                 }
 
                 $this->progressMessage('Getting records from archive....');
@@ -97,7 +102,7 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
 
                 $count = 0;
                 $isbnImageUrlArray = [];
-                $localArchivePath = $this->local->getAdapter()->getPathPrefix().$mrcFile;
+                $localArchivePath = $this->local->getAdapter()->getPathPrefix().$mrcFileName;
                 $collection = Collection::fromFile($localArchivePath);
 
                 foreach ($collection as $record) {
@@ -140,7 +145,8 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
     /**
      * Update local copy of vendors archive.
      *
-     * @param string $mrcFile
+     * @param string $mrcFileName
+     *   The path and name of the records file to update
      *
      * @return bool
      *
@@ -148,23 +154,24 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
      * @throws InvalidArgumentException
      * @throws IllegalVendorServiceException
      */
-    private function updateArchive(string $mrcFile): bool
+    private function updateArchive(string $mrcFileName): bool
     {
-        $remoteModifiedAt = $this->ftp->getTimestamp($mrcFile);
-        $remoteModifiedAtCache = $this->cache->getItem($this->getCacheKey($mrcFile));
+        $remoteModifiedAt = $this->ftp->getTimestamp($mrcFileName);
+        $remoteModifiedAtCache = $this->cache->getItem($this->getCacheKey($mrcFileName));
         $remoteModifiedAtCache->set($remoteModifiedAt);
         $remoteModifiedAtCache->expiresAfter(24 * 60 * 60);
 
         $this->cache->save($remoteModifiedAtCache);
 
         // @TODO Error handling for missing archive
-        return $this->local->put($mrcFile, $this->ftp->read($mrcFile));
+        return $this->local->put($mrcFileName, $this->ftp->read($mrcFileName));
     }
 
     /**
      * Check if vendors archive has update.
      *
-     * @param string $mrcFile
+     * @param string $mrcFileName
+     *   The path and name of the records file to check for update to
      *
      * @return bool
      *
@@ -172,12 +179,12 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
      * @throws InvalidArgumentException
      * @throws IllegalVendorServiceException
      */
-    private function archiveHasUpdate(string $mrcFile): bool
+    private function archiveHasUpdate(string $mrcFileName): bool
     {
         $update = true;
 
-        if ($this->local->has($mrcFile)) {
-            $remoteModifiedAtCache = $this->cache->getItem($this->getCacheKey($mrcFile));
+        if ($this->local->has($mrcFileName)) {
+            $remoteModifiedAtCache = $this->cache->getItem($this->getCacheKey($mrcFileName));
 
             if ($remoteModifiedAtCache->isHit()) {
                 $remote = $this->ftp->getTimestamp(self::VENDOR_ARCHIVE_NAME);
@@ -191,21 +198,22 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
     /**
      * Get cache key for the given filename.
      *
-     * @param string $mrcFile
+     * @param string $mrcFileName
+     *   The filename to get a cache key for
      *
      * @return string
      *
      * @throws IllegalVendorServiceException
      */
-    private function getCacheKey(string $mrcFile): string
+    private function getCacheKey(string $mrcFileName): string
     {
-        $hash = md5($mrcFile);
+        $hash = md5($mrcFileName);
 
         return 'app.vendor.'.$this->getVendorId().$hash.'.remoteModifiedAt';
     }
 
     /**
-     * Set config from service from DB vendor object.
+     * Set config for service from DB vendor object.
      *
      * @throws UnknownVendorServiceException
      * @throws IllegalVendorServiceException

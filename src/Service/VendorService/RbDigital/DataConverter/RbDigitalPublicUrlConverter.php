@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * Convert 'Iverse' urls from pointing to medium sized images to pointing large size.
+ * Convert 'RbDigital' urls to pointing to medium sized images from pointing to small sized.
  */
 
 namespace App\Service\VendorService\RbDigital\DataConverter;
 
 /**
- * Class IversePublicUrlConverter.
+ * Class RbDigitalPublicUrlConverter.
  */
 class RbDigitalPublicUrlConverter
 {
@@ -28,7 +28,7 @@ class RbDigitalPublicUrlConverter
     }
 
     /**
-     * Convert 'RBDigital' URL from 'medium' to 'large'.
+     * Convert 'RBDigital' URL from 'small' to 'medium'.
      *
      * @param string $url
      *   The '95x140' image url
