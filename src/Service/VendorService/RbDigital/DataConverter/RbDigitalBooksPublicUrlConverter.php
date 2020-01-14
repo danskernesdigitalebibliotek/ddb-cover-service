@@ -7,9 +7,9 @@
 namespace App\Service\VendorService\RbDigital\DataConverter;
 
 /**
- * Class RbDigitalPublicUrlConverter.
+ * Class RbDigitalBooksPublicUrlConverter.
  */
-class RbDigitalPublicUrlConverter
+class RbDigitalBooksPublicUrlConverter
 {
     private const SMALL_URL_STRING = '_image_95x140.jpg';
     private const MEDIUM_URL_STRING = '_image_148x230.jpg';
