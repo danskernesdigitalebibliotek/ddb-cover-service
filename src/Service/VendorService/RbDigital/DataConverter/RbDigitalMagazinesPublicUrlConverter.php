@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Convert 'RbDigital' urls to pointing to medium sized images from pointing to small sized.
+ * Convert 'RbDigital' urls by removing 'format' and other parameters from URL to get original size.
  */
 
 namespace App\Service\VendorService\RbDigital\DataConverter;

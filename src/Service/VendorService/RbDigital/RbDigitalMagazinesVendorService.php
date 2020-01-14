@@ -40,6 +40,7 @@ class RbDigitalMagazinesVendorService extends AbstractBaseVendorService
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface $statsLogger
      * @param SearchService $searchService
+     * @param \GuzzleHttp\ClientInterface $httpClient
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager, LoggerInterface $statsLogger, SearchService $searchService, ClientInterface $httpClient)
     {
@@ -66,7 +67,7 @@ class RbDigitalMagazinesVendorService extends AbstractBaseVendorService
             do {
                 $this->progressMessage('Search data well for: "'.self::VENDOR_SEARCH_TERM.'" (Offset: '.$offset.')');
 
-                // Search the data well for material with acSource set to "comics plus".
+                // Search the data well for material with acSource set to "rbdigital magazines".
                 [$pidArray, $more, $offset] = $this->searchService->search(self::VENDOR_SEARCH_TERM, $offset);
 
                 // Get the data wells image urls from the results
