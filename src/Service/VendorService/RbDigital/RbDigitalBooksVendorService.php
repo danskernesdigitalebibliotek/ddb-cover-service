@@ -10,6 +10,7 @@ use App\Exception\IllegalVendorServiceException;
 use App\Exception\UnknownVendorServiceException;
 use App\Service\VendorService\AbstractBaseVendorService;
 use App\Service\VendorService\ProgressBarTrait;
+use App\Service\VendorService\RbDigital\DataConverter\RbDigitalBooksPublicUrlConverter;
 use App\Service\VendorService\RbDigital\DataConverter\RbDigitalPublicUrlConverter;
 use App\Utils\Message\VendorImportResultMessage;
 use Doctrine\ORM\EntityManagerInterface;
@@ -114,7 +115,7 @@ class RbDigitalBooksVendorService extends AbstractBaseVendorService
                         ++$count;
 
                         if (0 === $count % self::BATCH_SIZE) {
-                            RbDigitalPublicUrlConverter::convertArrayValues($isbnImageUrlArray);
+                            RbDigitalBooksPublicUrlConverter::convertArrayValues($isbnImageUrlArray);
                             $this->updateOrInsertMaterials($isbnImageUrlArray);
                             $isbnImageUrlArray = [];
 
