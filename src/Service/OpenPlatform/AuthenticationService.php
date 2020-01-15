@@ -110,8 +110,8 @@ class AuthenticationService
                 $response = $this->client->request('POST', $this->params->get('openPlatform.auth.url'), [
                     'form_params' => [
                         'grant_type' => 'password',
-                        'username' => '@' . $this->params->get('openPlatform.auth.agency'),
-                        'password' => '@' . $this->params->get('openPlatform.auth.agency'),
+                        'username' => '@'.$this->params->get('openPlatform.auth.agency'),
+                        'password' => '@'.$this->params->get('openPlatform.auth.agency'),
                     ],
                     'auth' => [
                         $this->params->get('openPlatform.auth.id'),
