@@ -62,6 +62,16 @@ spec:
               secretKeyRef:
                 name: cover-service-secret
                 key: APP_OPENPLATFORM_AGENCY
+          - name: APP_DATAWELL_VENDOR_USER
+            valueFrom:
+              secretKeyRef:
+                name: cover-service-secret
+                key: APP_DATAWELL_VENDOR_USER
+          - name: APP_DATAWELL_VENDOR_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: cover-service-secret
+                key: APP_DATAWELL_VENDOR_PASSWORD
           - name: APP_CLOUDINARY_ID
             valueFrom:
               secretKeyRef:
