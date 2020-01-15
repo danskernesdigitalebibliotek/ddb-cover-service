@@ -116,10 +116,10 @@ spec:
                 name: cover-service-secret
                 key: APP_OPENPLATFORM_SECRET
           - name: APP_OPENPLATFORM_AGENCY
-              valueFrom:
-                secretKeyRef:
-                  name: cover-service-secret
-                  key: APP_OPENPLATFORM_AGENCY
+            valueFrom:
+              secretKeyRef:
+                name: cover-service-secret
+                key: APP_OPENPLATFORM_AGENCY
           - name: APP_CLOUDINARY_ID
             valueFrom:
               secretKeyRef:
