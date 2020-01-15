@@ -5,7 +5,7 @@ ENV APP_PATH=/var/www/html
 
 RUN mkdir -p ${APP_PATH}/public
 
-COPY --from=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.11 ${APP_PATH}/public ${APP_PATH}/public
+COPY --from=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:1.1.12 ${APP_PATH}/public ${APP_PATH}/public
 
 WORKDIR ${APP_PATH}
 

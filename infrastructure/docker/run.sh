@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=1.1.11
+VERSION=1.1.12
 
 (cd php7.3-fpm && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm:${VERSION} .)
 (cd cover-service && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:${VERSION} .)
