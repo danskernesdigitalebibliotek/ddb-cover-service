@@ -108,7 +108,8 @@ class SearchService
         // process.
         if ($refresh || !$item->isHit()) {
             try {
-                $res = $this->recursiveSearch($identifier, $type);
+                $token = $this->authenticationService->getAccessToken($refresh);
+                $res = $this->recursiveSearch($token, $identifier, $type);
             } catch (GuzzleException $exception) {
                 throw new PlatformSearchException($exception->getMessage(), $exception->getCode());
             }
@@ -232,6 +233,8 @@ class SearchService
      * This is need as the open platform allows an max limit of 50 elements, so
      * if more results exists this calls it self to get all results.
      *
+     * @param string $token
+     *   Access token.
      * @param string $identifier
      *   The identifier to search for
      * @param string $type
@@ -248,9 +251,8 @@ class SearchService
      * @throws \App\Exception\PlatformAuthException
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function recursiveSearch(string $identifier, string $type, int $offset = 0, array $results = []): array
+    private function recursiveSearch(string $token, string $identifier, string $type, int $offset = 0, array $results = []): array
     {
-        $token = $this->authenticationService->getAccessToken();
         $query = $this->searchIndex.'='.$identifier;
         if (IdentifierType::PID == $type) {
             // If this is a search after a pid simply search for it and not in the search index.
@@ -277,7 +279,7 @@ class SearchService
 
         // If there are more results get the next chunk.
         if (isset($json['hitCount']) && false !== $json['more']) {
-            $this->recursiveSearch($identifier, $type, $offset + $this::SEARCH_LIMIT, $results);
+            $this->recursiveSearch($token, $identifier, $type, $offset + $this::SEARCH_LIMIT, $results);
         }
 
         return $results;

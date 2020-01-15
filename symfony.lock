@@ -44,6 +44,12 @@
     "box/spout": {
         "version": "v2.7.3"
     },
+    "ck/file_marc_reference": {
+        "version": "v1.2.0"
+    },
+    "ck/php-marcspec": {
+        "version": "2.0.3"
+    },
     "cloudinary/cloudinary_php": {
         "version": "1.12.0"
     },
@@ -302,6 +308,12 @@
     "pdepend/pdepend": {
         "version": "2.5.2"
     },
+    "pear/file_marc": {
+        "version": "1.4.1"
+    },
+    "pear/pear_exception": {
+        "version": "v1.0.1"
+    },
     "phan/phan": {
         "version": "2.4.4"
     },
@@ -391,6 +403,9 @@
     },
     "sabre/event": {
         "version": "5.0.3"
+    },
+    "scriptotek/marc": {
+        "version": "v2.1.0"
     },
     "sebastian/code-unit-reverse-lookup": {
         "version": "1.0.1"
