@@ -9,6 +9,7 @@ parameters:
     openPlatform.auth.id: '%env(OPENPLATFORM_AUTH_ID)%'
     openPlatform.auth.secret: '%env(OPENPLATFORM_AUTH_SECRET)%'
     openPlatform.auth.url: '%env(OPENPLATFORM_AUTH_URL)%'
+    openPlatform.auth.agency: '%env(OPENPLATFORM_AUTH_AGENCY)%'
     openPlatform.search.url: '%env(OPENPLATFORM_SEARCH_URL)%'
     openPlatform.search.index: '%env(OPENPLATFORM_SEARCH_INDEX)%'
     openPlatform.search.ttl: '%env(OPENPLATFORM_SEARCH_TTL)%'
