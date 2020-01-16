@@ -93,6 +93,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   URL transformation service
      * @param \App\Service\NoHitService $noHitService
      *   Service for registering no hits
+     * @param \Psr\Log\LoggerInterface $logger
+     *   Logger.
      * @param array $options
      *   Any additional parameters to add to the service
      *
@@ -262,7 +264,8 @@ abstract class AbstractMoreInfoService extends SoapClient
 
         $results = [];
         if (false === $response) {
-            $this->logger->error('Curl ES query error: '.curl_error($ch));
+            $error = curl_error($ch);
+            $this->logger->error('Curl ES query error: '.$error);
         } else {
             $results = JSON::parse($response);
             $results = $this->filterResults($results);
@@ -272,13 +275,13 @@ abstract class AbstractMoreInfoService extends SoapClient
         $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, $labels);
 
         $time = microtime(true);
-        $imageUrls = $this->getImageUrls($results);
+        $imageUrls = is_array($results) ? $this->getImageUrls($results) : [];
         $this->statsLoggingService->info('Cover request/response', [
             'service' => 'MoreInfoService',
             'clientID' => $body->authentication->authenticationGroup,
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
-            'fileNames' => array_values($imageUrls),
+            'fileNames' => !empty($imageUrls) ? array_values($imageUrls) : null,
             'matches' => $this->getMatches($imageUrls, $searchParameters),
             'elasticQueryTime' => $queryTime,
         ]);
@@ -598,8 +601,10 @@ abstract class AbstractMoreInfoService extends SoapClient
      * Get image URLs from search result.
      *
      * @param array $results
+     *   An array of result from an Elastica search
      *
-     * @return mixed
+     * @return array
+     *   An array of image urls strings from the results
      */
     private function getImageUrls(array $results)
     {
@@ -609,7 +614,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             $urls[$result["isIdentifier"]] = $result['imageUrl'];
         }
 
-        return empty($urls) ? null : $urls;
+        return $urls;
     }
 
     /**

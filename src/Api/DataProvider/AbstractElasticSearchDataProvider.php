@@ -188,7 +188,7 @@ abstract class AbstractElasticSearchDataProvider
      * @param array $results
      *   An array of result from an Elastica search
      *
-     * @return mixed
+     * @return array
      *   An array of image urls strings from the results
      */
     protected function getImageUrls(array $results)
@@ -198,7 +198,7 @@ abstract class AbstractElasticSearchDataProvider
             $urls[$result["isIdentifier"]] = $result['imageUrl'];
         }
 
-        return empty($urls) ? null : $urls;
+        return $urls;
     }
 
     /**
@@ -244,7 +244,7 @@ abstract class AbstractElasticSearchDataProvider
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
-        $imageUrls = $this->getImageUrls($results);
+        $imageUrls = is_array($results) ? $this->getImageUrls($results) : [];
 
         $this->statsLoggingService->info('Cover request/response', [
             'service' => $className,
@@ -252,7 +252,7 @@ abstract class AbstractElasticSearchDataProvider
             'remoteIP' => $request->getClientIp(),
             'isType' => $type,
             'isIdentifiers' => $identifiers,
-            'fileNames' => array_values($imageUrls),
+            'fileNames' => !empty($imageUrls) ? array_values($imageUrls) : null,
             'matches' => $this->getMatches($imageUrls, $identifiers, $type),
         ]);
 
