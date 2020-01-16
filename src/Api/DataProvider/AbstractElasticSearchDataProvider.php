@@ -253,7 +253,7 @@ abstract class AbstractElasticSearchDataProvider
             'isType' => $type,
             'isIdentifiers' => $identifiers,
             'fileNames' => array_values($imageUrls),
-            'matches' => json_encode($this->getMatches($imageUrls, $identifiers, $type)),
+            'matches' => $this->getMatches($imageUrls, $identifiers, $type),
         ]);
 
         $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);
@@ -276,7 +276,13 @@ abstract class AbstractElasticSearchDataProvider
         $matches = [];
 
         foreach ($identifiers as $identifier) {
-            $matches[$identifierType][$identifier] = $imageUrls[$identifier] ?? null;
+            $match = [
+                'match' => $imageUrls[$identifier] ?? null,
+                'identifier' => $identifier,
+                'type' => $identifierType,
+            ];
+
+            $matches[] = $match;
         }
 
         return $matches;

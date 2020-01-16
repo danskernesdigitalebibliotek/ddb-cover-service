@@ -279,7 +279,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
             'fileNames' => array_values($imageUrls),
-            'matches' => json_encode($this->getMatches($imageUrls, $searchParameters)),
+            'matches' => $this->getMatches($imageUrls, $searchParameters),
             'elasticQueryTime' => $queryTime,
         ]);
         $this->metricsService->histogram('stats_logging_duration_seconds', 'Time used to log stats', microtime(true) - $time, $labels);
@@ -311,7 +311,13 @@ abstract class AbstractMoreInfoService extends SoapClient
 
         foreach ($searchParameters as $searchKey => $searchParameter) {
             foreach ($searchParameter as $search) {
-                $matches[$searchKey][$search] = $imageUrls[$search] ?? null;
+                $match = [
+                    'match' => $imageUrls[$search] ?? null,
+                    'identifier' => $search,
+                    'type' => $searchKey,
+                ];
+
+                $matches[] = $match;
             }
         }
 
