@@ -94,7 +94,7 @@ abstract class AbstractMoreInfoService extends SoapClient
      * @param \App\Service\NoHitService $noHitService
      *   Service for registering no hits
      * @param \Psr\Log\LoggerInterface $logger
-     *   Logger.
+     *   Logger
      * @param array $options
      *   Any additional parameters to add to the service
      *
@@ -305,8 +305,9 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   Array of found image urls
      * @param array $searchParameters
      *   Array requested identifiers
+     *
      * @return array
-     *   Array of matches between found imageUrls and requested identifiers.
+     *   Array of matches between found imageUrls and requested identifiers
      */
     private function getMatches(array $imageUrls, array $searchParameters)
     {
@@ -611,7 +612,9 @@ abstract class AbstractMoreInfoService extends SoapClient
         $urls = [];
 
         foreach ($results as $result) {
-            $urls[$result["isIdentifier"]] = $result['imageUrl'];
+            if (isset($result['isIdentifier'])) {
+                $urls[$result['isIdentifier']] = $result['imageUrl'];
+            }
         }
 
         return $urls;

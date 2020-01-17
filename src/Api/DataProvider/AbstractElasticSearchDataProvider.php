@@ -195,7 +195,9 @@ abstract class AbstractElasticSearchDataProvider
     {
         $urls = [];
         foreach ($results as $result) {
-            $urls[$result["isIdentifier"]] = $result['imageUrl'];
+            if (isset($result['isIdentifier'])) {
+                $urls[$result['isIdentifier']] = $result['imageUrl'];
+            }
         }
 
         return $urls;
@@ -263,13 +265,14 @@ abstract class AbstractElasticSearchDataProvider
      * Create array of matches between searches and found image urls.
      *
      * @param array $imageUrls
-     *   Array of found image urls.
+     *   Array of found image urls
      * @param array $identifiers
-     *   Array of requested identifiers.
+     *   Array of requested identifiers
      * @param string $identifierType
-     *   Type of the identifiers.
+     *   Type of the identifiers
+     *
      * @return array
-     *   Array of matches between found imageUrls and requested identifiers.
+     *   Array of matches between found imageUrls and requested identifiers
      */
     private function getMatches(array $imageUrls, array $identifiers, string $identifierType)
     {
