@@ -14,6 +14,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SearchRepository extends ServiceEntityRepository
 {
+    /**
+     * SearchRepository constructor.
+     *
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Search::class);
