@@ -41,9 +41,6 @@
     "behatch/contexts": {
         "version": "3.2.0"
     },
-    "cloudinary/cloudinary_php": {
-        "version": "1.12.0"
-    },
     "composer/semver": {
         "version": "1.4.2"
     },
@@ -214,9 +211,6 @@
     },
     "justinrainbow/json-schema": {
         "version": "5.2.7"
-    },
-    "karriere/json-decoder": {
-        "version": "v2.1.2"
     },
     "microsoft/tolerant-php-parser": {
         "version": "v0.0.18"

@@ -128,46 +128,6 @@ spec:
               secretKeyRef:
                 name: cover-service-secret
                 key: APP_DB_PASSWORD
-          - name: APP_OPENPLATFORM_ID
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_OPENPLATFORM_ID
-          - name: APP_OPENPLATFORM_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_OPENPLATFORM_SECRET
-          - name: APP_OPENPLATFORM_AGENCY
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_OPENPLATFORM_AGENCY
-          - name: APP_DATAWELL_VENDOR_USER
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DATAWELL_VENDOR_USER
-          - name: APP_DATAWELL_VENDOR_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DATAWELL_VENDOR_PASSWORD
-          - name: APP_CLOUDINARY_ID
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_CLOUDINARY_ID
-          - name: APP_CLOUDINARY_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_CLOUDINARY_SECRET
-          - name: APP_CLOUDINARY_DOMAIN
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_CLOUDINARY_DOMAIN
           - name: APP_THEMOVIEDATABASE_APIKEY
             valueFrom:
               secretKeyRef:

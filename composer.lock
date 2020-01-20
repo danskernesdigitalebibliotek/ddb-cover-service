@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "adb346c90205e40c8df7a5a1d25e8baf",
+    "content-hash": "e24170a0b20116e70ae8683cea04b465",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -189,58 +189,6 @@
                 "swagger"
             ],
             "time": "2019-11-23T11:27:39+00:00"
-        },
-        {
-            "name": "cloudinary/cloudinary_php",
-            "version": "1.16.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cloudinary/cloudinary_php.git",
-                "reference": "e33619e48ea8fa0350c007d640777091bfa4fdbc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/e33619e48ea8fa0350c007d640777091bfa4fdbc",
-                "reference": "e33619e48ea8fa0350c007d640777091bfa4fdbc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.8.*"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src"
-                ],
-                "files": [
-                    "src/Helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Cloudinary",
-                    "homepage": "https://github.com/cloudinary/cloudinary_php/graphs/contributors"
-                }
-            ],
-            "description": "Cloudinary PHP SDK",
-            "homepage": "https://github.com/cloudinary/cloudinary_php",
-            "keywords": [
-                "cdn",
-                "cloud",
-                "cloudinary",
-                "image management",
-                "sdk"
-            ],
-            "time": "2019-11-28T15:57:33+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -2288,53 +2236,6 @@
                 "sql"
             ],
             "time": "2014-01-12T16:20:24+00:00"
-        },
-        {
-            "name": "karriere/json-decoder",
-            "version": "v2.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/karriereat/json-decoder.git",
-                "reference": "bb720a787be00acc5a74d7e1e2e30823a12bc292"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/karriereat/json-decoder/zipball/bb720a787be00acc5a74d7e1e2e30823a12bc292",
-                "reference": "bb720a787be00acc5a74d7e1e2e30823a12bc292",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "karriere/code-quality": "^3.0",
-                "sebastian/comparator": "^1.1",
-                "sebastian/exporter": "^2.0",
-                "sebastian/recursion-context": "^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Karriere\\JsonDecoder\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes Pichler",
-                    "email": "johannes.pichler@karriere.at",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "JsonDecoder implementation that allows you to convert your JSON data into PHP class objects",
-            "keywords": [
-                "decoder",
-                "json"
-            ],
-            "time": "2019-03-05T10:26:22+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -10140,16 +10041,11 @@
     "platform": {
         "php": "^7.1.3",
         "ext-ctype": "*",
-        "ext-curl": "*",
-        "ext-ftp": "*",
         "ext-iconv": "*",
-        "ext-imagick": "*",
-        "ext-json": "*",
         "ext-redis": "*",
         "ext-soap": "*",
         "ext-xmlreader": "*",
-        "ext-zend-opcache": "*",
-        "ext-zip": "*"
+        "ext-zend-opcache": "*"
     },
     "platform-dev": []
 }

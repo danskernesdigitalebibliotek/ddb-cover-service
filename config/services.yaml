@@ -6,18 +6,6 @@
 parameters:
     locale: 'en'
     app.enable.no.hits: '%env(bool:APP_ENABLE_NO_HITS)%'
-    openPlatform.auth.id: '%env(OPENPLATFORM_AUTH_ID)%'
-    openPlatform.auth.secret: '%env(OPENPLATFORM_AUTH_SECRET)%'
-    openPlatform.auth.url: '%env(OPENPLATFORM_AUTH_URL)%'
-    openPlatform.auth.agency: '%env(OPENPLATFORM_AUTH_AGENCY)%'
-    openPlatform.search.url: '%env(OPENPLATFORM_SEARCH_URL)%'
-    openPlatform.search.index: '%env(OPENPLATFORM_SEARCH_INDEX)%'
-    openPlatform.search.ttl: '%env(OPENPLATFORM_SEARCH_TTL)%'
-    datawell.vendor.agency: '%env(DATAWELL_VENDOR_AGENCY)%'
-    datawell.vendor.profile: '%env(DATAWELL_VENDOR_PROFILE)%'
-    datawell.vendor.search_url: '%env(DATAWELL_VENDOR_SEARCH_URL)%'
-    datawell.vendor.user: '%env(DATAWELL_VENDOR_USER)%'
-    datawell.vendor.password: '%env(DATAWELL_VENDOR_PASSWORD)%'
 
 services:
     # default configuration for services in *this* file
