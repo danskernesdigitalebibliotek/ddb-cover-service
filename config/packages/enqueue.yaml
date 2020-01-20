@@ -1,6 +1,7 @@
 enqueue:
-    transport:
-        default: '%env(ENQUEUE_DSN)%'
-    client: ~
-    extensions:
-        doctrine_ping_connection_extension: true
+    default:
+        transport:
+            dsn: '%env(ENQUEUE_DSN)%'
+        client: ~
+        extensions:
+            doctrine_ping_connection_extension: true

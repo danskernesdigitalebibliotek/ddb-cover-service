@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Vendor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Vendor|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,9 +17,9 @@ class VendorRepository extends ServiceEntityRepository
     /**
      * VendorRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Vendor::class);
     }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64eb692bea59d1c86157f8af9bca77fd",
+    "content-hash": "adb346c90205e40c8df7a5a1d25e8baf",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -639,30 +639,29 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "1.12.6",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "08f944760ac471aa97a9b0386dfdb559db80b32d"
+                "reference": "6926771140ee87a823c3b2c72602de9dda4490d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/08f944760ac471aa97a9b0386dfdb559db80b32d",
-                "reference": "08f944760ac471aa97a9b0386dfdb559db80b32d",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/6926771140ee87a823c3b2c72602de9dda4490d3",
+                "reference": "6926771140ee87a823c3b2c72602de9dda4490d3",
                 "shasum": ""
             },
             "require": {
-                "doctrine/dbal": "^2.5.12",
-                "doctrine/doctrine-cache-bundle": "~1.2",
+                "doctrine/dbal": "^2.9.0",
                 "doctrine/persistence": "^1.3.3",
                 "jdorn/sql-formatter": "^1.2.16",
                 "php": "^7.1",
-                "symfony/cache": "^3.4.30|^4.3.3",
-                "symfony/config": "^3.4.30|^4.3.3",
-                "symfony/console": "^3.4.30|^4.3.3",
-                "symfony/dependency-injection": "^3.4.30|^4.3.3",
-                "symfony/doctrine-bridge": "^3.4.30|^4.3.3",
-                "symfony/framework-bundle": "^3.4.30|^4.3.3",
+                "symfony/cache": "^4.3.3|^5.0",
+                "symfony/config": "^4.3.3|^5.0",
+                "symfony/console": "^3.4.30|^4.3.3|^5.0",
+                "symfony/dependency-injection": "^4.3.3|^5.0",
+                "symfony/doctrine-bridge": "^4.3.7|^5.0",
+                "symfony/framework-bundle": "^3.4.30|^4.3.3|^5.0",
                 "symfony/service-contracts": "^1.1.1|^2.0"
             },
             "conflict": {
@@ -673,14 +672,14 @@
                 "doctrine/coding-standard": "^6.0",
                 "doctrine/orm": "^2.6",
                 "ocramius/proxy-manager": "^2.1",
-                "php-coveralls/php-coveralls": "^2.1",
                 "phpunit/phpunit": "^7.5",
                 "symfony/phpunit-bridge": "^4.2",
-                "symfony/property-info": "^3.4.30|^4.3.3",
-                "symfony/twig-bridge": "^3.4|^4.1",
-                "symfony/validator": "^3.4.30|^4.3.3",
-                "symfony/web-profiler-bundle": "^3.4.30|^4.3.3",
-                "symfony/yaml": "^3.4.30|^4.3.3",
+                "symfony/property-info": "^4.3.3|^5.0",
+                "symfony/proxy-manager-bridge": "^3.4|^4.3.3|^5.0",
+                "symfony/twig-bridge": "^3.4.30|^4.3.3|^5.0",
+                "symfony/validator": "^3.4.30|^4.3.3|^5.0",
+                "symfony/web-profiler-bundle": "^3.4.30|^4.3.3|^5.0",
+                "symfony/yaml": "^3.4.30|^4.3.3|^5.0",
                 "twig/twig": "^1.34|^2.12"
             },
             "suggest": {
@@ -690,7 +689,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -728,56 +727,44 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2019-12-19T09:08:00+00:00"
+            "time": "2020-01-18T11:56:15+00:00"
         },
         {
-            "name": "doctrine/doctrine-cache-bundle",
-            "version": "1.4.0",
+            "name": "doctrine/doctrine-migrations-bundle",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/DoctrineCacheBundle.git",
-                "reference": "6bee2f9b339847e8a984427353670bad4e7bdccb"
+                "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
+                "reference": "856437e8de96a70233e1f0cc2352fc8dd15a899d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineCacheBundle/zipball/6bee2f9b339847e8a984427353670bad4e7bdccb",
-                "reference": "6bee2f9b339847e8a984427353670bad4e7bdccb",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/856437e8de96a70233e1f0cc2352fc8dd15a899d",
+                "reference": "856437e8de96a70233e1f0cc2352fc8dd15a899d",
                 "shasum": ""
             },
             "require": {
-                "doctrine/cache": "^1.4.2",
-                "doctrine/inflector": "^1.0",
+                "doctrine/doctrine-bundle": "~1.0|~2.0",
+                "doctrine/migrations": "^2.2",
                 "php": "^7.1",
-                "symfony/doctrine-bridge": "^3.4|^4.0"
+                "symfony/framework-bundle": "~3.4|~4.0|~5.0"
             },
             "require-dev": {
-                "instaclick/coding-standard": "~1.1",
-                "instaclick/object-calisthenics-sniffs": "dev-master",
-                "instaclick/symfony2-coding-standard": "dev-remaster",
-                "phpunit/phpunit": "^7.0",
-                "predis/predis": "~0.8",
-                "satooshi/php-coveralls": "^1.0",
-                "squizlabs/php_codesniffer": "~1.5",
-                "symfony/console": "^3.4|^4.0",
-                "symfony/finder": "^3.4|^4.0",
-                "symfony/framework-bundle": "^3.4|^4.0",
-                "symfony/phpunit-bridge": "^3.4|^4.0",
-                "symfony/security-acl": "^2.8",
-                "symfony/validator": "^3.4|^4.0",
-                "symfony/yaml": "^3.4|^4.0"
-            },
-            "suggest": {
-                "symfony/security-acl": "For using this bundle to cache ACLs"
+                "doctrine/coding-standard": "^5.0",
+                "mikey179/vfsstream": "^1.6",
+                "phpstan/phpstan": "^0.9.2",
+                "phpstan/phpstan-strict-rules": "^0.9",
+                "phpunit/phpunit": "^6.4|^7.0"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Doctrine\\Bundle\\DoctrineCacheBundle\\": ""
+                    "Doctrine\\Bundle\\MigrationsBundle\\": ""
                 },
                 "exclude-from-classmap": [
                     "/Tests/"
@@ -793,94 +780,22 @@
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Fabio B. Silva",
-                    "email": "fabio.bat.silva@gmail.com"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@hotmail.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Doctrine Project",
-                    "homepage": "http://www.doctrine-project.org/"
-                }
-            ],
-            "description": "Symfony Bundle for Doctrine Cache",
-            "homepage": "https://www.doctrine-project.org",
-            "keywords": [
-                "cache",
-                "caching"
-            ],
-            "time": "2019-11-29T11:22:01+00:00"
-        },
-        {
-            "name": "doctrine/doctrine-migrations-bundle",
-            "version": "v1.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-                "reference": "49fa399181db4bf4f9f725126bd1cb65c4398dce"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/49fa399181db4bf4f9f725126bd1cb65c4398dce",
-                "reference": "49fa399181db4bf4f9f725126bd1cb65c4398dce",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "~1.0",
-                "doctrine/migrations": "^1.1",
-                "php": ">=5.4.0",
-                "symfony/framework-bundle": "~2.7|~3.3|~4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.36 || ^5.7.27 || ^7.4"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Doctrine\\Bundle\\MigrationsBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
                     "name": "Doctrine Project",
                     "homepage": "http://www.doctrine-project.org"
                 },
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
                 }
             ],
             "description": "Symfony DoctrineMigrationsBundle",
-            "homepage": "http://www.doctrine-project.org",
+            "homepage": "https://www.doctrine-project.org",
             "keywords": [
                 "dbal",
                 "migrations",
                 "schema"
             ],
-            "time": "2018-12-03T11:55:33+00:00"
+            "time": "2019-11-13T12:57:41+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -1145,32 +1060,39 @@
         },
         {
             "name": "doctrine/migrations",
-            "version": "v1.8.1",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "215438c0eef3e5f9b7da7d09c6b90756071b43e6"
+                "reference": "a3987131febeb0e9acb3c47ab0df0af004588934"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/215438c0eef3e5f9b7da7d09c6b90756071b43e6",
-                "reference": "215438c0eef3e5f9b7da7d09c6b90756071b43e6",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/a3987131febeb0e9acb3c47ab0df0af004588934",
+                "reference": "a3987131febeb0e9acb3c47ab0df0af004588934",
                 "shasum": ""
             },
             "require": {
-                "doctrine/dbal": "~2.6",
-                "ocramius/proxy-manager": "^1.0|^2.0",
+                "doctrine/dbal": "^2.9",
+                "ocramius/package-versions": "^1.3",
+                "ocramius/proxy-manager": "^2.0.2",
                 "php": "^7.1",
-                "symfony/console": "~3.3|^4.0"
+                "symfony/console": "^3.4||^4.0||^5.0",
+                "symfony/stopwatch": "^3.4||^4.0||^5.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^1.0",
-                "doctrine/orm": "~2.5",
-                "jdorn/sql-formatter": "~1.1",
+                "doctrine/coding-standard": "^6.0",
+                "doctrine/orm": "^2.6",
+                "ext-pdo_sqlite": "*",
+                "jdorn/sql-formatter": "^1.1",
                 "mikey179/vfsstream": "^1.6",
-                "phpunit/phpunit": "~7.0",
-                "squizlabs/php_codesniffer": "^3.0",
-                "symfony/yaml": "~3.3|^4.0"
+                "phpstan/phpstan": "^0.10",
+                "phpstan/phpstan-deprecation-rules": "^0.10",
+                "phpstan/phpstan-phpunit": "^0.10",
+                "phpstan/phpstan-strict-rules": "^0.10",
+                "phpunit/phpunit": "^7.0",
+                "symfony/process": "^3.4||^4.0||^5.0",
+                "symfony/yaml": "^3.4||^4.0||^5.0"
             },
             "suggest": {
                 "jdorn/sql-formatter": "Allows to generate formatted SQL with the diff command.",
@@ -1182,12 +1104,11 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "v1.8.x-dev"
+                    "dev-master": "2.2.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Doctrine\\DBAL\\Migrations\\": "lib/Doctrine/DBAL/Migrations",
                     "Doctrine\\Migrations\\": "lib/Doctrine/Migrations"
                 }
             },
@@ -1209,13 +1130,15 @@
                     "email": "contact@mikesimonson.com"
                 }
             ],
-            "description": "Database Schema migrations using Doctrine DBAL",
+            "description": "PHP Doctrine Migrations project offer additional functionality on top of the database abstraction layer (DBAL) for versioning your database schema and easily deploying changes to it. It is a very easy to use and a powerful tool.",
             "homepage": "https://www.doctrine-project.org/projects/migrations.html",
             "keywords": [
                 "database",
-                "migrations"
+                "dbal",
+                "migrations",
+                "php"
             ],
-            "time": "2018-06-06T21:00:30+00:00"
+            "time": "2019-12-04T06:09:14+00:00"
         },
         {
             "name": "doctrine/orm",
@@ -1462,69 +1385,6 @@
             "time": "2020-01-08T19:53:19+00:00"
         },
         {
-            "name": "eightpoints/guzzle-bundle",
-            "version": "v7.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/8p/EightPointsGuzzleBundle.git",
-                "reference": "b2e56e140e07526ec2fef53aca303ab60b75b912"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/8p/EightPointsGuzzleBundle/zipball/b2e56e140e07526ec2fef53aca303ab60b75b912",
-                "reference": "b2e56e140e07526ec2fef53aca303ab60b75b912",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "~6.0",
-                "php": ">=7.0",
-                "psr/log": "~1.0",
-                "symfony/expression-language": "~2.7|~3.0|~4.0",
-                "symfony/framework-bundle": "~2.7|~3.0|~4.0",
-                "symfony/stopwatch": "~2.7|~3.0|~4.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "~2.7|~3.0|~4.0",
-                "symfony/twig-bundle": "~2.7|~3.0|~4.0",
-                "symfony/var-dumper": "~2.7|~3.0|~4.0",
-                "symfony/yaml": "~2.7|~3.0|~4.0"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "EightPoints\\Bundle\\GuzzleBundle\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Florian Preusner",
-                    "email": "florian.preusner@8points.de",
-                    "homepage": "https://github.com/florianpreusner"
-                },
-                {
-                    "name": "Community",
-                    "homepage": "https://github.com/8p/GuzzleBundle/contributors"
-                }
-            ],
-            "description": "Integrates Guzzle 6.x, a PHP HTTP Client, into Symfony 2/3/4. Comes with easy and powerful configuration options and optional plugins.",
-            "homepage": "https://github.com/8p/GuzzleBundle",
-            "keywords": [
-                "Guzzle",
-                "bundle",
-                "client",
-                "curl",
-                "http client",
-                "rest",
-                "symfony",
-                "web service"
-            ],
-            "time": "2019-10-02T11:16:13+00:00"
-        },
-        {
             "name": "elasticsearch/elasticsearch",
             "version": "v6.7.2",
             "source": {
@@ -1630,46 +1490,34 @@
             "time": "2019-10-04T10:46:29+00:00"
         },
         {
-            "name": "enqueue/async-event-dispatcher",
-            "version": "0.8.42",
+            "name": "enqueue/dsn",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-enqueue/async-event-dispatcher.git",
-                "reference": "203b1682bbcb264b0a0304d14a4083746013005f"
+                "url": "https://github.com/php-enqueue/dsn.git",
+                "reference": "533b1f68babba86bbc3712dc2cc6f74dc2aa03a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/async-event-dispatcher/zipball/203b1682bbcb264b0a0304d14a4083746013005f",
-                "reference": "203b1682bbcb264b0a0304d14a4083746013005f",
+                "url": "https://api.github.com/repos/php-enqueue/dsn/zipball/533b1f68babba86bbc3712dc2cc6f74dc2aa03a2",
+                "reference": "533b1f68babba86bbc3712dc2cc6f74dc2aa03a2",
                 "shasum": ""
             },
             "require": {
-                "enqueue/enqueue": "^0.8@dev",
-                "php": ">=5.6",
-                "symfony/event-dispatcher": "^2.8|^3|^4"
+                "php": "^7.1.3"
             },
             "require-dev": {
-                "enqueue/fs": "^0.8@dev",
-                "enqueue/null": "^0.8@dev",
-                "enqueue/test": "^0.8@dev",
-                "phpunit/phpunit": "~5.5",
-                "symfony/config": "^2.8|^3|^4",
-                "symfony/dependency-injection": "^2.8|^3|^4",
-                "symfony/filesystem": "^2.8|^3|^4",
-                "symfony/http-kernel": "^2.8|^3|^4"
-            },
-            "suggest": {
-                "symfony/dependency-injection": "^2.8|^3|^4 If you'd like to use async event dispatcher container extension."
+                "phpunit/phpunit": "~7.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.8.x-dev"
+                    "dev-master": "0.10.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Enqueue\\AsyncEventDispatcher\\": ""
+                    "Enqueue\\Dsn\\": ""
                 },
                 "exclude-from-classmap": [
                     "/Tests/"
@@ -1679,60 +1527,63 @@
             "license": [
                 "MIT"
             ],
-            "description": "Symfony async event dispatcher",
+            "description": "Parse DSN",
             "homepage": "https://enqueue.forma-pro.com/",
             "keywords": [
-                "async event",
-                "event dispatcher",
-                "messaging",
-                "queue"
+                "dsn",
+                "parse"
             ],
-            "time": "2018-11-22T13:24:40+00:00"
+            "time": "2019-12-19T07:01:09+00:00"
         },
         {
             "name": "enqueue/enqueue",
-            "version": "0.8.42",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-enqueue/enqueue.git",
-                "reference": "af9c5d09462a0b26310561f807eb64a2ed61ab1f"
+                "reference": "e63dab2510ae3e31f5967a91e96c9cfafb5c4d07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/enqueue/zipball/af9c5d09462a0b26310561f807eb64a2ed61ab1f",
-                "reference": "af9c5d09462a0b26310561f807eb64a2ed61ab1f",
+                "url": "https://api.github.com/repos/php-enqueue/enqueue/zipball/e63dab2510ae3e31f5967a91e96c9cfafb5c4d07",
+                "reference": "e63dab2510ae3e31f5967a91e96c9cfafb5c4d07",
                 "shasum": ""
             },
             "require": {
-                "enqueue/null": "^0.8@dev",
-                "php": ">=5.6",
+                "enqueue/dsn": "^0.10",
+                "enqueue/null": "^0.10",
+                "php": "^7.1.3",
+                "psr/container": "^1",
                 "psr/log": "^1",
-                "queue-interop/queue-interop": "^0.6.2@dev",
+                "queue-interop/amqp-interop": "^0.8",
+                "queue-interop/queue-interop": "^0.8",
                 "ramsey/uuid": "^2|^3.5"
             },
             "require-dev": {
                 "empi89/php-amqp-stubs": "*@dev",
-                "enqueue/amqp-bunny": "^0.8@dev",
-                "enqueue/amqp-ext": "^0.8@dev",
-                "enqueue/amqp-lib": "^0.8@dev",
-                "enqueue/dbal": "^0.8@dev",
-                "enqueue/fs": "^0.8@dev",
-                "enqueue/gearman": "^0.8@dev",
-                "enqueue/gps": "^0.8@dev",
-                "enqueue/mongodb": "^0.8@dev",
-                "enqueue/pheanstalk": "^0.8@dev",
-                "enqueue/rdkafka": "^0.8@dev",
-                "enqueue/redis": "^0.8@dev",
-                "enqueue/simple-client": "^0.8@dev",
-                "enqueue/sqs": "^0.8@dev",
-                "enqueue/stomp": "^0.8@dev",
-                "enqueue/test": "^0.8@dev",
-                "phpunit/phpunit": "~5.5",
-                "symfony/config": "^2.8|^3|^4",
-                "symfony/console": "^2.8|^3|^4",
-                "symfony/dependency-injection": "^2.8|^3|^4",
-                "symfony/event-dispatcher": "^2.8|^3|^4",
-                "symfony/http-kernel": "^2.8|^3|^4"
+                "enqueue/amqp-bunny": "0.10.x-dev",
+                "enqueue/amqp-ext": "0.10.x-dev",
+                "enqueue/amqp-lib": "0.10.x-dev",
+                "enqueue/dbal": "0.10.x-dev",
+                "enqueue/dsn": "0.10.x-dev",
+                "enqueue/fs": "0.10.x-dev",
+                "enqueue/gearman": "0.10.x-dev",
+                "enqueue/gps": "0.10.x-dev",
+                "enqueue/mongodb": "0.10.x-dev",
+                "enqueue/pheanstalk": "0.10.x-dev",
+                "enqueue/rdkafka": "0.10.x-dev",
+                "enqueue/redis": "0.10.x-dev",
+                "enqueue/simple-client": "0.10.x-dev",
+                "enqueue/sqs": "0.10.x-dev",
+                "enqueue/stomp": "0.10.x-dev",
+                "enqueue/test": "0.10.x-dev",
+                "phpunit/phpunit": "~7.5",
+                "symfony/config": "^4.3|^5",
+                "symfony/console": "^4.3|^5",
+                "symfony/dependency-injection": "^4.3|^5",
+                "symfony/event-dispatcher": "^4.3|^5",
+                "symfony/http-kernel": "^4.3|^5",
+                "symfony/yaml": "^4.3|^5"
             },
             "suggest": {
                 "enqueue/amqp-ext": "AMQP transport (based on php extension)",
@@ -1741,23 +1592,20 @@
                 "enqueue/redis": "Redis transport",
                 "enqueue/sqs": "Amazon AWS SQS transport",
                 "enqueue/stomp": "STOMP transport",
-                "symfony/config": "^2.8|^3|^4",
-                "symfony/console": "^2.8|^3|^4 If you want to use li commands",
-                "symfony/dependency-injection": "^2.8|^3|^4"
+                "symfony/config": "^4.3|^5",
+                "symfony/console": "^2.8|^3|^4|^5 If you want to use cli commands",
+                "symfony/dependency-injection": "^4.3|^5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.8.x-dev"
+                    "dev-master": "0.10.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
                     "Enqueue\\": ""
                 },
-                "files": [
-                    "functions_include.php"
-                ],
                 "exclude-from-classmap": [
                     "/Tests/"
                 ]
@@ -1774,52 +1622,61 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2018-11-22T13:24:40+00:00"
+            "time": "2019-12-19T07:01:09+00:00"
         },
         {
             "name": "enqueue/enqueue-bundle",
-            "version": "0.8.42",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-enqueue/enqueue-bundle.git",
-                "reference": "38241e453f43d0f19294e7cad26992652b0d45b3"
+                "reference": "d16f655a3a92fa726fa483921664f725322ba071"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/enqueue-bundle/zipball/38241e453f43d0f19294e7cad26992652b0d45b3",
-                "reference": "38241e453f43d0f19294e7cad26992652b0d45b3",
+                "url": "https://api.github.com/repos/php-enqueue/enqueue-bundle/zipball/d16f655a3a92fa726fa483921664f725322ba071",
+                "reference": "d16f655a3a92fa726fa483921664f725322ba071",
                 "shasum": ""
             },
             "require": {
-                "enqueue/async-event-dispatcher": "^0.8@dev",
-                "enqueue/enqueue": "^0.8.35@dev",
-                "enqueue/null": "^0.8@dev",
-                "php": ">=5.6",
-                "symfony/framework-bundle": "^2.8|^3|^4"
+                "enqueue/enqueue": "^0.10",
+                "enqueue/null": "^0.10",
+                "php": "^7.1.3",
+                "queue-interop/amqp-interop": "^0.8",
+                "queue-interop/queue-interop": "^0.8",
+                "symfony/framework-bundle": "^4.3|^5"
             },
             "require-dev": {
-                "doctrine/doctrine-bundle": "~1.2",
-                "enqueue/amqp-bunny": "^0.8@dev",
-                "enqueue/amqp-ext": "^0.8@dev",
-                "enqueue/amqp-lib": "^0.8@dev",
-                "enqueue/dbal": "^0.8@dev",
-                "enqueue/fs": "^0.8@dev",
-                "enqueue/gps": "^0.8@dev",
-                "enqueue/job-queue": "^0.8@dev",
-                "enqueue/redis": "^0.8@dev",
-                "enqueue/sqs": "^0.8@dev",
-                "enqueue/stomp": "^0.8@dev",
-                "enqueue/test": "^0.8@dev",
-                "php-amqplib/php-amqplib": "^2.7@dev",
-                "phpunit/phpunit": "~5.5",
-                "symfony/browser-kit": "^2.8|^3|^4",
-                "symfony/expression-language": "^2.8|^3|^4",
-                "symfony/monolog-bundle": "^2.8|^3|^4"
+                "alcaeus/mongo-php-adapter": "^1.0",
+                "doctrine/doctrine-bundle": "~1.2|^2",
+                "doctrine/mongodb-odm-bundle": "^3.5|^4",
+                "enqueue/amqp-bunny": "0.10.x-dev",
+                "enqueue/amqp-ext": "0.10.x-dev",
+                "enqueue/amqp-lib": "0.10.x-dev",
+                "enqueue/async-command": "0.10.x-dev",
+                "enqueue/async-event-dispatcher": "0.10.x-dev",
+                "enqueue/dbal": "0.10.x-dev",
+                "enqueue/fs": "0.10.x-dev",
+                "enqueue/gps": "0.10.x-dev",
+                "enqueue/job-queue": "0.10.x-dev",
+                "enqueue/redis": "0.10.x-dev",
+                "enqueue/sqs": "0.10.x-dev",
+                "enqueue/stomp": "0.10.x-dev",
+                "enqueue/test": "0.10.x-dev",
+                "php-amqplib/php-amqplib": "^2.7",
+                "phpunit/phpunit": "~7.5",
+                "symfony/browser-kit": "^4.3|^5",
+                "symfony/expression-language": "^4.3|^5",
+                "symfony/yaml": "^4.3|^5"
+            },
+            "suggest": {
+                "enqueue/async-command": "If want to run Symfony command via message queue",
+                "enqueue/async-event-dispatcher": "If you want dispatch and process events asynchronously"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.8.x-dev"
+                    "dev-master": "0.10.x-dev"
                 }
             },
             "autoload": {
@@ -1842,38 +1699,35 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2018-11-22T13:24:40+00:00"
+            "time": "2019-12-19T07:01:09+00:00"
         },
         {
             "name": "enqueue/null",
-            "version": "0.8.42",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-enqueue/null.git",
-                "reference": "47802550b673fd864b138b1d07e415bc7d49e9b4"
+                "reference": "25b322ec6f32dde5f46efaab4b02137d1e1edbfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/null/zipball/47802550b673fd864b138b1d07e415bc7d49e9b4",
-                "reference": "47802550b673fd864b138b1d07e415bc7d49e9b4",
+                "url": "https://api.github.com/repos/php-enqueue/null/zipball/25b322ec6f32dde5f46efaab4b02137d1e1edbfd",
+                "reference": "25b322ec6f32dde5f46efaab4b02137d1e1edbfd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6",
-                "queue-interop/queue-interop": "^0.6@dev|^1.0.0-alpha1"
+                "php": "^7.1.3",
+                "queue-interop/queue-interop": "^0.8"
             },
             "require-dev": {
-                "enqueue/enqueue": "^0.8@dev",
-                "enqueue/test": "^0.8@dev",
-                "phpunit/phpunit": "~5.5",
-                "queue-interop/queue-spec": "^0.5.3@dev",
-                "symfony/config": "^2.8|^3|^4",
-                "symfony/dependency-injection": "^2.8|^3|^4"
+                "enqueue/test": "0.10.x-dev",
+                "phpunit/phpunit": "~7.5",
+                "queue-interop/queue-spec": "^0.6"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.8.x-dev"
+                    "dev-master": "0.10.x-dev"
                 }
             },
             "autoload": {
@@ -1895,45 +1749,42 @@
                 "queue",
                 "testing"
             ],
-            "time": "2018-11-22T13:24:40+00:00"
+            "time": "2019-12-19T07:01:09+00:00"
         },
         {
             "name": "enqueue/redis",
-            "version": "0.8.42",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-enqueue/redis.git",
-                "reference": "c6289b9d05162276b6b5f3de72405d03b533a0ba"
+                "reference": "ec54b3528564dbe6a407b96530e9920f73eb58d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/redis/zipball/c6289b9d05162276b6b5f3de72405d03b533a0ba",
-                "reference": "c6289b9d05162276b6b5f3de72405d03b533a0ba",
+                "url": "https://api.github.com/repos/php-enqueue/redis/zipball/ec54b3528564dbe6a407b96530e9920f73eb58d9",
+                "reference": "ec54b3528564dbe6a407b96530e9920f73eb58d9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6",
-                "queue-interop/queue-interop": "^0.6@dev|^1.0.0-alpha1"
+                "enqueue/dsn": "^0.10",
+                "php": "^7.1.3",
+                "queue-interop/queue-interop": "^0.8",
+                "ramsey/uuid": "^3"
             },
             "require-dev": {
-                "enqueue/enqueue": "^0.8@dev",
-                "enqueue/null": "^0.8@dev",
-                "enqueue/test": "^0.8@dev",
-                "phpunit/phpunit": "~5.4.0",
+                "enqueue/null": "0.10.x-dev",
+                "enqueue/test": "0.10.x-dev",
+                "phpunit/phpunit": "~7.5",
                 "predis/predis": "^1.1",
-                "queue-interop/queue-spec": "^0.5.3@dev",
-                "symfony/config": "^2.8|^3|^4",
-                "symfony/dependency-injection": "^2.8|^3|^4"
+                "queue-interop/queue-spec": "^0.6"
             },
             "suggest": {
-                "enqueue/enqueue": "If you'd like to use advanced features like Client abstract layer or Symfony integration features",
-                "ext-redis": "Either this PHP extension or predis/predis extension has to be installed.",
-                "predis/predis": "Either this PHP library or redis extension has to be installed."
+                "ext-redis": "If you'd like to use phpredis extension."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.8.x-dev"
+                    "dev-master": "0.10.x-dev"
                 }
             },
             "autoload": {
@@ -1955,7 +1806,7 @@
                 "queue",
                 "redis"
             ],
-            "time": "2018-11-22T13:24:40+00:00"
+            "time": "2019-12-19T07:01:09+00:00"
         },
         {
             "name": "fig/link-util",
@@ -2100,16 +1951,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.5.0",
+            "version": "6.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5"
+                "reference": "43ece0e75098b7ecd8d13918293029e555a50f82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5",
-                "reference": "dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/43ece0e75098b7ecd8d13918293029e555a50f82",
+                "reference": "43ece0e75098b7ecd8d13918293029e555a50f82",
                 "shasum": ""
             },
             "require": {
@@ -2163,7 +2014,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2019-12-07T18:20:45+00:00"
+            "time": "2019-12-23T11:57:10+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -3202,26 +3053,68 @@
             "time": "2019-11-01T11:05:21+00:00"
         },
         {
-            "name": "queue-interop/queue-interop",
-            "version": "0.6.2",
+            "name": "queue-interop/amqp-interop",
+            "version": "0.8.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/queue-interop/queue-interop.git",
-                "reference": "950c8083ff328751843080f25266dec0db624ddb"
+                "url": "https://github.com/queue-interop/amqp-interop.git",
+                "reference": "2029c3b3b9f10cc1c0a219650f66ab68fcfe656d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/queue-interop/queue-interop/zipball/950c8083ff328751843080f25266dec0db624ddb",
-                "reference": "950c8083ff328751843080f25266dec0db624ddb",
+                "url": "https://api.github.com/repos/queue-interop/amqp-interop/zipball/2029c3b3b9f10cc1c0a219650f66ab68fcfe656d",
+                "reference": "2029c3b3b9f10cc1c0a219650f66ab68fcfe656d",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5"
+                "php": "^7.1.3",
+                "queue-interop/queue-interop": "^0.7|^0.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.4.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "0.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Interop\\Amqp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2018-12-13T13:42:47+00:00"
+        },
+        {
+            "name": "queue-interop/queue-interop",
+            "version": "0.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/queue-interop/queue-interop.git",
+                "reference": "b43af85f635439fa2c9a6d8fd486489da4869741"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/queue-interop/queue-interop/zipball/b43af85f635439fa2c9a6d8fd486489da4869741",
+                "reference": "b43af85f635439fa2c9a6d8fd486489da4869741",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5",
+                "queue-interop/queue-spec": "^0.6@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.7-dev"
                 }
             },
             "autoload": {
@@ -3242,7 +3135,7 @@
                 "messaging",
                 "queue"
             ],
-            "time": "2018-08-05T12:16:04+00:00"
+            "time": "2018-11-22T17:53:21+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -3286,22 +3179,22 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.9.1",
+            "version": "3.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "5ac2740e0c8c599d2bbe7f113a939f2b5b216c67"
+                "reference": "7779489a47d443f845271badbdcedfe4df8e06fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/5ac2740e0c8c599d2bbe7f113a939f2b5b216c67",
-                "reference": "5ac2740e0c8c599d2bbe7f113a939f2b5b216c67",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/7779489a47d443f845271badbdcedfe4df8e06fb",
+                "reference": "7779489a47d443f845271badbdcedfe4df8e06fb",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "paragonie/random_compat": "^1 | ^2 | 9.99.99",
-                "php": "^5.4 | ^7",
+                "php": "^5.4 | ^7 | ^8",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "replace": {
@@ -3311,13 +3204,13 @@
                 "codeception/aspect-mock": "^1 | ^2",
                 "doctrine/annotations": "^1.2",
                 "goaop/framework": "1.0.0-alpha.2 | ^1 | ^2.1",
-                "jakub-onderka/php-parallel-lint": "^0.9.0",
-                "mockery/mockery": "^0.9.9",
+                "jakub-onderka/php-parallel-lint": "^1",
+                "mockery/mockery": "^0.9.11 | ^1",
                 "moontoast/math": "^1.1",
                 "paragonie/random-lib": "^2",
                 "php-mock/php-mock-phpunit": "^0.3 | ^1.1",
                 "phpunit/phpunit": "^4.8 | ^5.4 | ^6.5",
-                "squizlabs/php_codesniffer": "^2.3"
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "suggest": {
                 "ext-ctype": "Provides support for PHP Ctype functions",
@@ -3369,7 +3262,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2019-12-01T04:55:27+00:00"
+            "time": "2019-12-17T08:18:51+00:00"
         },
         {
             "name": "react/promise",
@@ -4394,16 +4287,16 @@
         },
         {
             "name": "symfony/expression-language",
-            "version": "v4.4.1",
+            "version": "v4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/expression-language.git",
-                "reference": "8a1028a65623a8f7bba582b60e4fd308e6f43001"
+                "reference": "539e7ff0b635c8b90d8127bc929da781a96eab2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/expression-language/zipball/8a1028a65623a8f7bba582b60e4fd308e6f43001",
-                "reference": "8a1028a65623a8f7bba582b60e4fd308e6f43001",
+                "url": "https://api.github.com/repos/symfony/expression-language/zipball/539e7ff0b635c8b90d8127bc929da781a96eab2d",
+                "reference": "539e7ff0b635c8b90d8127bc929da781a96eab2d",
                 "shasum": ""
             },
             "require": {
@@ -4441,7 +4334,7 @@
             ],
             "description": "Symfony ExpressionLanguage Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-12T14:53:53+00:00"
+            "time": "2019-12-10T10:33:21+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -6244,7 +6137,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v4.4.1",
+            "version": "v4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
