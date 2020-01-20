@@ -1,7 +1,7 @@
 FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION=develop
+ARG APP_VERSION=feature/splicing
 ENV APP_PATH=/var/www/html
 
 # Move site into the container.
@@ -33,7 +33,8 @@ ENV APP_PATH=/var/www/html
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
 RUN chown -R www-data:www-data ${APP_PATH}/var \
     && mkdir -p ${APP_PATH}/config/secrets \
-    && chown -R www-data:www-data ${APP_PATH}/config/secrets
+    && chown -R www-data:www-data ${APP_PATH}/config/secrets \
+    && rm -rf ${APP_PATH}/infrastructure
 
 # Download prometheus php-fpm export.
 COPY --from=hipages/php-fpm_exporter /php-fpm_exporter /usr/local/bin/php-fpm_exporter
