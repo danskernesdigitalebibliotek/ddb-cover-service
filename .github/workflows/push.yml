@@ -30,7 +30,7 @@ jobs:
         run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service:latest
 
       - name: Push CoverService Nginx image
-        run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/nginx:latest
+        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/nginx:latest
 
       # Set the target Azure Kubernetes Service (AKS) cluster. 
       - uses: azure/aks-set-context@v1
