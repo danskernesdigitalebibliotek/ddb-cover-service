@@ -3,7 +3,7 @@ on: [create]
 name: Release
 
 env:
-  ORG_NAME: cableman
+  ORG_NAME: danskernesdigitalebibliotek
   APP_VERSION: ${{ github.event.ref }}
 
 jobs:
@@ -22,9 +22,9 @@ jobs:
         run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:${{ env.APP_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" .
 
       - name: Push CoverService image
-        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service:${{ env.APP_VERSION }}
+        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:${{ env.APP_VERSION }}
       - name: Push CoverService Nginx image
-        run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/nginx:${{ env.APP_VERSION }}
+        run: docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:${{ env.APP_VERSION }}
 
   deploy:
     runs-on: ubuntu-latest

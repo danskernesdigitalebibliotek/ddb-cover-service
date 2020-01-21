@@ -7,7 +7,7 @@ name: Release (stg)
 
 # Environment variables available to all jobs and steps in this workflow
 env:
-  ORG_NAME: cableman
+  ORG_NAME: danskernesdigitalebibliotek
   NAMESPACE: cover-service
   
 jobs:
