@@ -5,6 +5,7 @@ name: Release
 env:
   ORG_NAME: danskernesdigitalebibliotek
   APP_VERSION: ${{ github.event.ref }}
+  NAMESPACE: cover-service
 
 jobs:
   build:
