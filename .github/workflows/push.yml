@@ -31,15 +31,11 @@ jobs:
       - name: Build nginx sidecar image
         run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:latest" --file="infrastructure/docker/nginx/Dockerfile" .
 
-      - name: Build CoverServiceJobs image
-        run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service-jobs:latest" --file="infrastructure/docker/cover-service-jobs/Dockerfile" .
-
       - name: Push CoverService image
         run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service:latest
+
       - name: Push CoverService Nginx image
         run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/nginx:latest
-      - name: Push CoverServiceJobs image
-        run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service-jobs:latest
 
       # Set the target Azure Kubernetes Service (AKS) cluster. 
       - uses: azure/aks-set-context@v1

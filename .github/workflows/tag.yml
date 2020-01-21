@@ -9,7 +9,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event.ref_type == 'tag'
+    if: github.event.ref_type == 'tag' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@master
       - name: Login to github package registry
@@ -18,22 +18,17 @@ jobs:
       - name: Build CoverService image
         run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:${{ env.APP_VERSION }}" --file="infrastructure/docker/cover-service/Dockerfile" .
 
-      - name: Build nginx sidecar image
+      - name: Build nginx side-car image
         run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:${{ env.APP_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" .
-
-      - name: Build CoverServiceJobs image
-        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service-jobs:${{ env.APP_VERSION }}" --file="infrastructure/docker/cover-service-jobs/Dockerfile" .
 
       - name: Push CoverService image
         run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service:${{ env.APP_VERSION }}
       - name: Push CoverService Nginx image
         run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/nginx:${{ env.APP_VERSION }}
-      - name: Push CoverServiceJobs image
-        run: docker.pkg.github.com/${{ env.ORG_NAME }}ddb-cover-service/cover-service-jobs:${{ env.APP_VERSION }}
 
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.ref_type == 'tag'
+    if: github.event.ref_type == 'tag' && github.ref == 'refs/heads/master'
     needs:
       build
     steps:
@@ -42,7 +37,6 @@ jobs:
       # Set the target Azure Kubernetes Service (AKS) cluster. 
       - name: Set AKS Context (Prod)
         uses: azure/aks-set-context@v1
-        if: github.ref == 'refs/heads/master'
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
           cluster-name: ddb-cover-service
