@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm AS APP_BUILDER
+FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-base-images-k8s/php7.3-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION=develop
@@ -19,12 +19,13 @@ RUN APP_ENV=prod composer install --no-dev -o --no-scripts --classmap-authoritat
     && cp config/packages/framework.yaml /tmp \
     && awk '!/system: cache.adapter.redis/' config/packages/framework.yaml > temp && mv temp config/packages/framework.yaml \
     && APP_ENV=prod REDIS_CACHE_SYSTEM_BACKEND=cache.adapter.system composer docker-build \
-    && cp -f /tmp/framework.yaml config/packages/framework.yaml
+    && cp -f /tmp/framework.yaml config/packages/framework.yaml \
+    && composer clear-cache
 
 ####
 ## Build main application image.
 ####
-FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/php7.3-fpm
+FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-base-images-k8s/php7.3-fpm-base
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html
@@ -33,7 +34,8 @@ ENV APP_PATH=/var/www/html
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
 RUN chown -R www-data:www-data ${APP_PATH}/var \
     && mkdir -p ${APP_PATH}/config/secrets \
-    && chown -R www-data:www-data ${APP_PATH}/config/secrets
+    && chown -R www-data:www-data ${APP_PATH}/config/secrets \
+    && rm -rf ${APP_PATH}/infrastructure
 
 # Download prometheus php-fpm export.
 COPY --from=hipages/php-fpm_exporter /php-fpm_exporter /usr/local/bin/php-fpm_exporter
