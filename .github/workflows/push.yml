@@ -20,11 +20,6 @@ jobs:
       - name: Login to github package registry
         run: docker login docker.pkg.github.com -u publisher -p "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
       - name: Build CoverService image
         run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:latest" --file="infrastructure/docker/cover-service/Dockerfile" .
 
