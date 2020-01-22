@@ -5,9 +5,6 @@ metadata:
   namespace: cover-service
   name: cover-service-config
 data:
-  APP_DB_SERVER: 'cover-service-prod-database.mariadb.database.azure.com'
-  APP_DB_PORT: '3306'
-  APP_DB_DATABASE: 'cover-service'
   APP_REDIS_SERVER: 'redis'
   APP_REDIS_PORT: '6379'
   APP_REDIS_CACHE_SERVER: 'redis'
@@ -118,16 +115,6 @@ spec:
           initialDelaySeconds: 0
           periodSeconds: 10
         env:
-          - name: APP_DB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DB_USERNAME
-          - name: APP_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DB_PASSWORD
           - name: APP_THEMOVIEDATABASE_APIKEY
             valueFrom:
               secretKeyRef:
