@@ -264,8 +264,7 @@ abstract class AbstractMoreInfoService extends SoapClient
 
         $results = [];
         if (false === $response) {
-            $error = curl_error($ch);
-            $this->logger->error('Curl ES query error: '.$error);
+            $this->logger->error('Curl ES query error: '.curl_error($ch));
         } else {
             $results = JSON::parse($response);
             $results = $this->filterResults($results);
