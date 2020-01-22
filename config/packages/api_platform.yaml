@@ -15,6 +15,12 @@ api_platform:
         pagination:
             enabled: false
 
+    doctrine:
+        enabled: false
+
+    doctrine_mongodb_odm:
+        enabled: false
+
     formats:
         # First in list is default format
         json:     ['application/json']

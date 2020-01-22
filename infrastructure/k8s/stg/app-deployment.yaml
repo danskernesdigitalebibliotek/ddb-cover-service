@@ -5,9 +5,6 @@ metadata:
   namespace: cover-service
   name: cover-service-config
 data:
-  APP_DB_SERVER: 'cover-service-stg-database.mariadb.database.azure.com'
-  APP_DB_PORT: '3306'
-  APP_DB_DATABASE: 'cover-service'
   APP_REDIS_SERVER: 'redis'
   APP_REDIS_PORT: '6379'
   APP_REDIS_CACHE_SERVER: 'redis'
@@ -95,56 +92,6 @@ spec:
           initialDelaySeconds: 0
           periodSeconds: 10
         env:
-          - name: APP_DB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DB_USERNAME
-          - name: APP_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DB_PASSWORD
-          - name: APP_OPENPLATFORM_ID
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_OPENPLATFORM_ID
-          - name: APP_OPENPLATFORM_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_OPENPLATFORM_SECRET
-          - name: APP_OPENPLATFORM_AGENCY
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_OPENPLATFORM_AGENCY
-          - name: APP_DATAWELL_VENDOR_USER
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DATAWELL_VENDOR_USER
-          - name: APP_DATAWELL_VENDOR_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_DATAWELL_VENDOR_PASSWORD
-          - name: APP_CLOUDINARY_ID
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_CLOUDINARY_ID
-          - name: APP_CLOUDINARY_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_CLOUDINARY_SECRET
-          - name: APP_CLOUDINARY_DOMAIN
-            valueFrom:
-              secretKeyRef:
-                name: cover-service-secret
-                key: APP_CLOUDINARY_DOMAIN
           - name: APP_THEMOVIEDATABASE_APIKEY
             valueFrom:
               secretKeyRef:
