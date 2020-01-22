@@ -40,7 +40,7 @@ jobs:
       - name: Set AKS Context (Prod)
         uses: azure/aks-set-context@v1
         with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          creds: '${{ secrets.AZURE_CREDENTIALS_PROD }}'
           cluster-name: ddb-cover-service
           resource-group: CoverService
 
