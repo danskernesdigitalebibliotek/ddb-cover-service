@@ -62,10 +62,3 @@ services:
         arguments: [ '@App\OpenApi\DocumentationDecorator.inner']
         autoconfigure: false
 
-    Enqueue\Bundle\Consumption\Extension\DoctrinePingConnectionExtension:
-        public: false
-        arguments:
-            - '@doctrine'
-        tags:
-            - { name: 'enqueue.consumption.extension' }
-
