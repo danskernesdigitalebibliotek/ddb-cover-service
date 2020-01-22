@@ -3,5 +3,3 @@ enqueue:
         transport:
             dsn: '%env(ENQUEUE_DSN)%'
         client: ~
-        extensions:
-            doctrine_ping_connection_extension: true
