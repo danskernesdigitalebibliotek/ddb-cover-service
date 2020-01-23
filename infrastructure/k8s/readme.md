@@ -31,7 +31,7 @@ Create resources group
 az group create --name ${res} --location ${region}
 ```
 
-Create a VNET with the two sub-nets that are going to be used.
+Create a VNET with the two subnets that are going to be used.
 ```sh
 az network vnet create \
     --resource-group ${res} \
