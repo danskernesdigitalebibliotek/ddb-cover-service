@@ -280,7 +280,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             'clientID' => $body->authentication->authenticationGroup,
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
-            'fileNames' => !empty($imageUrls) ? array_values($imageUrls) : null,
+            'fileNames' => array_values($imageUrls),
             'matches' => $this->getMatches($imageUrls, $searchParameters),
             'elasticQueryTime' => $queryTime,
         ]);

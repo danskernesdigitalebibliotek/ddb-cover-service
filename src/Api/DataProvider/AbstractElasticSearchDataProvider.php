@@ -246,7 +246,7 @@ abstract class AbstractElasticSearchDataProvider
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
-        $imageUrls = is_array($results) ? $this->getImageUrls($results) : [];
+        $imageUrls = $this->getImageUrls($results);
 
         $this->statsLoggingService->info('Cover request/response', [
             'service' => $className,
@@ -254,7 +254,7 @@ abstract class AbstractElasticSearchDataProvider
             'remoteIP' => $request->getClientIp(),
             'isType' => $type,
             'isIdentifiers' => $identifiers,
-            'fileNames' => !empty($imageUrls) ? array_values($imageUrls) : null,
+            'fileNames' => array_values($imageUrls),
             'matches' => $this->getMatches($imageUrls, $identifiers, $type),
         ]);
 
