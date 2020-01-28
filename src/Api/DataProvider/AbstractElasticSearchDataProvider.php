@@ -188,17 +188,19 @@ abstract class AbstractElasticSearchDataProvider
      * @param array $results
      *   An array of result from an Elastica search
      *
-     * @return mixed
+     * @return array
      *   An array of image urls strings from the results
      */
     protected function getImageUrls(array $results)
     {
         $urls = [];
         foreach ($results as $result) {
-            $urls[] = $result['imageUrl'];
+            if (isset($result['isIdentifier'])) {
+                $urls[$result['isIdentifier']] = $result['imageUrl'];
+            }
         }
 
-        return empty($urls) ? null : $urls;
+        return $urls;
     }
 
     /**
@@ -244,15 +246,48 @@ abstract class AbstractElasticSearchDataProvider
     {
         $className = substr(\get_class($this), strrpos(\get_class($this), '\\') + 1);
 
+        $imageUrls = $this->getImageUrls($results);
+
         $this->statsLoggingService->info('Cover request/response', [
             'service' => $className,
             'clientID' => 'REST_API',
             'remoteIP' => $request->getClientIp(),
             'isType' => $type,
             'isIdentifiers' => $identifiers,
-            'fileNames' => $this->getImageUrls($results),
+            'fileNames' => array_values($imageUrls),
+            'matches' => $this->getMatches($imageUrls, $identifiers, $type),
         ]);
 
         $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);
+    }
+
+    /**
+     * Create array of matches between searches and found image urls.
+     *
+     * @param array $imageUrls
+     *   Array of found image urls
+     * @param array $identifiers
+     *   Array of requested identifiers
+     * @param string $identifierType
+     *   Type of the identifiers
+     *
+     * @return array
+     *   Array of matches between found imageUrls and requested identifiers
+     */
+    private function getMatches(array $imageUrls, array $identifiers, string $identifierType)
+    {
+        $matches = [];
+
+        foreach ($identifiers as $identifier) {
+            $match = [
+                'match' => $imageUrls[$identifier] ?? null,
+                'identifier' => $identifier,
+                'type' => $identifierType,
+            ];
+
+            $matches[] = $match;
+        }
+
+        return $matches;
     }
 }
