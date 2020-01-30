@@ -93,6 +93,8 @@ abstract class AbstractMoreInfoService extends SoapClient
      *   URL transformation service
      * @param \App\Service\NoHitService $noHitService
      *   Service for registering no hits
+     * @param \Psr\Log\LoggerInterface $logger
+     *   Logger
      * @param array $options
      *   Any additional parameters to add to the service
      *
@@ -272,12 +274,14 @@ abstract class AbstractMoreInfoService extends SoapClient
         $this->metricsService->histogram('elastica_query_duration_seconds', 'Time used to run elasticsearch query', $queryTime, $labels);
 
         $time = microtime(true);
+        $imageUrls = is_array($results) ? $this->getImageUrls($results) : [];
         $this->statsLoggingService->info('Cover request/response', [
             'service' => 'MoreInfoService',
             'clientID' => $body->authentication->authenticationGroup,
             'remoteIP' => $this->requestStack->getCurrentRequest()->getClientIp(),
             'searchParameters' => $searchParameters,
-            'fileNames' => $this->getImageUrls($results),
+            'fileNames' => array_values($imageUrls),
+            'matches' => $this->getMatches($imageUrls, $searchParameters),
             'elasticQueryTime' => $queryTime,
         ]);
         $this->metricsService->histogram('stats_logging_duration_seconds', 'Time used to log stats', microtime(true) - $time, $labels);
@@ -291,6 +295,36 @@ abstract class AbstractMoreInfoService extends SoapClient
         $this->metricsService->histogram('request_duration_total_seconds', 'Total time used to handel soap request', microtime(true) - $startTime, $labels);
 
         return $response;
+    }
+
+    /**
+     * Create array of matches between searches and found image urls.
+     *
+     * @param array $imageUrls
+     *   Array of found image urls
+     * @param array $searchParameters
+     *   Array requested identifiers
+     *
+     * @return array
+     *   Array of matches between found imageUrls and requested identifiers
+     */
+    private function getMatches(array $imageUrls, array $searchParameters)
+    {
+        $matches = [];
+
+        foreach ($searchParameters as $searchKey => $searchParameter) {
+            foreach ($searchParameter as $search) {
+                $match = [
+                    'match' => $imageUrls[$search] ?? null,
+                    'identifier' => $search,
+                    'type' => $searchKey,
+                ];
+
+                $matches[] = $match;
+            }
+        }
+
+        return $matches;
     }
 
     /**
@@ -567,18 +601,22 @@ abstract class AbstractMoreInfoService extends SoapClient
      * Get image URLs from search result.
      *
      * @param array $results
+     *   An array of result from an Elastica search
      *
-     * @return mixed
+     * @return array
+     *   An array of image urls strings from the results
      */
     private function getImageUrls(array $results)
     {
         $urls = [];
 
         foreach ($results as $result) {
-            $urls[] = $result['imageUrl'];
+            if (isset($result['isIdentifier'])) {
+                $urls[$result['isIdentifier']] = $result['imageUrl'];
+            }
         }
 
-        return empty($urls) ? null : $urls;
+        return $urls;
     }
 
     /**
