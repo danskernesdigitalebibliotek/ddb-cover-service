@@ -5,6 +5,7 @@ metadata:
   namespace: cover-service
   name: cover-service-config
 data:
+  APP_CORS_ALLOW_ORIGIN: '*'
   APP_REDIS_SERVER: 'redis'
   APP_REDIS_PORT: '6379'
   APP_REDIS_CACHE_SERVER: 'redis'
