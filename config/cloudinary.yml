@@ -8,6 +8,22 @@
 # service.
 original:
 
+# 1000 px
 default:
   transformation: 't_ddb_cover'
+  extension: 'jpg'
+
+# 160 px
+small:
+  transformation: 't_ddb_cover_small'
+  extension: 'jpg'
+
+# 270 px
+medium:
+  transformation: 't_ddb_cover_medium'
+  extension: 'jpg'
+
+# 540 px
+large:
+  transformation: 't_ddb_cover_large'
   extension: 'jpg'
