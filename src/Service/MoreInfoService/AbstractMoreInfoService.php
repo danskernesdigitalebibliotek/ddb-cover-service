@@ -545,14 +545,19 @@ abstract class AbstractMoreInfoService extends SoapClient
         foreach ($results as $result) {
             $identifierInformation = $identifierInformationList[$result['isIdentifier']];
             $identifierInformation->identifierKnown = true;
-
-            $image = new ImageType();
-            $image->_ = $this->transformer->transform($result['imageUrl']);
-            $image->imageSize = 'detail';
-            $image->imageFormat = $this->getImageFormat($result['imageFormat']);
-
             $identifierInformation->coverImage = [];
-            $identifierInformation->coverImage[] = $image;
+
+            $urls = $this->transformer->transformAll($result['imageUrl']);
+            // Unset the original image size as it's not used in soap end-point.
+            unset($urls['original']);
+            foreach ($urls as $size => $url) {
+                $image = new ImageType();
+                $image->_ = $this->transformer->transform($result['imageUrl']);
+                $image->imageSize = $this->imageSizeMapping($size);
+                // @TODO Implement format. Currently all formats return jpeg.
+                $image->imageFormat = $this->getImageFormat('jpeg');
+                $identifierInformation->coverImage[] = $image;
+            }
         }
 
         $response = new MoreInfoResponse();
@@ -560,6 +565,25 @@ abstract class AbstractMoreInfoService extends SoapClient
         $response->identifierInformation = array_values($identifierInformationList);
 
         return $response;
+    }
+
+    /**
+     * Mapping from transformation service image size to moreinfo size.
+     *
+     * This is an approximated image size mapping.
+     *
+     * @param string $size
+     *   Transformation service image size
+     * @return string
+     *   The approximated moreinfo image size
+     */
+    private function imageSizeMapping(string $size) {
+        return [
+            'default' => 'detail',
+            'small' => 'detail_117',
+            'medium' => 'detail_256',
+            'large' => 'detail_500',
+        ][$size];
     }
 
     /**
