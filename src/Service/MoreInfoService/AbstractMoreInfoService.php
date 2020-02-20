@@ -552,7 +552,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             unset($urls['original']);
             foreach ($urls as $size => $url) {
                 $image = new ImageType();
-                $image->_ = $this->transformer->transform($result['imageUrl']);
+                $image->_ = $url;
                 $image->imageSize = $this->imageSizeMapping($size);
                 // @TODO Implement format. Currently all formats return jpeg.
                 $image->imageFormat = $this->getImageFormat('jpeg');
@@ -574,10 +574,12 @@ abstract class AbstractMoreInfoService extends SoapClient
      *
      * @param string $size
      *   Transformation service image size
+     *
      * @return string
      *   The approximated moreinfo image size
      */
-    private function imageSizeMapping(string $size) {
+    private function imageSizeMapping(string $size)
+    {
         return [
             'default' => 'detail',
             'small' => 'detail_117',
