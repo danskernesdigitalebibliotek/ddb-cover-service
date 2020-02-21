@@ -83,6 +83,17 @@ paths:
             # Image sizes
 
             A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive.
+
+
+            The different sizes in pixels (height).
+
+            - default: 1000px
+
+            - small: 160px
+
+            - medium: 270px
+
+            - large: 540px
           required: false
           in: query
           schema:
@@ -92,9 +103,15 @@ paths:
               enum:
                 - default
                 - original
+                - small
+                - medium
+                - large
             default:
               - default
               - original
+              - small
+              - medium
+              - large
           style: form
           explode: false
         - name: limit
@@ -218,7 +235,18 @@ paths:
           description: >-
             # Image sizes
 
-            A list if image sizes (Cloudinary transformations) for the cover(s) you want to receive.
+            A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive.
+
+
+            The different sizes in pixels (height).
+
+            - default: 1000px
+
+            - small: 160px
+
+            - medium: 270px
+
+            - large: 540px
           required: false
           in: query
           schema:
@@ -228,11 +256,15 @@ paths:
               enum:
                 - default
                 - original
-                - thumbnail
+                - small
+                - medium
+                - large
             default:
               - default
               - original
-              - thumbnail
+              - small
+              - medium
+              - large
           style: form
           explode: false
       responses:
