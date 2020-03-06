@@ -71,7 +71,7 @@ final class CoverItemDataProvider extends AbstractElasticSearchDataProvider impl
         $sizes = $request->query->get('size');
 
         if (!$sizes) {
-            $sizes = ['default'];
+            $sizes = 'default';
         }
 
         return explode(',', $sizes);

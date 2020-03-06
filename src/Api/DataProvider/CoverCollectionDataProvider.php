@@ -99,7 +99,7 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
         $sizes = $request->query->get('size');
 
         if (!$sizes) {
-            $sizes = ['default'];
+            $sizes = 'default';
         }
 
         return explode(',', $sizes);
