@@ -37,6 +37,8 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
 
         $isIdentifiers = $this->getIdentifiers($request);
 
+        $imageSizes = $this->getSizes($request);
+
         $query = $this->buildElasticQuery($identifierType, $isIdentifiers);
         $results = $this->search($query);
 
@@ -44,7 +46,7 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
         foreach ($results as $result) {
             $foundIdentifiers[] = $result['isIdentifier'];
 
-            yield $this->factory->createIdentifierDto($identifierType, $result);
+            yield $this->factory->createIdentifierDto($identifierType, $imageSizes, $result);
         }
 
         // @TODO Move logging logic to new EventListener an trigger on POST_READ, https://api-platform.com/docs/core/events/
@@ -81,5 +83,25 @@ final class CoverCollectionDataProvider extends AbstractElasticSearchDataProvide
         $isIdentifiers = \is_array($isIdentifiers) ? $isIdentifiers : [$isIdentifiers];
 
         return $isIdentifiers;
+    }
+
+    /**
+     * Get sizes from requests.
+     *
+     * @param Request $request
+     *   The Symfony request
+     *
+     * @return array
+     *   Array with size names
+     */
+    private function getSizes(Request $request)
+    {
+        $sizes = $request->query->get('size');
+
+        if (!$sizes) {
+            $sizes = ['default'];
+        }
+
+        return explode(',', $sizes);
     }
 }
