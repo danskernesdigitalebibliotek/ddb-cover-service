@@ -37,17 +37,19 @@ class IdentifierFactory
      * Create Identifier Dto from identifier type.
      *
      * @param string $type
-     *   The identifier type (e.g. 'pid', 'isbn', etc).
+     *   The identifier type (e.g. 'pid', 'isbn', etc)
+     * @param array $imageSizes
+     *   The image sizes requested
      * @param array $data
      *   An array of key => values to set on the relevant properties
      *
      * @return IdentifierInterface
      *   A new {type} identifier data transfer object (DTO) with values set from {data}
      */
-    public function createIdentifierDto(string $type, array $data): IdentifierInterface
+    public function createIdentifierDto(string $type, array $imageSizes, array $data): IdentifierInterface
     {
         $identifier = $this->createDto($type);
-        $this->setIdentifierData($identifier, $data);
+        $this->setIdentifierData($identifier, $imageSizes, $data);
 
         return $identifier;
     }
@@ -57,14 +59,19 @@ class IdentifierFactory
      *
      * @param IdentifierInterface $identifier
      *   The identifier type (e.g. 'pid', 'isbn', etc).
+     * @param array $imageSizes
+     *   The image sizes requested
      * @param array $data
      *   An array of key => values to set on the relevant properties
      */
-    private function setIdentifierData(IdentifierInterface $identifier, array $data): void
+    private function setIdentifierData(IdentifierInterface $identifier, array $imageSizes, array $data): void
     {
         $identifier->setId($data['isIdentifier']);
 
         $urls = $this->transformer->transformAll($data['imageUrl']);
+        $urls = array_filter($urls, function (string $url, string $size) use ($imageSizes) {
+            return in_array($size, $imageSizes);
+        }, ARRAY_FILTER_USE_BOTH);
 
         foreach ($urls as $size => $url) {
             $imageUrl = new ImageUrl();
