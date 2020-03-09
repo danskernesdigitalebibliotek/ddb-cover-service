@@ -10,8 +10,17 @@ targetAverageUtilization: 80
 
 app:
   image:
-    version: '1.2.7'
-  cors_allow_origin: '*'
+    version: "1.2.7"
+    imagePullPolicy: "IfNotPresent"
+  cors_allow_origin: "*"
+  elastic_url: "http://elasticsearch-es-http:9200/"
+
+nginx:
+  exporter:
+    image:
+      version: 0.6.0
 
 ingress:
-  domain: cover.dandigbib.org
+  domain: "cover.dandigbib.org"
+  mail: "itkdev@mkb.aarhus.dk"
+  enableTLS: false

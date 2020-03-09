@@ -202,7 +202,7 @@ helm repo update
 
 Install the cert-manager Helm chart to enable support for lets-encrypt.
 ```sh
-helm install cert-manager --namespace cert-manager --version v0.11.0 jetstack/cert-manager
+helm install cert-manager --namespace cert-manager --version v0.13.1 jetstack/cert-manager
 ```
 
 ## Monitoring
@@ -279,22 +279,6 @@ user.
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
 ```
 
-# Github package registry
-To use the github package registry from kubernetes you need to store basic authentication in a secret and use it in `imagePullSecrets` in the yaml deployment.
-
-```sh
-kubectl create secret docker-registry github-registry \
-    --docker-server=docker.pkg.github.com \
-    --docker-username=cableman \
-    --docker-password=XXXXX_TOKEN_XXXXX \
-    --docker-email=YOUR_MAIL_ADDRESS
-```
-
-See the github secret in clear text from the cluster.
-```sh
-kubectl get secret github-registry --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
-```
-
 # Application install
 To install the application into the kubernetes cluster yaml files can be found in the k8s folder and should be applied 
 in the order given below. 
@@ -317,12 +301,12 @@ kubens cover-service
 The `app-secret` is not part of the code-base as is contains secrets. So you have to figure these out by reading the 
 other yaml files and get the secrets from the services.
 ```sh
-kubectl apply -f app-secret.yaml -f letsencrypt-clusterissuer.yaml 
+kubectl apply -f letsencrypt-clusterissuer.yaml 
 ```
 
 Get the main application up and running.
 ```sh
-kubectl apply -f redis-deployment.yaml -f app-deployment.yaml -f app-ingress.yaml
+helm install cover-service
 ```
 
 # TODO
