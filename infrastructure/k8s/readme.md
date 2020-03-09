@@ -187,7 +187,6 @@ kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cer
 Create the namespace for cert-manager
 ```sh
 kubectl create namespace cert-manager
-kubens cert-manager
 ```
 
 Add the Jetstack Helm repository
@@ -263,10 +262,6 @@ subjects:
 kubectl apply -f logreader-rbac.yaml
 ```
 
-## Horizontal pod autoscaler (HPA)
-
-The application deployment uses HPA. See the app deployment for more information.
-
 # Install elastic search operator
 
 ```sh
@@ -278,6 +273,9 @@ user.
 ```sh
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
 ```
+## Horizontal pod autoscaler (HPA)
+
+The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
 
 # Application install
 To install the application into the kubernetes cluster yaml files can be found in the k8s folder and should be applied 
@@ -285,7 +283,7 @@ in the order given below.
 
 Install namespace, storage and elasticsearch server.
 ```sh
-kubectl apply -f namespace.yaml -f aks-storage.yaml -f elasticsearch.yaml
+kubectl apply elasticsearch.yaml
 ```
 
 Get elasticsearch password. 
@@ -293,23 +291,16 @@ Get elasticsearch password.
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
 ```
 
-Jump into the new namespace.
-```sh
-kubens cover-service
-```
-
 The `app-secret` is not part of the code-base as is contains secrets. So you have to figure these out by reading the 
 other yaml files and get the secrets from the services.
-```sh
-kubectl apply -f letsencrypt-clusterissuer.yaml 
-```
 
 Get the main application up and running.
 ```sh
 cd infrastructure/cover-service
-helm upgrade --install cover-service --set hpa.enabled=true --set ingress.enableTLS=true
+helm upgrade --install cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
 ```
 
-# TODO
-
-* Create helm charts to get around all the yaml file versions.
+Jump into the new namespace.
+```sh
+kubens cover-service
+```

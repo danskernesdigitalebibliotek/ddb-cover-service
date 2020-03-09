@@ -1,3 +1,4 @@
+{{- if .Values.ingress.enable }}
 {{- if .Values.ingress.enableTLS }}
 ---
 apiVersion: cert-manager.io/v1alpha2
@@ -9,7 +10,7 @@ spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory # production
     #server: https://acme-staging-v02.api.letsencrypt.org/directory # staging
-    email: {{ .Values.ingress.mail | quote }}
+    email: {{ required "A valid .Values.ingress.mail entry required!" .Values.ingress.mail | quote }}
     privateKeySecretRef:
       name: letsencrypt
     solvers:
@@ -38,14 +39,15 @@ spec:
   {{- if .Values.ingress.enableTLS }}
   tls:
     - hosts:
-        - {{ .Values.ingress.domain | quote }}
+        - {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
       secretName: {{ .Release.Namespace }}-ingress-tls-secret
   {{- end }}
   rules:
-    - host: {{ .Values.ingress.domain | quote }}
+    - host: {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
       http:
         paths:
           - backend:
               serviceName: {{ .Release.Namespace }}-service
               servicePort: 80
             path: /
+{{- end }}

@@ -3,8 +3,7 @@
 # Declare variables to be passed into your templates.
 
 ingress:
-  domain: "cover.dandigbib.org"
-  mail: "itkdev@mkb.aarhus.dk"
+  enabled: true
   enableTLS: false
 
 hpa:
