@@ -9,8 +9,9 @@ targetAverageUtilization: 70
 targetAverageUtilization: 80
 
 app:
-  version: "1.2.7"
-  cors_allow_origin: "*"
+  image:
+    version: '1.2.7'
+  cors_allow_origin: '*'
 
 ingress:
   domain: cover.dandigbib.org
