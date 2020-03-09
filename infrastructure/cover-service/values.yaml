@@ -4,6 +4,7 @@
 
 ingress:
   enabled: true
+  enableAuth: false
   enableTLS: false
 
 hpa:

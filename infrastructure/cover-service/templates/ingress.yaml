@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enable }}
+{{- if .Values.ingress.enabled }}
 {{- if .Values.ingress.enableTLS }}
 ---
 apiVersion: cert-manager.io/v1alpha2
@@ -31,6 +31,11 @@ metadata:
     {{- end }}
     prometheus.io/scrape: "true"
     prometheus.io/port: "10254"
+    {{- if .Values.ingress.enableAuth }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    {{- end }}
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-origin: {{ .Values.app.cors_allow_origin | quote }}
