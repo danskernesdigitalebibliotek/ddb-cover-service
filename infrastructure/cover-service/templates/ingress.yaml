@@ -2,8 +2,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  namespace: cover-service
-  name: cover-service-frontend
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Namespace }}-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt
@@ -11,18 +11,18 @@ metadata:
     prometheus.io/port: "10254"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "{{ .Values.app.cors_allow_origin }}"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
 spec:
   tls:
     - hosts:
-        - cover.dandigbib.org
-      secretName: cover-service-frontend-tls-secret
+        - {{ .Values.ingress.domain }}
+      secretName: {{ .Release.Namespace }}-ingress-tls-secret
   rules:
-    - host: cover.dandigbib.org
+    - host: {{ .Values.ingress.domain }}
       http:
         paths:
           - backend:
-              serviceName: cover-service
+              serviceName: {{ .Release.Namespace }}-service
               servicePort: 80
             path: /

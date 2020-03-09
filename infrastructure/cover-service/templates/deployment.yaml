@@ -1,0 +1,115 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Namespace }}-app
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Namespace }}-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Namespace }}-app
+        tier: frontend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scheme: "http"
+    spec:
+      imagePullSecrets:
+        - name: github-registry
+      containers:
+        - name: frontend
+          image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:{{ .Values.app.version }}
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "300m"
+            limits:
+              memory: "384Mi"
+              cpu: "500m"
+          readinessProbe:
+            exec:
+              command:
+                - php-fpm-healthcheck
+            initialDelaySeconds: 1
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - php-fpm-healthcheck
+                - --accepted-conn=500000
+            initialDelaySeconds: 0
+            periodSeconds: 10
+          env:
+            - name: APP_THEMOVIEDATABASE_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: cover-service-secret
+                  key: APP_THEMOVIEDATABASE_APIKEY
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cover-service-secret
+                  key: APP_SECRET
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-configmap
+          ports:
+            - containerPort: 9000
+            - containerPort: 9253
+        - name: nginx
+          image: docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx:{{ .Values.app.version }}
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "96Mi"
+              cpu: "300m"
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: nginx-config
+          ports:
+            - containerPort: 80
+        - name: nginx-exporter
+          image: nginx/nginx-prometheus-exporter:0.5.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "96Mi"
+              cpu: "100m"
+          readinessProbe:
+            tcpSocket:
+              port: 9113
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9113
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          ports:
+            - containerPort: 9113
