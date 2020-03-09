@@ -9,7 +9,9 @@ name: Release (stg)
 env:
   ORG_NAME: danskernesdigitalebibliotek
   NAMESPACE: cover-service
-  
+  APP_VERSION: release
+  VERSION: latest
+
 jobs:
   build:
     name: Staging deploy
@@ -18,19 +20,19 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Login to github package registry
-        run: docker login docker.pkg.github.com -u publisher -p "${{ secrets.GITHUB_TOKEN }}"
+        run: docker login --username secrets.DOCKER_USERNAME --password "${{ secrets.DOCKER_PASSWORD }}"
 
       - name: Build CoverService image
-        run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:latest" --file="infrastructure/docker/cover-service/Dockerfile" .
+        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="danskernesdigitalebibliotek/cover-service:${{ env.VERSION }}}" --file="infrastructure/docker/cover-service/Dockerfile" infrastructure/docker/cover-service
 
       - name: Build nginx sidecar image
-        run: docker build --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:latest" --file="infrastructure/docker/nginx/Dockerfile" .
+        run: docker build --build-arg VERSION=${{ env.VERSION }}} --tag="danskernesdigitalebibliotek/cover-service-nginx:${{ env.VERSION }}}" --file="infrastructure/docker/nginx/Dockerfile" infrastructure/docker/nginx
 
       - name: Push CoverService image
-        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:latest
+        run: docker push danskernesdigitalebibliotek/cover-service:${{ env.VERSION }}}
 
       - name: Push CoverService Nginx image
-        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:latest
+        run: docker push danskernesdigitalebibliotek/cover-service-nginx:${{ env.VERSION }}}
 
       # Set the target Azure Kubernetes Service (AKS) cluster. 
       - uses: azure/aks-set-context@v1
@@ -41,5 +43,10 @@ jobs:
           cluster-name: ddb-cover-service-stg
           resource-group: CoverServiceStg
 
-      - name: Deployment
-        run: kubectl -n ${{ env.NAMESPACE }} apply -f infrastructure/k8s/stg/app-deployment.yaml
+      - uses: azure/setup-helm@v1
+        name: Install helm
+        with:
+          id: install
+
+      - name: Deploy cover servive
+        run: helm upgrade --install cover-service --namespace ${{ env.NAMESPACE }} --set app.image.version=latest --set hpa.enabled=false --set ingress.enableAuth=true --set ingress.enableTLS=true --set ingress.mail='itkdev@mkb-itkdev.dk' --set ingress.domain=coverservice.itkdev.dk

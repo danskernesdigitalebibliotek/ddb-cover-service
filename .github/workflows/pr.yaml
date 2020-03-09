@@ -59,6 +59,19 @@ jobs:
             - name: phpcsfixerr
               run: |
                   composer actions/phpcsfixer
+    helm:
+        name: Helm
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+
+            - uses: azure/setup-helm@v1
+              name: Install helm
+              with:
+                 id: install
+
+            - name: Lint helm
+              run: helm lint infrastructure/cover-service  --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail=test@itkdev.dk --set ingress.domain=cover.dandigbib.org
 
 #   @TODO: Add in future release.
 #    phan:
