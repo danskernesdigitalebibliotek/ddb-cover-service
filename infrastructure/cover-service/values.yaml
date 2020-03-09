@@ -18,10 +18,23 @@ app:
   image:
     version: "1.2.7"
     imagePullPolicy: "IfNotPresent"
+  enbled_no_hits: "false"
   cors_allow_origin: "*"
   elastic_url: "http://elasticsearch-es-http:9200/"
+  redis:
+    server: "redis"
+    port: "6379"
+    cache_db: "10"
+  php:
+    max_children: "80"
+    start_servers: "15"
+    min_spare_servers: "15"
+    max_spare_servers: "30"
+    slowlog_timeout: "1"
+
 
 nginx:
   exporter:
     image:
       version: 0.6.0
+

@@ -306,7 +306,8 @@ kubectl apply -f letsencrypt-clusterissuer.yaml
 
 Get the main application up and running.
 ```sh
-helm upgrade --install cover-service
+cd infrastructure/cover-service
+helm upgrade --install cover-service --set hpa.enabled=true --set ingress.enableTLS=true
 ```
 
 # TODO
