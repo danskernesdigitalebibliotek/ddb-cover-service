@@ -2,11 +2,17 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# HPA
-minReplicas: 5
-maxReplicas: 15
-targetAverageUtilization: 70
-targetAverageUtilization: 80
+ingress:
+  domain: "cover.dandigbib.org"
+  mail: "itkdev@mkb.aarhus.dk"
+  enableTLS: false
+
+hpa:
+  enabled: false
+  minReplicas: 5
+  maxReplicas: 15
+  targetAverageUtilization: 70
+  targetAverageUtilization: 80
 
 app:
   image:
@@ -19,8 +25,3 @@ nginx:
   exporter:
     image:
       version: 0.6.0
-
-ingress:
-  domain: "cover.dandigbib.org"
-  mail: "itkdev@mkb.aarhus.dk"
-  enableTLS: false

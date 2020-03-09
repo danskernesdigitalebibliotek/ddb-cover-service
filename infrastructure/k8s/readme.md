@@ -306,7 +306,7 @@ kubectl apply -f letsencrypt-clusterissuer.yaml
 
 Get the main application up and running.
 ```sh
-helm install cover-service
+helm upgrade --install cover-service
 ```
 
 # TODO
