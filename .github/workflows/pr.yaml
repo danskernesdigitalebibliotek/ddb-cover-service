@@ -2,14 +2,18 @@ on: pull_request
 name: Review
 jobs:
     test-composer-install:
-        name: Validate composer
         runs-on: ubuntu-latest
+        strategy:
+          fail-fast: false
+          matrix:
+            php: ['7,4', '7,3']
+        name: Validate composer (${{ matrix.php}})
         steps:
             -   uses: actions/checkout@master
             -   name: Setup PHP, with composer and extensions
                 uses: shivammathur/setup-php@master
                 with:
-                    php-version: 7.3
+                    php-version: ${{ matrix.php}}
                     extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                     coverage: none
             -   name: Validate composer files
@@ -21,14 +25,18 @@ jobs:
                     APP_ENV=prod composer install --no-dev -o
 
     runner-phpcs:
-        name: runner-phpcs
         runs-on: ubuntu-latest
+        strategy:
+          fail-fast: false
+          matrix:
+            php: ['7,4', '7,3', '8.0']
+        name: Coding style (${{ matrix.php}})
         steps:
             - uses: actions/checkout@master
             - name: Setup PHP, with composer and extensions
               uses: shivammathur/setup-php@master
               with:
-                  php-version: 7.3
+                  php-version: ${{ matrix.php}}
                   extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
             - name: Install Reviewdog
@@ -43,14 +51,18 @@ jobs:
               env:
                   REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     phpcsfixer:
-        name: PHP-CS-FIXER
         runs-on: ubuntu-latest
+        strategy:
+          fail-fast: false
+          matrix:
+            php: ['7,4', '7,3', '8.0']
+        name: Coding style fixer (${{ matrix.php}})
         steps:
             - uses: actions/checkout@master
             - name: Setup PHP, with composer and extensions
               uses: shivammathur/setup-php@master
               with:
-                  php-version: 7.3
+                  php-version: ${{ matrix.php}}
                   extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
             - name: Install Dependencies
