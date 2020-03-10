@@ -1,5 +1,8 @@
 ---
-on: [create]
+on:
+  push:
+    tags:
+      - '*'
 name: Release
 
 env:
@@ -17,16 +20,16 @@ jobs:
         run: docker login --username secrets.DOCKER_USERNAME --password "${{ secrets.DOCKER_PASSWORD }}"
 
       - name: Build CoverService image
-        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:${{ env.APP_VERSION }}" --file="infrastructure/docker/cover-service/Dockerfile" .
+        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="danskernesdigitalebibliotek/cover-service:${{ env.APP_VERSION }}" --file="infrastructure/docker/cover-service/Dockerfile" infrastructure/docker/cover-service
 
       - name: Build nginx side-car image
-        run: docker build --build-arg VERSION=${{ env.VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:${{ env.APP_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" .
+        run: docker build --build-arg VERSION=${{ env.APP_VERSION }} --tag="danskernesdigitalebibliotek/cover-service-nginx:${{ env.APP_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" infrastructure/docker/nginx
 
       - name: Push CoverService image
-        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:${{ env.APP_VERSION }}
+        run: docker push danskernesdigitalebibliotek/cover-service:${{ env.APP_VERSION }}
 
       - name: Push CoverService Nginx image
-        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:${{ env.APP_VERSION }}
+        run: docker push danskernesdigitalebibliotek/cover-service-nginx:${{ env.APP_VERSION }}
 
   deploy:
     runs-on: ubuntu-latest
