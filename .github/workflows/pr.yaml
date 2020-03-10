@@ -12,10 +12,10 @@ jobs:
             - uses: actions/checkout@master
 
             - name: Setup PHP, with composer and extensions
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php}}
-                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  extension: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
             - name: Get composer cache directory
@@ -46,10 +46,10 @@ jobs:
             - uses: actions/checkout@master
 
             - name: Setup PHP, with composer and extensions
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php}}
-                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  extension: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
             - name: Install Reviewdog
@@ -83,10 +83,10 @@ jobs:
             - uses: actions/checkout@master
 
             - name: Setup PHP, with composer and extensions
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php}}
-                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  extension: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
             - name: Get composer cache directory
