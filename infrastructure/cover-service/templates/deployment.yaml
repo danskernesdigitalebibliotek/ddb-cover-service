@@ -50,11 +50,6 @@ spec:
             initialDelaySeconds: 0
             periodSeconds: 10
           env:
-            - name: APP_THEMOVIEDATABASE_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: cover-service-secret
-                  key: APP_THEMOVIEDATABASE_APIKEY
             - name: APP_SECRET
               valueFrom:
                 secretKeyRef:
