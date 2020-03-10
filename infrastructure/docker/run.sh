@@ -1,7 +1,10 @@
 #!/bin/sh
 
-(cd ../../ && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service --file="infrastructure/docker/cover-service/Dockerfile" .)
-(cd ../../ && docker build --no-cache --tag=docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx --file="infrastructure/docker/nginx/Dockerfile" .)
+APP_VERSION=develop
+VERSION=latest
 
-docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:latest
-docker push docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/nginx:latest
+docker build --no-cache --build-arg APP_VERSION=${APP_VERSION} --tag=danskernesdigitalebibliotek/cover-service:${VERSION} --file="cover-service/Dockerfile" cover-service
+docker build --no-cache --build-arg VERSION=${VERSION} --tag=danskernesdigitalebibliotek/cover-service-nginx:${VERSION} --file="nginx/Dockerfile" nginx
+
+docker push danskernesdigitalebibliotek/cover-service:latest
+docker push danskernesdigitalebibliotek/cover-service-nginx:latest

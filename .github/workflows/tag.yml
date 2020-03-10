@@ -1,5 +1,8 @@
 ---
-on: [create]
+on:
+  push:
+    tags:
+      - '*'
 name: Release
 
 env:
@@ -14,19 +17,19 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Login to github package registry
-        run: docker login docker.pkg.github.com -u publisher -p "${{ secrets.GITHUB_TOKEN }}"
+        run: docker login --username secrets.DOCKER_USERNAME --password "${{ secrets.DOCKER_PASSWORD }}"
 
       - name: Build CoverService image
-        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:${{ env.APP_VERSION }}" --file="infrastructure/docker/cover-service/Dockerfile" .
+        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="danskernesdigitalebibliotek/cover-service:${{ env.APP_VERSION }}" --file="infrastructure/docker/cover-service/Dockerfile" infrastructure/docker/cover-service
 
       - name: Build nginx side-car image
-        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:${{ env.APP_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" .
+        run: docker build --build-arg VERSION=${{ env.APP_VERSION }} --tag="danskernesdigitalebibliotek/cover-service-nginx:${{ env.APP_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" infrastructure/docker/nginx
 
       - name: Push CoverService image
-        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/cover-service:${{ env.APP_VERSION }}
+        run: docker push danskernesdigitalebibliotek/cover-service:${{ env.APP_VERSION }}
 
       - name: Push CoverService Nginx image
-        run: docker push docker.pkg.github.com/${{ env.ORG_NAME }}/ddb-cover-service/nginx:${{ env.APP_VERSION }}
+        run: docker push danskernesdigitalebibliotek/cover-service-nginx:${{ env.APP_VERSION }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -44,13 +47,10 @@ jobs:
           cluster-name: ddb-cover-service
           resource-group: CoverService
 
-      - name: Render Deployment YAML
-        uses: nowactions/envsubst@v1
+      - uses: azure/setup-helm@v1
+        name: Install helm
         with:
-          input: ./infrastructure/k8s/app-deployment.yaml
-          output: ./rendered-deployment.yaml
-        env:
-          APP_VERSION: ${{ env.APP_VERSION }}
+          id: install
 
-      - name: Deployment
-        run: kubectl -n ${{ env.NAMESPACE }} apply -f ./rendered-deployment.yaml
+      - name: Deploy cover service
+        run: helm upgrade --install cover-service --namespace ${{ env.NAMESPACE }} --set app.image.version=${{ env.APP_VERSION }} --set hpa.enabled=true --set ingress.enableAuth=false --set ingress.enableTLS=true --set ingress.mail='itkdev@mkb-itkdev.dk' --set ingress.domain=cover.dandigbib.org

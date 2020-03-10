@@ -187,7 +187,6 @@ kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cer
 Create the namespace for cert-manager
 ```sh
 kubectl create namespace cert-manager
-kubens cert-manager
 ```
 
 Add the Jetstack Helm repository
@@ -202,7 +201,7 @@ helm repo update
 
 Install the cert-manager Helm chart to enable support for lets-encrypt.
 ```sh
-helm install cert-manager --namespace cert-manager --version v0.11.0 jetstack/cert-manager
+helm install cert-manager --namespace cert-manager --version v0.13.1 jetstack/cert-manager
 ```
 
 ## Monitoring
@@ -263,10 +262,6 @@ subjects:
 kubectl apply -f logreader-rbac.yaml
 ```
 
-## Horizontal pod autoscaler (HPA)
-
-The application deployment uses HPA. See the app deployment for more information.
-
 # Install elastic search operator
 
 ```sh
@@ -278,22 +273,9 @@ user.
 ```sh
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
 ```
+## Horizontal pod autoscaler (HPA)
 
-# Github package registry
-To use the github package registry from kubernetes you need to store basic authentication in a secret and use it in `imagePullSecrets` in the yaml deployment.
-
-```sh
-kubectl create secret docker-registry github-registry \
-    --docker-server=docker.pkg.github.com \
-    --docker-username=cableman \
-    --docker-password=XXXXX_TOKEN_XXXXX \
-    --docker-email=YOUR_MAIL_ADDRESS
-```
-
-See the github secret in clear text from the cluster.
-```sh
-kubectl get secret github-registry --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
-```
+The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
 
 # Application install
 To install the application into the kubernetes cluster yaml files can be found in the k8s folder and should be applied 
@@ -301,7 +283,7 @@ in the order given below.
 
 Install namespace, storage and elasticsearch server.
 ```sh
-kubectl apply -f namespace.yaml -f aks-storage.yaml -f elasticsearch.yaml
+kubectl apply elasticsearch.yaml
 ```
 
 Get elasticsearch password. 
@@ -309,22 +291,16 @@ Get elasticsearch password.
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
 ```
 
+The `app-secret` is not part of the code-base as is contains secrets. So you have to figure these out by reading the 
+other yaml files and get the secrets from the services.
+
+Get the main application up and running.
+```sh
+cd infrastructure/cover-service
+helm upgrade --install cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
+```
+
 Jump into the new namespace.
 ```sh
 kubens cover-service
 ```
-
-The `app-secret` is not part of the code-base as is contains secrets. So you have to figure these out by reading the 
-other yaml files and get the secrets from the services.
-```sh
-kubectl apply -f app-secret.yaml -f letsencrypt-clusterissuer.yaml 
-```
-
-Get the main application up and running.
-```sh
-kubectl apply -f redis-deployment.yaml -f app-deployment.yaml -f app-ingress.yaml
-```
-
-# TODO
-
-* Create helm charts to get around all the yaml file versions.
