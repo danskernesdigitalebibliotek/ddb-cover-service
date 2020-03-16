@@ -6,6 +6,7 @@
 parameters:
     locale: 'en'
     app.enable.no.hits: '%env(bool:APP_ENABLE_NO_HITS)%'
+    elastic.min.image.size: '%env(ELASTIC_MIN_IMAGE_SIZE)%'
 
 services:
     # default configuration for services in *this* file

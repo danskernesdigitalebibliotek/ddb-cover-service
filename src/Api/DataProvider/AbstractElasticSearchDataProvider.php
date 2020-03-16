@@ -21,6 +21,7 @@ use Elastica\JSON;
 use Elastica\Query;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,6 +39,7 @@ abstract class AbstractElasticSearchDataProvider
     protected $factory;
     protected $noHitService;
     protected $logger;
+    protected $params;
 
     /**
      * SearchCollectionDataProvider constructor.
@@ -58,8 +60,10 @@ abstract class AbstractElasticSearchDataProvider
      *   Service for registering no hits
      * @param loggerInterface $logger
      *   Standard logger
+     * @param ParameterBagInterface $params
+     *   Access to environment variables
      */
-    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService, LoggerInterface $logger)
+    public function __construct(Type $index, RequestStack $requestStack, StatsLoggingService $statsLoggingService, MetricsService $metricsService, EventDispatcherInterface $dispatcher, IdentifierFactory $factory, NoHitService $noHitService, LoggerInterface $logger, ParameterBagInterface $params)
     {
         $this->index = $index;
         $this->requestStack = $requestStack;
@@ -69,6 +73,7 @@ abstract class AbstractElasticSearchDataProvider
         $this->factory = $factory;
         $this->noHitService = $noHitService;
         $this->logger = $logger;
+        $this->params = $params;
     }
 
     /**
@@ -97,6 +102,8 @@ abstract class AbstractElasticSearchDataProvider
     /**
      * Build Elastic query from IS types and IS identifiers.
      *
+     * Create query in the form (id or id or ...) and (size > x) using bool and range filter query.
+     *
      * @param string $type
      *   The type ('pid', 'isbn', etc) of identifiers given
      * @param array $identifiers
@@ -107,21 +114,40 @@ abstract class AbstractElasticSearchDataProvider
      */
     protected function buildElasticQuery(string $type, array $identifiers): Query
     {
-        $boolQuery = new Query\BoolQuery();
+        $innerQuery = new Query\BoolQuery();
 
         foreach ($identifiers as $identifier) {
             $identifierFieldTermQuery = new Query\Term();
             $identifierFieldTermQuery->setTerm('isIdentifier', $identifier);
-            $boolQuery->addShould($identifierFieldTermQuery);
+            $innerQuery->addShould($identifierFieldTermQuery);
         }
 
+        $outerBoolQuery = new Query\BoolQuery();
+        $outerBoolQuery->addMust($innerQuery);
+
+        $range = new Query\Range();
+        $range->addField('height', [
+            'gte' => $this->params->get('elastic.min.image.size'),
+            'lt' => 'infinity',
+        ]);
+        $outerBoolQuery->addFilter($range);
+
         $query = new Query();
-        $query->setQuery($boolQuery);
+        $query->setQuery($outerBoolQuery);
         $query->setSize(count($identifiers));
 
         return $query;
     }
 
+    /**
+     * Execute search query.
+     *
+     * @param Query $query
+     *   The search query
+     *
+     * @return array
+     *   Search results found in ES
+     */
     protected function search(Query $query)
     {
         $results = [];
