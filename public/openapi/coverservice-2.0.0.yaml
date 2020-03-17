@@ -18,8 +18,6 @@ info:
 
     * Generic Covers: parameter is currently ignored. Service doesn't yet provide generic covers.
 
-    * Image sizes: parameter is currently ignored. All available sizes are returned.
-
     * Pagination: not implemented.
 
     * Oauth: not implemented.
@@ -38,7 +36,7 @@ paths:
 
         Get covers by ID in specific image format(s), specific image size(s) and with or without generic covers.
 
-        The results can be paginated by specifiying an offset and a page limit. The response will contain a "Link" HTTP header according to RFC5988 pointing to previous and/or next page of results.
+        The results can be paginated by specifying an offset and a page limit. The response will contain a "Link" HTTP header according to RFC5988 pointing to previous and/or next page of results.
         (Note: pagination not yet implemented)
       security:
         - OAuth2: [read]
@@ -82,7 +80,9 @@ paths:
           description: >-
             # Image sizes
 
-            A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive.
+            A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive. If the original
+            image is smaller than the transformation it is not returned, but you can always request the original size
+            and use that as fallback.
 
 
             The different sizes in pixels (height).
@@ -235,7 +235,9 @@ paths:
           description: >-
             # Image sizes
 
-            A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive.
+            A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive. If the original
+            image is smaller than the transformation it is not returned, but you can always request the original size
+            and use that as fallback.
 
 
             The different sizes in pixels (height).
