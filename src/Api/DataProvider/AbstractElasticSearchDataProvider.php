@@ -21,6 +21,7 @@ use Elastica\JSON;
 use Elastica\Query;
 use Elastica\Type;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ abstract class AbstractElasticSearchDataProvider
     protected $factory;
     protected $noHitService;
     protected $logger;
-    protected $params;
+    protected $minImageSize;
 
     /**
      * SearchCollectionDataProvider constructor.
@@ -73,7 +74,13 @@ abstract class AbstractElasticSearchDataProvider
         $this->factory = $factory;
         $this->noHitService = $noHitService;
         $this->logger = $logger;
-        $this->params = $params;
+
+        try {
+            $this->minImageSize = $params->get('elastic.min.image.size');
+        } catch (ParameterNotFoundException $e) {
+            // Default to show all images regardless of size.
+            $this->minImageSize = 0;
+        }
     }
 
     /**
@@ -127,7 +134,7 @@ abstract class AbstractElasticSearchDataProvider
 
         $range = new Query\Range();
         $range->addField('height', [
-            'gte' => $this->params->get('elastic.min.image.size'),
+            'gte' => $this->minImageSize,
             'lt' => 'infinity',
         ]);
         $outerBoolQuery->addFilter($range);
