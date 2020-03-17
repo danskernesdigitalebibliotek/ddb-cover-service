@@ -68,9 +68,12 @@ class IdentifierFactory
     {
         $identifier->setId($data['isIdentifier']);
 
-        $urls = $this->transformer->transformAll($data['imageUrl']);
-        $urls = array_filter($urls, function (string $url, string $size) use ($imageSizes) {
-            return in_array($size, $imageSizes);
+        $urls = $this->transformer->transformAll($data['imageUrl'], $data['width'], $data['height']);
+        $urls = array_filter($urls, function (?string $url, string $size) use ($imageSizes) {
+            if (!is_null($url)) {
+                return in_array($size, $imageSizes);
+            }
+            return false;
         }, ARRAY_FILTER_USE_BOTH);
 
         foreach ($urls as $size => $url) {

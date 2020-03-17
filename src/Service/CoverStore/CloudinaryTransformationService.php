@@ -37,7 +37,7 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
     /**
      * {@inheritdoc}
      */
-    public function transform(string $url, string $format = 'default'): string
+    public function transform(string $url, int $width, int $height, string $format = 'default'): ?string
     {
         // Find transformation if not available throw exception.
         if (!array_key_exists($format, $this->transformations)) {
@@ -47,6 +47,10 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
 
         // Insert named transformation if it exists.
         if (!empty($transformation['transformation'])) {
+            // Check if the original image is large than the transformation size. If it is not return null.
+            if ($transformation['size'] >= $height) {
+                return null;
+            }
             $url = str_replace('/image/upload/', '/image/upload/'.$transformation['transformation'].'/', $url);
         }
 
@@ -64,15 +68,26 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
     /**
      * {@inheritdoc}
      */
-    public function transformAll(string $url): array
+    public function transformAll(string $url, int $width, int $height): array
     {
         $formats = array_keys($this->transformations);
         $transformedUrls = [];
         foreach ($formats as $format) {
-            $transformedUrls[$format] = $this->transform($url, $format);
+            $transformedUrls[$format] = $this->transform($url, $width, $height, $format);
         }
 
         return $transformedUrls;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatMetadata($format): array {
+        if (isset($this->transformations[$format])) {
+            throw new CoverStoreTransformationException('Unknown transformation: '.$format);
+        }
+
+        return $this->transformations[$format];
     }
 
     /**
