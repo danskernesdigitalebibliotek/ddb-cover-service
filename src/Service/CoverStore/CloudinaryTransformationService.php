@@ -82,7 +82,8 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
     /**
      * {@inheritdoc}
      */
-    public function getFormatMetadata($format): array {
+    public function getFormatMetadata($format): array
+    {
         if (isset($this->transformations[$format])) {
             throw new CoverStoreTransformationException('Unknown transformation: '.$format);
         }

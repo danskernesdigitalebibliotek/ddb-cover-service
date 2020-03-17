@@ -28,7 +28,7 @@ interface CoverStoreTransformationInterface
      *   The format to use
      *
      * @return string|null
-     *   If the transformation has bigger dimensions than the original image null will be returned.
+     *   If the transformation has bigger dimensions than the original image null will be returned
      *
      * @throws CoverStoreTransformationException
      */
@@ -59,8 +59,8 @@ interface CoverStoreTransformationInterface
      * @return array
      *   Array with metadata about the format
      *
-     * @throws CoverStoreTransformationException
-     *   If format do not exists.
+     * @throws coverStoreTransformationException
+     *   If format do not exists
      */
     public function getFormatMetadata($format): array;
 

@@ -73,6 +73,7 @@ class IdentifierFactory
             if (!is_null($url)) {
                 return in_array($size, $imageSizes);
             }
+
             return false;
         }, ARRAY_FILTER_USE_BOTH);
 
