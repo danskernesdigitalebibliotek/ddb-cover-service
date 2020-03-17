@@ -48,7 +48,7 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
         // Insert named transformation if it exists.
         if (!empty($transformation['transformation'])) {
             // Check if the original image is large than the transformation size. If it is not return null.
-            if ($transformation['size'] >= $height) {
+            if ($transformation['size'] > $height) {
                 return null;
             }
             $url = str_replace('/image/upload/', '/image/upload/'.$transformation['transformation'].'/', $url);
