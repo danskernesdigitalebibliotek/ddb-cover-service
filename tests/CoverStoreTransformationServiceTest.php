@@ -76,6 +76,9 @@ class CoverStoreTransformationServiceTest extends TestCase
         $this->assertEquals($service->transformAll($this->url, 1080, 1920), $output);
     }
 
+    /**
+     * Test that transformation with small sizes returns null.
+     */
     public function testAllTransformationWithSmallSize()
     {
         $output = [
