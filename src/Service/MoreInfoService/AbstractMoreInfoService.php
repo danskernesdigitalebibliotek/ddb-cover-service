@@ -547,16 +547,18 @@ abstract class AbstractMoreInfoService extends SoapClient
             $identifierInformation->identifierKnown = true;
             $identifierInformation->coverImage = [];
 
-            $urls = $this->transformer->transformAll($result['imageUrl']);
+            $urls = $this->transformer->transformAll($result['imageUrl'], $result['width'], $result['height']);
             // Unset the original image size as it's not used in soap end-point.
             unset($urls['original']);
             foreach ($urls as $size => $url) {
-                $image = new ImageType();
-                $image->_ = $url;
-                $image->imageSize = $this->imageSizeMapping($size);
-                // @TODO Implement format. Currently all formats return jpeg.
-                $image->imageFormat = $this->getImageFormat('jpeg');
-                $identifierInformation->coverImage[] = $image;
+                if (!is_null($url)) {
+                    $image = new ImageType();
+                    $image->_ = $url;
+                    $image->imageSize = $this->imageSizeMapping($size);
+                    // @TODO Implement format. Currently all formats return jpeg.
+                    $image->imageFormat = $this->getImageFormat('jpeg');
+                    $identifierInformation->coverImage[] = $image;
+                }
             }
         }
 
@@ -610,7 +612,9 @@ abstract class AbstractMoreInfoService extends SoapClient
 
         if ($this->provideDefaultCover()) {
             $image = new ImageType();
-            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
+            // The image size here should be the size of the default image or at least the default image should be
+            // bigger then the default transformation.
+            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL, 2500, 3256);
             $image->imageSize = 'detail';
             $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
             // Set source to fallback code to allow no hits filtering
