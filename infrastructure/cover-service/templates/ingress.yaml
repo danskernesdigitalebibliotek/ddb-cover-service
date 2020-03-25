@@ -23,7 +23,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Namespace }}-ingress
+  name: {{ .Release.Name }}-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.enableTLS }}
@@ -45,14 +45,14 @@ spec:
   tls:
     - hosts:
         - {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
-      secretName: {{ .Release.Namespace }}-ingress-tls-secret
+      secretName: {{ .Release.Name }}-ingress-tls-secret
   {{- end }}
   rules:
     - host: {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
       http:
         paths:
           - backend:
-              serviceName: {{ .Release.Namespace }}-service
+              serviceName: {{ .Release.Name }}-service
               servicePort: 80
             path: /
 {{- end }}

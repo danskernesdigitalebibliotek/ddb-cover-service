@@ -3,11 +3,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Namespace }}-app
+  name: {{ .Release.Name }}-app
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Namespace }}-app
+      app: {{ .Release.Name }}-app
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Namespace }}-app
+        app: {{ .Release.Name }}-app
         tier: frontend
       annotations:
         prometheus.io/scrape: 'true'
