@@ -2,12 +2,12 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1beta1
 kind: Elasticsearch
 metadata:
-  namespace: cover-service
+  namespace:  {{ .Release.Namespace }}
   name: elasticsearch
   labels:
     tier: backend
 spec:
-  version: 6.8.4
+  version: {{ .Values.es.version }}
   nodeSets:
     - name: cs-elasticsearch
       count: 1
@@ -19,8 +19,8 @@ spec:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 1024Gi
-            storageClassName: managed-premium-retain
+                storage: {{ .Values.es.storage.size }}
+            storageClassName: {{ .Values.es.storage.class }}
       config:
         node.master: true
         node.data: true
@@ -35,8 +35,6 @@ spec:
             prometheus.io/port: "9114"
             prometheus.io/scheme: "http"
         spec:
-          imagePullSecrets:
-            - name: github-registry
           # This changes the kernel setting on the node to allow ES to use mmap.
           initContainers:
             - name: sysctl
@@ -45,7 +43,6 @@ spec:
               command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
           containers:
             - name: elasticsearch
-              # specify resource limits and requests
               resources:
                 requests:
                   memory: "4Gi"

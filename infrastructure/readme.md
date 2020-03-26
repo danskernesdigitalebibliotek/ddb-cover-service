@@ -122,21 +122,6 @@ AKS_PERS_LOCATION=westeurope
 AKS_PERS_SHARE_NAME=coverservice
 ```
 
-Create a storage account
-```sh
-az storage account create -n $AKS_PERS_STORAGE_ACCOUNT_NAME -g $AKS_PERS_RESOURCE_GROUP -l $AKS_PERS_LOCATION --sku Premium_LRS --kind FileStorage
-```
-
-Get storage account key
-```sh
-STORAGE_KEY=$(az storage account keys list --resource-group $AKS_PERS_RESOURCE_GROUP --account-name $AKS_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
-```
-
-Create cluster secret to access storage account.
-```
-kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
-```
-
 ## Helm
 We are going to use https://helm.sh/ to install ingress and cert-manager into the cluster setup. Note that we here are using helm version 3. We also install the kubectx helper tool as it makes switching cluster and namespaces easier.
 ```sh
@@ -144,9 +129,10 @@ brew install helm
 brew install kubectx
 ```
 
-Add stable official helm charts and repository.
+Add stable official and bitnami helm charts repositories.
 ```sh
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 ```
 
@@ -155,7 +141,6 @@ helm repo update
 Create namespace and change into the namespace.
 ```sh
 kubectl create namespace ingress
-kubens ingress   
 ```
 
 Install nginx ingress using helm chart.
@@ -170,11 +155,6 @@ helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
 Wait for the public IP to be assigned.
 ```sh
 watch --interval=1 kubectl --namespace ingress get services -o wide ingress-nginx-ingress-controller
-```
-
-Switch back to default namespace.
-```sh
-kubens default
 ```
 
 # Certificate manager
@@ -262,45 +242,83 @@ subjects:
 kubectl apply -f logreader-rbac.yaml
 ```
 
-# Install elastic search operator
+See this [repository](https://github.com/itk-dev/k8s_azure_monitoring.git) for information about setting up prometheus inside the cluster.
+
+## Install ElasticSearch operator
 
 ```sh
 kubectl apply -f https://download.elastic.co/downloads/eck/1.0.0-beta1/all-in-one.yaml
 ```
 
-Use the command below after you have deployed the elastic-search application to get the password for the `elastica` 
-user.
-```sh
-kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
-```
 ## Horizontal pod autoscaler (HPA)
-
 The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
 
+
 # Application install
-To install the application into the kubernetes cluster yaml files can be found in the k8s folder and should be applied 
-in the order given below. 
+To install the application into the kubernetes cluster helm chars are included with the source code.
 
-Install namespace, storage and elasticsearch server.
+### Prepare (shard configuration)
+The first step is to prepare the cluster with services that are used across the different services that makes up the complete CoverService application (frontend, upload service, faktor export, importers etc.).
+
 ```sh
-kubectl apply elasticsearch.yaml
+kubectl create namespace cover-service
+helm upgrade --install shared-config infrastructure/shared-config --namespace cover-service
 ```
 
-Get elasticsearch password. 
-```sh
-kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode
-```
 
-The `app-secret` is not part of the code-base as is contains secrets. So you have to figure these out by reading the 
-other yaml files and get the secrets from the services.
+### CoverService
+
+```yaml
+{{- if eq .Values.env "prod" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-secret
+type: Opaque
+stringData:
+  APP_SECRET: "yyyyy"
+{{- end }}
+
+{{- if eq .Values.env "stg" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-secret
+type: Opaque
+stringData:
+  APP_SECRET: "xxxxx"
+
+{{- if .Values.ingress.enableAuth }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-basic-auth
+type: Opaque
+data:
+  auth: BASE64-ENCODED-STRING
+{{- end }}
+{{- end }}
+```
 
 Get the main application up and running.
 ```sh
-cd infrastructure/cover-service
-helm upgrade --install cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
+helm upgrade --install cover-service infrastructure/cover-service --namespace cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
 ```
 
 Jump into the new namespace.
 ```sh
 kubens cover-service
 ```
+
+### The other services
+
+* [Vendor Importers service](https://github.com/danskernesdigitalebibliotek/ddb-cover-service-importers)
+* [Upload service](https://github.com/danskernesdigitalebibliotek/ddb-cover-service-upload)
+* [Faktor export service](https://github.com/danskernesdigitalebibliotek/ddb-cover-service-faktor-export)
+

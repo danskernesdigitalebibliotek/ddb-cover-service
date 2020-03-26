@@ -1,0 +1,20 @@
+# Default values for shared_config.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+cert:
+  env: prod
+  mail: itkdev@mkb.aarhus.dk
+
+es:
+  version: "6.8.4"
+  storage:
+    class: "managed-premium-retain"
+    size: "1024Gi"
+
+redis:
+  version: "4-alpine"
+  maxmemory: "128mb"
+  storage:
+    class: "managed-premium-retain"
+    size: "1Gi"

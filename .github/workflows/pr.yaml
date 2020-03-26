@@ -115,8 +115,11 @@ jobs:
               with:
                   version: v3.1.2
 
-            - name: Lint helm
+            - name: Lint helm (CoverService)
               run: helm lint infrastructure/cover-service  --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail=test@itkdev.dk --set ingress.domain=cover.dandigbib.org
+
+            - name: Lint helm (Shared config)
+              run: helm lint infrastructure/shared-config
 
 #   @TODO: Add in future release.
 #    phan:
