@@ -263,7 +263,7 @@ The first step is to prepare the cluster with services that are used across the 
 
 
 ```sh
-helm upgrade --install shared-config infrastructure/shared-config
+helm upgrade --install shared-config infrastructure/shared-config --namespace cover-service
 ```
 
 
@@ -309,7 +309,7 @@ data:
 
 Get the main application up and running.
 ```sh
-helm upgrade --install cover-service infrastructure/cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
+helm upgrade --install cover-service infrastructure/cover-service --namespace cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
 ```
 
 Jump into the new namespace.
