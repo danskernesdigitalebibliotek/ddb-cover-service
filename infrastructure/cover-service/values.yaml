@@ -19,7 +19,7 @@ hpa:
 
 app:
   image:
-    version: "1.2.7"
+    version: "latest"
     imagePullPolicy: "IfNotPresent"
   enbled_no_hits: "false"
   cors_allow_origin: "*"

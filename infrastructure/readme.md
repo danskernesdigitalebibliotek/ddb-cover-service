@@ -254,15 +254,14 @@ kubectl apply -f https://download.elastic.co/downloads/eck/1.0.0-beta1/all-in-on
 The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
 
 
-
 # Application install
 To install the application into the kubernetes cluster helm chars are included with the source code.
 
 ### Prepare (shard configuration)
 The first step is to prepare the cluster with services that are used across the different services that makes up the complete CoverService application (frontend, upload service, faktor export, importers etc.).
 
-
 ```sh
+kubectl create namespace cover-service
 helm upgrade --install shared-config infrastructure/shared-config --namespace cover-service
 ```
 
