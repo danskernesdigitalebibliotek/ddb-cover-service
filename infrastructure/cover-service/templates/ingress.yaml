@@ -1,23 +1,4 @@
 {{- if .Values.ingress.enabled }}
-{{- if .Values.ingress.enableTLS }}
----
-apiVersion: cert-manager.io/v1alpha2
-kind: ClusterIssuer
-metadata:
-  namespace: {{ .Release.Namespace }}
-  name: letsencrypt
-spec:
-  acme:
-    server: https://acme-v02.api.letsencrypt.org/directory # production
-    #server: https://acme-staging-v02.api.letsencrypt.org/directory # staging
-    email: {{ required "A valid .Values.ingress.mail entry required!" .Values.ingress.mail | quote }}
-    privateKeySecretRef:
-      name: letsencrypt
-    solvers:
-      - http01:
-          ingress:
-            class:  nginx
-{{- end }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -27,7 +8,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.enableTLS }}
-    cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.cert }}
     {{- end }}
     prometheus.io/scrape: "true"
     prometheus.io/port: "10254"

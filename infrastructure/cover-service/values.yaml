@@ -8,6 +8,7 @@ ingress:
   enabled: true
   enableAuth: false
   enableTLS: false
+  cert: "letsencrypt"
 
 hpa:
   enabled: false
