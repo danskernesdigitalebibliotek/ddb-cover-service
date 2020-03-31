@@ -23,7 +23,7 @@ app:
     imagePullPolicy: "IfNotPresent"
   enbled_no_hits: "false"
   cors_allow_origin: "*"
-  elastic_url: "http://elasticsearch-es-http:9200"
+  elastic_url: "http://elasticsearch-es-http:9200/"
   redis:
     server: "redis"
     port: "6379"
