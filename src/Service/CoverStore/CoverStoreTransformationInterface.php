@@ -24,15 +24,15 @@ interface CoverStoreTransformationInterface
      *   The original image width for the url linked to
      * @param int $height
      *   The original image height for the url linked to
-     * @param string $format
-     *   The format to use
+     * @param string $namedSize
+     *   The named size to use
      *
      * @return string|null
      *   If the transformation has bigger dimensions than the original image null will be returned
      *
      * @throws CoverStoreTransformationException
      */
-    public function transform(string $url, int $width, int $height, string $format = 'default'): ?string;
+    public function transform(string $url, int $width, int $height, string $namedSize = 'default'): ?string;
 
     /**
      * Apply all configured transformations.
@@ -45,24 +45,24 @@ interface CoverStoreTransformationInterface
      *   The original image height for the url linked to
      *
      * @return array
-     *   All transformation keyed by name (If the transformation has bigger dimensions than the original image null will
+     *   All transformations keyed by name (If the transformation has bigger dimensions than the original image null will
      *   be returned as the URL.)
      */
     public function transformAll(string $url, int $width, int $height): array;
 
     /**
-     * Get metadata about an give format.
+     * Get metadata about an given format.
      *
-     * @param $format
+     * @param string $format
      *   The format to get metadata about
      *
      * @return array
      *   Array with metadata about the format
      *
-     * @throws coverStoreTransformationException
-     *   If format do not exists
+     * @throws CoverStoreTransformationException
+     *   If format does not exists
      */
-    public function getFormatMetadata($format): array;
+    public function getFormatMetadata(string $format): array;
 
     /**
      * Return the names of the formats available.

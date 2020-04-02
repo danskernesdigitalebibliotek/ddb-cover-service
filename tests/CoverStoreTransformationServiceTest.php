@@ -151,6 +151,6 @@ class CoverStoreTransformationServiceTest extends TestCase
                 'extension' => 'jpg',
                 'size' => 300,
             ],
-      ];
+        ];
     }
 }

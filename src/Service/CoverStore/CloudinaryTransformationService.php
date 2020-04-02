@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Implements transformation service for cloudinary.
+ * Implements transformation service for Cloudinary.
  */
 
 namespace App\Service\CoverStore;
@@ -37,17 +37,18 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
     /**
      * {@inheritdoc}
      */
-    public function transform(string $url, int $width, int $height, string $format = 'default'): ?string
+    public function transform(string $url, int $width, int $height, string $namedSize = 'default'): ?string
     {
         // Find transformation if not available throw exception.
-        if (!array_key_exists($format, $this->transformations)) {
-            throw new CoverStoreTransformationException('Unknown transformation: '.$format);
+        if (!array_key_exists($namedSize, $this->transformations)) {
+            throw new CoverStoreTransformationException('Unknown transformation: '.$namedSize);
         }
-        $transformation = $this->transformations[$format];
+        $transformation = $this->transformations[$namedSize];
 
         // Insert named transformation if it exists.
         if (!empty($transformation['transformation'])) {
-            // Check if the original image is large than the transformation size. If it is not return null.
+            // We do not allow upscaling of images. Return null if the transformation will result in a larger image
+            // than the original.
             if ($transformation['size'] > $height) {
                 return null;
             }
@@ -82,7 +83,7 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
     /**
      * {@inheritdoc}
      */
-    public function getFormatMetadata($format): array
+    public function getFormatMetadata(string $format): array
     {
         if (isset($this->transformations[$format])) {
             throw new CoverStoreTransformationException('Unknown transformation: '.$format);

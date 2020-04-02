@@ -224,7 +224,7 @@ abstract class AbstractElasticSearchDataProvider
      * @return array
      *   An array of image urls strings from the results
      */
-    protected function getImageUrls(array $results)
+    protected function getImageUrls(array $results): array
     {
         $urls = [];
         foreach ($results as $result) {
@@ -307,7 +307,7 @@ abstract class AbstractElasticSearchDataProvider
      * @return array
      *   Array of matches between found imageUrls and requested identifiers
      */
-    private function getMatches(array $imageUrls, array $identifiers, string $identifierType)
+    private function getMatches(array $imageUrls, array $identifiers, string $identifierType): array
     {
         $matches = [];
 

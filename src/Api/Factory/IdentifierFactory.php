@@ -70,21 +70,58 @@ class IdentifierFactory
 
         $urls = $this->transformer->transformAll($data['imageUrl'], $data['width'], $data['height']);
         $urls = array_filter($urls, function (?string $url, string $size) use ($imageSizes) {
-            if (!is_null($url)) {
-                return in_array($size, $imageSizes);
-            }
-
-            return false;
+            return in_array($size, $imageSizes, true);
         }, ARRAY_FILTER_USE_BOTH);
 
         foreach ($urls as $size => $url) {
             $imageUrl = new ImageUrl();
             $imageUrl->setUrl($url);
             // @TODO Implement format
-            $imageUrl->setFormat('jpeg');
+            $imageUrl->setFormat($this->getFormat($size, $data['imageFormat']));
             $imageUrl->setSize($size);
 
             $identifier->addImageUrl($imageUrl);
+        }
+    }
+
+    /**
+     * Get the image format for a given image size.
+     *
+     * @param string $imageSize
+     * @param string $originalFormat
+     *
+     * @return string
+     */
+    private function getFormat(string $imageSize, string $originalFormat): string
+    {
+        $formats = $this->transformer->getFormats();
+
+        if (!array_key_exists($imageSize, $formats)) {
+            throw new \RuntimeException('Unknown image size: '.$imageSize);
+        }
+
+        $extension = $formats[$imageSize] ?? $formats[$imageSize]['extension'];
+        $format = $extension ? $this->getFormatFromExt($extension) : $originalFormat;
+
+        return $this->getFormatFromExt($format);
+    }
+
+    /**
+     * Get the image format from a file extension.
+     *
+     * @param string $extension
+     *
+     * @return string
+     */
+    private function getFormatFromExt(string $extension): string
+    {
+        $extension = strtolower($extension);
+
+        switch ($extension) {
+            case 'jpg':
+                return 'jpeg';
+            default:
+                return $extension;
         }
     }
 

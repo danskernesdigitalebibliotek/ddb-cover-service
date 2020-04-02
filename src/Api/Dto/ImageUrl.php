@@ -31,7 +31,7 @@ final class ImageUrl
     /**
      * @return string
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -43,7 +43,7 @@ final class ImageUrl
      *
      * @return ImageUrl
      */
-    public function setUrl(string $url): self
+    public function setUrl(?string $url): self
     {
         $this->url = $url;
 
