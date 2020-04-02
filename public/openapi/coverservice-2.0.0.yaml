@@ -64,8 +64,8 @@ paths:
           style: form
           explode: false
           example:
-            - '870970-basis:26957087'
-            - '870970-basis:53969127'
+            - '838530-basis:19510966'
+            - '819170-basis:76129783'
         - name: generic
           description: >-
             # Generic covers
@@ -80,20 +80,21 @@ paths:
           description: >-
             # Image sizes
 
-            A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive. If the original
-            image is smaller than the transformation it is not returned, but you can always request the original size
+            A list of the named image sizes for the cover(s) you want to receive. If the original
+            image is smaller than the requested size null is returned for that size, but you can always request the original size
             and use that as fallback.
 
+            The different named sizes and their size in pixels (height).
 
-            The different sizes in pixels (height).
+            - original: the source image, can be any size
 
-            - default: 1000px
+            - default: 1000px height
 
-            - small: 160px
+            - small: 160px height
 
-            - medium: 270px
+            - medium: 270px height
 
-            - large: 540px
+            - large: 540px height
           required: false
           in: query
           schema:
@@ -235,20 +236,21 @@ paths:
           description: >-
             # Image sizes
 
-            A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive. If the original
-            image is smaller than the transformation it is not returned, but you can always request the original size
+            A list of the named image sizes for the cover(s) you want to receive. If the original
+            image is smaller than the requested size null is returned for that size, but you can always request the original size
             and use that as fallback.
 
+            The different named sizes and their size in pixels (height).
 
-            The different sizes in pixels (height).
+            - original: the source image, can be any size
 
-            - default: 1000px
+            - default: 1000px height
 
-            - small: 160px
+            - small: 160px height
 
-            - medium: 270px
+            - medium: 270px height
 
-            - large: 540px
+            - large: 540px height
           required: false
           in: query
           schema:
@@ -322,7 +324,7 @@ components:
 
         **Notice:** A cover can be known under more than one type/ID.
       type: string
-      example: '870970-basis:26957087'
+      example: '889500-basis:7197281'
     CoverCollection:
       type: array
       items:
