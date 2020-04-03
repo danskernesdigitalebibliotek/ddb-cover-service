@@ -43,6 +43,7 @@ class ElasticService
      * Index the Search objects in elasticsearch.
      *
      * @param Search ...$searches
+     *   Iterable of Search objects to index
      *
      * @throws ElasticIndexException
      */
@@ -79,6 +80,7 @@ class ElasticService
      * Get the index name configured for Fos\Elastica.
      *
      * @return string
+     *   The name of the index configured
      *
      * @throws ElasticIndexException
      */
@@ -95,6 +97,8 @@ class ElasticService
         $indexName = array_pop($indexes);
         $indexConfig = $this->fosElasticaConfigManager->getIndexConfiguration($indexName);
 
+        // Fos\Elastica has a trailing slash for the elasticsearch url. Elastics own client does not accept a trailing slash.
+        // @TODO When Fos\Elastica is removed this needs to be adapted for new implementation
         $elasticHost = rtrim($this->elasticHost, '/');
         $client = ClientBuilder::create()->setHosts([$elasticHost])->build();
 

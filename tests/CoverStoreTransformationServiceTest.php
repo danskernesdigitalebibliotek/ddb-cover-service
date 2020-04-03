@@ -26,7 +26,7 @@ class CoverStoreTransformationServiceTest extends TestCase
     {
         $output = 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover/v1544766159/publizon/9788711672051.jpg';
         $service = $this->getService();
-        $this->assertEquals($service->transform($this->url), $output);
+        $this->assertEquals($service->transform($this->url, 1080, 1920), $output);
     }
 
     /**
@@ -34,9 +34,9 @@ class CoverStoreTransformationServiceTest extends TestCase
      */
     public function testNamedTransformation()
     {
-        $output = 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover,q_auto/v1544766159/publizon/9788711672051.jpg';
+        $output = 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_small/v1544766159/publizon/9788711672051.jpg';
         $service = $this->getService();
-        $this->assertEquals($service->transform($this->url, 't1'), $output);
+        $this->assertEquals($service->transform($this->url, 1080, 1920, 't1'), $output);
     }
 
     /**
@@ -46,7 +46,7 @@ class CoverStoreTransformationServiceTest extends TestCase
     {
         $output = 'https://res.cloudinary.com/dandigbib/image/upload/v1544766159/publizon/9788711672051.jpg';
         $service = $this->getService();
-        $this->assertEquals($service->transform($this->url, 't3'), $output);
+        $this->assertEquals($service->transform($this->url, 1080, 1920, 't3'), $output);
     }
 
     /**
@@ -54,9 +54,9 @@ class CoverStoreTransformationServiceTest extends TestCase
      */
     public function testNamedNoExtensionTransformation()
     {
-        $output = 'https://res.cloudinary.com/dandigbib/image/upload/q_auto/v1544766159/publizon/9788711672051.png';
+        $output = 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_medium/v1544766159/publizon/9788711672051.png';
         $service = $this->getService();
-        $this->assertEquals($service->transform($this->url, 't2'), $output);
+        $this->assertEquals($service->transform($this->url, 1080, 1920, 't2'), $output);
     }
 
     /**
@@ -67,13 +67,30 @@ class CoverStoreTransformationServiceTest extends TestCase
         $output = [
             'original' => $this->url,
             'default' => 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover/v1544766159/publizon/9788711672051.jpg',
-            't1' => 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover,q_auto/v1544766159/publizon/9788711672051.jpg',
-            't2' => 'https://res.cloudinary.com/dandigbib/image/upload/q_auto/v1544766159/publizon/9788711672051.png',
+            't1' => 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_small/v1544766159/publizon/9788711672051.jpg',
+            't2' => 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_medium/v1544766159/publizon/9788711672051.png',
             't3' => 'https://res.cloudinary.com/dandigbib/image/upload/v1544766159/publizon/9788711672051.jpg',
         ];
 
         $service = $this->getService();
-        $this->assertEquals($service->transformAll($this->url), $output);
+        $this->assertEquals($service->transformAll($this->url, 1080, 1920), $output);
+    }
+
+    /**
+     * Test that transformation with small sizes returns null.
+     */
+    public function testAllTransformationWithSmallSize()
+    {
+        $output = [
+            'original' => $this->url,
+            'default' => null,
+            't1' => 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_small/v1544766159/publizon/9788711672051.jpg',
+            't2' => 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_medium/v1544766159/publizon/9788711672051.png',
+            't3' => 'https://res.cloudinary.com/dandigbib/image/upload/v1544766159/publizon/9788711672051.jpg',
+        ];
+
+        $service = $this->getService();
+        $this->assertEquals($service->transformAll($this->url, 1080, 200), $output);
     }
 
     /**
@@ -92,7 +109,7 @@ class CoverStoreTransformationServiceTest extends TestCase
     {
         $this->expectException(CoverStoreTransformationException::class);
         $service = $this->getService();
-        $service->transform($this->url, 'fake');
+        $service->transform($this->url, 1080, 1920, 'fake');
     }
 
     /**
@@ -119,17 +136,21 @@ class CoverStoreTransformationServiceTest extends TestCase
             'default' => [
                 'transformation' => 't_ddb_cover',
                 'extension' => 'jpg',
+                'size' => 1000,
             ],
             't1' => [
-                'transformation' => 't_ddb_cover,q_auto',
+                'transformation' => 't_ddb_cover_small',
                 'extension' => 'jpg',
+                'size' => 100,
             ],
             't2' => [
-                'transformation' => 'q_auto',
+                'transformation' => 't_ddb_cover_medium',
+                'size' => 200,
             ],
             't3' => [
                 'extension' => 'jpg',
+                'size' => 300,
             ],
-      ];
+        ];
     }
 }

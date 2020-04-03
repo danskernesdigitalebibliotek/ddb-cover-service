@@ -25,6 +25,7 @@ class FixturesLoadCommand extends Command
      * FixturesLoadCommand constructor.
      *
      * @param AppFixtures $appFixtures
+     *   The AppFixtures service
      */
     public function __construct(AppFixtures $appFixtures)
     {
@@ -34,7 +35,7 @@ class FixturesLoadCommand extends Command
     }
 
     /**
-     * Configure command.
+     * {@inheritdoc}
      */
     protected function configure(): void
     {
@@ -42,12 +43,7 @@ class FixturesLoadCommand extends Command
     }
 
     /**
-     * Execute command.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
