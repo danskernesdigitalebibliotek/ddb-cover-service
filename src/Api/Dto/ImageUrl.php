@@ -42,6 +42,7 @@ final class ImageUrl
      * Set url.
      *
      * @param string|null $url
+     *
      * @return $this
      */
     public function setUrl(?string $url): self
