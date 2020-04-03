@@ -88,7 +88,9 @@ class IdentifierFactory
      * Get the image format for a given image size.
      *
      * @param string $imageSize
+     *   The image sizes requested
      * @param string $originalFormat
+     *   The format of the original image, e.g 'jpeg', 'png'
      *
      * @return string
      */
@@ -110,8 +112,10 @@ class IdentifierFactory
      * Get the image format from a file extension.
      *
      * @param string $extension
+     *   The file extension of the image file
      *
      * @return string
+     *   The format of the image, e.g 'jpeg', 'png'
      */
     private function getFormatFromExt(string $extension): string
     {

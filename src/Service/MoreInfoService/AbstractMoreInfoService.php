@@ -53,9 +53,9 @@ abstract class AbstractMoreInfoService extends SoapClient
 {
     private const FALLBACK_CODE = 'fallback';
     private const FALLBACK_IMAGE_URL = 'https://res.cloudinary.com/dandigbib/image/upload/v1576082092/default/forside-mangler-c.jpg';
-    // Note: If the fallback image is changed the with and heigth should be updated to match the dimensions og the new image.
+    // Note: If the fallback image is changed the width and height should be updated to match the dimensions of the new image.
     private const FALLBACK_IMAGE_WIDTH = 2500;
-    private const FALLBACK_IMAGE_HEIGTH = 3256;
+    private const FALLBACK_IMAGE_HEIGHT = 3256;
 
     /**
      * Default class mapping for this service.
@@ -620,7 +620,7 @@ abstract class AbstractMoreInfoService extends SoapClient
             $image = new ImageType();
             // We do not allow upscaling so the image size here should be the size of the default image or at least the default image should be
             // bigger then the default transformation.
-            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL, self::FALLBACK_IMAGE_WIDTH, self::FALLBACK_IMAGE_HEIGTH, 'default');
+            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL, self::FALLBACK_IMAGE_WIDTH, self::FALLBACK_IMAGE_HEIGHT, 'default');
             $image->imageSize = 'detail';
             $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
             // Set source to fallback code to allow no hits filtering

@@ -29,7 +29,9 @@ final class ImageUrl
     private $size;
 
     /**
-     * @return string
+     * Get url.
+     *
+     * @return string|null
      */
     public function getUrl(): ?string
     {
@@ -39,9 +41,8 @@ final class ImageUrl
     /**
      * Set url.
      *
-     * @param string $url
-     *
-     * @return ImageUrl
+     * @param string|null $url
+     * @return $this
      */
     public function setUrl(?string $url): self
     {

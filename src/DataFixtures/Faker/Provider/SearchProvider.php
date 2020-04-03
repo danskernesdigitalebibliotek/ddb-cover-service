@@ -22,6 +22,7 @@ final class SearchProvider extends BaseProvider
      * Get a random pid number.
      *
      * @return string
+     *   A random but pseudo realistic pid identifier
      */
     public function pid(): string
     {
@@ -34,6 +35,7 @@ final class SearchProvider extends BaseProvider
      * Get a random faust number.
      *
      * @return string
+     *   A random but pseudo realistic faust identifier
      */
     public function faust(): string
     {
@@ -44,6 +46,7 @@ final class SearchProvider extends BaseProvider
      * Get a random ISBN13 number.
      *
      * @return string
+     *   A random but pseudo realistic ISBN13 identifier
      */
     public function isbn(): string
     {
@@ -51,9 +54,10 @@ final class SearchProvider extends BaseProvider
     }
 
     /**
-     * Get a random identifier type.
+     * Get a random identifier type ('faust' | 'isbn' | 'pid').
      *
      * @return string
+     *   A random identifier type
      */
     public function isType(): string
     {
@@ -63,13 +67,15 @@ final class SearchProvider extends BaseProvider
     /**
      * Get a random identifier matching the given type.
      *
-     * @param IdentifierType $type
+     * @param string $type
+     *   The identifier type to generate identifier for
      *
-     * @return string|null
+     * @return string
+     *   A random but pseudo realistic identifier
      *
      * @throws UnknownIsTypeException
      */
-    public function isIdentifier(string $type): ?string
+    public function isIdentifier(string $type): string
     {
         switch ($type) {
             case IdentifierType::FAUST:
@@ -84,9 +90,10 @@ final class SearchProvider extends BaseProvider
     }
 
     /**
-     * Get random image format.
+     * Get random image format ('JPEG' | 'PNG').
      *
      * @return string
+     *   A random image format
      */
     public function imageFormat(): string
     {
@@ -94,9 +101,10 @@ final class SearchProvider extends BaseProvider
     }
 
     /**
-     * Get random image url.
+     * Get random image url for the cloudinary CDN.
      *
      * @return string
+     *   A random realistic CDN URL
      */
     public function imageUrl(): string
     {
@@ -107,18 +115,20 @@ final class SearchProvider extends BaseProvider
      * Get random height.
      *
      * @return int
+     *   A random height, >=128, <=10000
      */
-    public function height()
+    public function height(): int
     {
         return self::numberBetween(128, 10000);
     }
 
     /**
-     * get random width.
+     * Get random width.
      *
      * @return int
+     *   A random width, >=128, <=10000
      */
-    public function width()
+    public function width(): int
     {
         return self::numberBetween(128, 10000);
     }
