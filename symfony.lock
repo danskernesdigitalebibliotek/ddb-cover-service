@@ -11,44 +11,11 @@
             "ref": "18727d8f229306860b46955f438e1897421da689"
         }
     },
-    "behat/behat": {
-        "version": "v3.5.0"
-    },
-    "behat/gherkin": {
-        "version": "v4.5.1"
-    },
-    "behat/mink": {
-        "version": "1.7.x-dev"
-    },
-    "behat/mink-browserkit-driver": {
-        "version": "1.3.3"
-    },
-    "behat/mink-extension": {
-        "version": "2.3.1"
-    },
-    "behat/symfony2-extension": {
-        "version": "2.1",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.1",
-            "ref": "ff944fc5f8dc1d1c9602968c2c12646c557adbbc"
-        }
-    },
-    "behat/transliterator": {
-        "version": "v1.2.0"
-    },
-    "behatch/contexts": {
-        "version": "3.2.0"
-    },
     "composer/semver": {
         "version": "1.4.2"
     },
     "composer/xdebug-handler": {
         "version": "1.3.1"
-    },
-    "container-interop/container-interop": {
-        "version": "1.2.0"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -208,9 +175,6 @@
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
-    },
-    "justinrainbow/json-schema": {
-        "version": "5.2.7"
     },
     "microsoft/tolerant-php-parser": {
         "version": "v0.0.18"
@@ -401,9 +365,6 @@
     "symfony/cache-contracts": {
         "version": "v2.0.1"
     },
-    "symfony/class-loader": {
-        "version": "v3.4.21"
-    },
     "symfony/config": {
         "version": "v4.1.7"
     },
@@ -415,9 +376,6 @@
             "version": "3.3",
             "ref": "181d766db0eb468f41337f9b2d9d5b61ba1ee441"
         }
-    },
-    "symfony/css-selector": {
-        "version": "v4.1.10"
     },
     "symfony/debug": {
         "version": "v4.1.7"
