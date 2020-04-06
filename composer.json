@@ -37,6 +37,7 @@
     },
     "require-dev": {
         "escapestudios/symfony2-coding-standard": "^3.10",
+        "friends-of-behat/symfony-extension": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "friendsoftwig/twigcs": "^3.2",
         "fzaninotto/faker": "^1.9",
