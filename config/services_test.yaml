@@ -6,6 +6,7 @@ services:
     App\Tests\Behat\:
         resource: '../tests/Behat/*'
 
+    # APCU is not available when testing through Behat using the Symfony KernelDriver
     app.metrics_service.adapter:
         autowire: false
         class: Prometheus\Storage\InMemory

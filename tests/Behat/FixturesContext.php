@@ -72,7 +72,7 @@ class FixturesContext implements Context
     /**
      * Prepare Elastic indexes.
      *
-     * @BeforeScenario
+     * @BeforeScenario @createFixtures
      */
     public function prepareIndexes(): void
     {
@@ -92,12 +92,8 @@ class FixturesContext implements Context
     {
         $indexes = array_keys($this->indexManager->getAllIndexes());
 
-        if (!$indexes) {
-            $this->createIndexes();
-        } else {
-            foreach ($indexes as $index) {
-                $this->resetter->resetIndex($index, false, true);
-            }
+        foreach ($indexes as $index) {
+            $this->resetter->resetIndex($index, false, true);
         }
     }
 
