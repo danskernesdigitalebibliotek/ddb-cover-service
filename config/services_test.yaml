@@ -5,3 +5,7 @@ services:
 
     App\Tests\Behat\:
         resource: '../tests/Behat/*'
+
+    app.metrics_service.adapter:
+        autowire: false
+        class: Prometheus\Storage\InMemory

@@ -63,3 +63,11 @@ services:
         arguments: [ '@App\OpenApi\DocumentationDecorator.inner']
         autoconfigure: false
 
+    app.metrics_service.adapter:
+        autowire: false
+        class: Prometheus\Storage\APC
+
+    App\Service\MetricsService:
+        autowire: false
+        arguments:
+            $adapter: '@app.metrics_service.adapter'

@@ -9,6 +9,7 @@ namespace App\Service;
 use Prometheus\CollectorRegistry;
 use Prometheus\Exception\MetricsRegistrationException;
 use Prometheus\RenderTextFormat;
+use Prometheus\Storage\Adapter;
 use Prometheus\Storage\APC;
 
 /**
@@ -21,10 +22,11 @@ class MetricsService
 
     /**
      * MetricsService constructor.
+     *
+     * @param Adapter $adapter
      */
-    public function __construct()
+    public function __construct(Adapter $adapter)
     {
-        $adapter = new APC();
         $this->registry = new CollectorRegistry($adapter);
     }
 
