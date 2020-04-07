@@ -3,6 +3,16 @@ default:
         default:
             contexts:
                 - App\Tests\Behat\DemoContext
+                - App\Tests\Behat\FixturesContext
+                - Behat\MinkExtension\Context\MinkContext
+                - behatch:context:json
+                - behatch:context:rest
+                - behatch:context:browser
 
     extensions:
         FriendsOfBehat\SymfonyExtension: null
+        Behatch\Extension: ~
+        Behat\MinkExtension:
+            sessions:
+                symfony:
+                    symfony: ~

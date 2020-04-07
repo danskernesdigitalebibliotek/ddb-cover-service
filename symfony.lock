@@ -20,6 +20,9 @@
     "behat/transliterator": {
         "version": "v1.3.0"
     },
+    "behatch/contexts": {
+        "version": "3.3.0"
+    },
     "composer/semver": {
         "version": "1.4.2"
     },
@@ -146,6 +149,15 @@
     "fig/link-util": {
         "version": "1.0.0"
     },
+    "friends-of-behat/mink": {
+        "version": "v1.8.0"
+    },
+    "friends-of-behat/mink-browserkit-driver": {
+        "version": "v1.4.0"
+    },
+    "friends-of-behat/mink-extension": {
+        "version": "v2.4.0"
+    },
     "friends-of-behat/symfony-extension": {
         "version": "2.0",
         "recipe": {
@@ -202,6 +214,15 @@
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "justinrainbow/json-schema": {
+        "version": "5.2.9"
+    },
+    "matthiasnoback/behat-local-code-coverage-extension": {
+        "version": "v0.4.0"
+    },
+    "matthiasnoback/live-code-coverage": {
+        "version": "v1.2.1"
     },
     "microsoft/tolerant-php-parser": {
         "version": "v0.0.18"
@@ -403,6 +424,9 @@
             "version": "3.3",
             "ref": "181d766db0eb468f41337f9b2d9d5b61ba1ee441"
         }
+    },
+    "symfony/css-selector": {
+        "version": "v4.4.7"
     },
     "symfony/debug": {
         "version": "v4.1.7"
