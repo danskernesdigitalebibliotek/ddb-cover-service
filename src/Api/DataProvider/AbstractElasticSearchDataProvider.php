@@ -132,6 +132,10 @@ abstract class AbstractElasticSearchDataProvider
         $outerBoolQuery = new Query\BoolQuery();
         $outerBoolQuery->addMust($innerQuery);
 
+        $typeFieldTermQuery = new Query\Term();
+        $typeFieldTermQuery->setTerm('isType', $type);
+        $outerBoolQuery->addMust($typeFieldTermQuery);
+
         $range = new Query\Range();
         $range->addField('height', [
             'gte' => $this->minImageSize,
@@ -142,6 +146,7 @@ abstract class AbstractElasticSearchDataProvider
         $query = new Query();
         $query->setQuery($outerBoolQuery);
         $query->setSize(count($identifiers));
+        $query->setSort(['isIdentifier' => ['order' => 'asc']]);
 
         return $query;
     }
