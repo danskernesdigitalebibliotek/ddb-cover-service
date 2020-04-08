@@ -10,7 +10,6 @@ use Prometheus\CollectorRegistry;
 use Prometheus\Exception\MetricsRegistrationException;
 use Prometheus\RenderTextFormat;
 use Prometheus\Storage\Adapter;
-use Prometheus\Storage\APC;
 
 /**
  * Class MetricsService.
@@ -46,7 +45,7 @@ class MetricsService
      * @param array $labels
      *   Labels to filter by in prometheus. Default empty array.
      */
-    public function counter($name, $help, $value = 1, array $labels = [])
+    public function counter($name, $help, $value = 1, array $labels = []): void
     {
         try {
             $counter = $this->registry->getOrRegisterCounter($this->namespace, $name, $help, array_keys($labels));
@@ -71,7 +70,7 @@ class MetricsService
      * @param $labels
      *   Labels to filter by in prometheus. Default empty array.
      */
-    public function gauge($name, $help, $value, $labels = [])
+    public function gauge($name, $help, $value, $labels = []): void
     {
         try {
             $gauge = $this->registry->getOrRegisterGauge($this->namespace, $name, $help, array_keys($labels));
@@ -97,7 +96,7 @@ class MetricsService
      * @param $labels
      *   Labels to filter by in prometheus. Default empty array.
      */
-    public function histogram($name, $help, $value, $labels = [])
+    public function histogram($name, $help, $value, $labels = []): void
     {
         try {
             $histogram = $this->registry->getOrRegisterHistogram($this->namespace, $name, $help, array_keys($labels));
@@ -114,7 +113,7 @@ class MetricsService
      * @return string
      *   Render matrices in a single string
      */
-    public function render()
+    public function render(): string
     {
         $renderer = new RenderTextFormat();
 
