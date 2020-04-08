@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Behat context for data fixtures.
+ */
+
 namespace App\Tests\Behat;
 
 use App\DataFixtures\Elastic\ElasticService;
@@ -10,6 +15,9 @@ use FOS\ElasticaBundle\Configuration\ConfigManager;
 use FOS\ElasticaBundle\Index\IndexManager;
 use FOS\ElasticaBundle\Index\Resetter;
 
+/**
+ * Class FixturesContext.
+ */
 class FixturesContext implements Context
 {
     private $elasticService;
