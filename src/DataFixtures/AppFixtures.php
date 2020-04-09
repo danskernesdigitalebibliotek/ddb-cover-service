@@ -42,7 +42,7 @@ class AppFixtures
         $faker->seed(self::FAKER_SEED);
         $faker->addProvider(new SearchProvider($faker));
 
-        $results = [];
+        $searches = [];
 
         for ($i = 1; $i <= self::CREATE_TOTAL; ++$i) {
             $search = new Search();
@@ -55,16 +55,16 @@ class AppFixtures
             $search->setWidth($faker->width);
             $search->setHeight($faker->height);
 
-            $results[] = $search;
+            $searches[] = $search;
 
             if (0 === $i % self::BATCH_SIZE) {
-                $this->elasticService->index(...$results);
-                $results = [];
+                $this->elasticService->index(...$searches);
+                $searches = [];
             }
         }
 
-        if (!empty($results)) {
-            $this->elasticService->index(...$results);
+        if (!empty($searches)) {
+            $this->elasticService->index(...$searches);
         }
     }
 }

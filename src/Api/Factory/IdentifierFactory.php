@@ -102,8 +102,8 @@ class IdentifierFactory
             throw new \RuntimeException('Unknown image size: '.$imageSize);
         }
 
-        $extension = $formats[$imageSize] ?? $formats[$imageSize]['extension'];
-        $format = $extension ? $this->getFormatFromExt($extension) : $originalFormat;
+        $extension = $formats[$imageSize]['extension'] ?? null;
+        $format = $formats[$imageSize]['extension'] ? $this->getFormatFromExt($extension) : $originalFormat;
 
         return $this->getFormatFromExt($format);
     }

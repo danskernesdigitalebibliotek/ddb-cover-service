@@ -63,3 +63,13 @@ services:
         arguments: [ '@App\OpenApi\DocumentationDecorator.inner']
         autoconfigure: false
 
+    # APCU is not available when testing through behat using the Symfony KernelDriver
+    # so we need to be able manually configure the right adapter for testing
+    App\Service\MetricsService:
+        autowire: false
+        arguments:
+            $adapter: '@app.metrics_service.adapter'
+
+    app.metrics_service.adapter:
+        autowire: false
+        class: Prometheus\Storage\APC
