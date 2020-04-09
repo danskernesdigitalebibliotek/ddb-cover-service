@@ -4,9 +4,9 @@ jobs:
     test-composer-install:
         runs-on: ubuntu-latest
         strategy:
-          fail-fast: false
-          matrix:
-            php: ['7.4', '7.3']
+            fail-fast: false
+            matrix:
+                php: ['7.4', '7.3']
         name: Validate composer (${{ matrix.php}})
         steps:
             - uses: actions/checkout@master
@@ -14,9 +14,9 @@ jobs:
             - name: Setup PHP, with composer and extensions
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ matrix.php}}
-                  extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
-                  coverage: none
+                php-version: ${{ matrix.php}}
+                extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                coverage: none
 
             - name: Get composer cache directory
               id: composer-cache
@@ -34,6 +34,41 @@ jobs:
               run: |
                   set -a && source .env && set +a
                   APP_ENV=prod composer install --no-dev -o
+
+    unit_tests:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ['7.4', '7.3']
+        name: Unit tests (${{ matrix.php}})
+        steps:
+            - uses: actions/checkout@master
+
+            - name: Setup PHP, with composer and extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php}}
+                  extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  coverage: none
+
+            - name: Install Reviewdog
+              run: wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $PWD/ v0.9.14
+
+            - name: Get composer cache directory
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+            - uses: actions/cache@v1
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ matrix.php }}-composer-
+
+            - name: Install Dependencies
+              run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+            - name: Unit tests
+              run: |
+                  phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
     runner-phpcs:
         runs-on: ubuntu-latest
