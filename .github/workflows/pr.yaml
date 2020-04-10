@@ -84,8 +84,8 @@ jobs:
             # —— Check Elasticsearch 🔎 ——————————————————————————————————————————————
             - name: Check the Elasticsearch connection from runner host
               run: |
-                  curl -fsSL "http://localhost:$ES_HTTP_PORT"
-                  curl -fsSL "http://localhost:$ES_HTTP_PORT/_cluster/health?pretty"
+                  curl -fsSL "http://localhost:9209"
+                  curl -fsSL "http://localhost:9209/_cluster/health?pretty"
 
             - name: Checkout
               uses: actions/checkout@master
