@@ -1,0 +1,117 @@
+swagger: '2.0'
+basePath: /
+info:
+  title: 'DDB Cover Service'
+  version: '2.0'
+  description: 'Search for covers by ISBN/FAUST/PID'
+paths:
+  '/api/cover/{type}':
+    get:
+      tags:
+        - Cover
+      operationId: getCoverCollection
+      produces:
+        - application/json
+        - application/ld+json
+        - application/xml
+        - text/xml
+        - text/html
+      summary: 'Retrieves the collection of Cover resources.'
+      responses:
+        200:
+          description: 'Cover collection response'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Cover-read'
+      parameters:
+        -
+          name: id
+          in: query
+          required: false
+          type: string
+        -
+          name: 'id[]'
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        -
+          name: format
+          in: query
+          required: false
+          type: string
+        -
+          name: 'format[]'
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        -
+          name: generic
+          in: query
+          required: false
+          type: string
+        -
+          name: 'generic[]'
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        -
+          name: size
+          in: query
+          required: false
+          type: string
+        -
+          name: 'size[]'
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+  '/api/cover/{type}/{id}':
+    get:
+      tags:
+        - Cover
+      operationId: getCoverItem
+      produces:
+        - application/json
+        - application/ld+json
+        - application/xml
+        - text/xml
+        - text/html
+      summary: 'Retrieves a Cover resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'Cover resource response'
+          schema:
+            $ref: '#/definitions/Cover-read'
+        404:
+          description: 'Resource not found'
+definitions:
+  Cover-read:
+    type: object
+    description: ''
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+      imageUrls:
+        type: array
+        items:
+          type: string
