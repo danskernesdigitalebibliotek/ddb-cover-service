@@ -26,57 +26,35 @@ paths:
               $ref: '#/definitions/Cover-read'
       parameters:
         -
+          name: type
+          in: path
+          required: true
+          type: string
+        -
           name: id
           in: query
-          required: false
+          required: true
           type: string
-        -
-          name: 'id[]'
-          in: query
-          required: false
-          type: array
-          items:
-            type: string
-          collectionFormat: multi
-        -
-          name: format
-          in: query
-          required: false
-          type: string
-        -
-          name: 'format[]'
-          in: query
-          required: false
-          type: array
-          items:
-            type: string
-          collectionFormat: multi
         -
           name: generic
           in: query
           required: false
           type: string
         -
-          name: 'generic[]'
-          in: query
-          required: false
-          type: array
-          items:
-            type: string
-          collectionFormat: multi
-        -
           name: size
           in: query
           required: false
           type: string
         -
-          name: 'size[]'
+          name: limit
           in: query
           required: false
-          type: array
-          items:
-            type: string
-          collectionFormat: multi
+          type: integer
+        -
+          name: offset
+          in: query
+          required: false
+          type: integer
   '/api/cover/{type}/{id}':
     get:
       tags:
@@ -92,6 +70,11 @@ paths:
       parameters:
         -
           name: id
+          in: path
+          required: true
+          type: string
+        -
+          name: type
           in: path
           required: true
           type: string
@@ -114,4 +97,4 @@ definitions:
       imageUrls:
         type: array
         items:
-          type: string
+          type: object
