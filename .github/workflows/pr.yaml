@@ -78,14 +78,14 @@ jobs:
             elasticsearch:
                 image: elasticsearch:6.8.4
                 ports:
-                    - 9209:9200
+                    - 9200/tcp
                 options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
         steps:
             # —— Check Elasticsearch 🔎 ——————————————————————————————————————————————
             - name: Check the Elasticsearch connection from runner host
               run: |
-                  curl -fsSL "http://localhost:9209"
-                  curl -fsSL "http://localhost:9209/_cluster/health?pretty"
+                  curl -fsSL "http://localhost:9200"
+                  curl -fsSL "http://localhost:9200/_cluster/health?pretty"
 
             - name: Checkout
               uses: actions/checkout@master
@@ -113,7 +113,9 @@ jobs:
               uses: mxschmitt/action-tmate@v2
 
             - name: Behaviour tests
-              run: phpdbg -qrr ./vendor/bin/behat
+              run: |
+                  APP_ENV=test ELASTIC_URL=http://elasticsearch:9200/ bin/console fos:elatica:create
+                  ELASTIC_URL=http://elasticsearch:9200/ phpdbg -qrr ./vendor/bin/behat
 
     runner-phpcs:
         runs-on: ubuntu-latest

@@ -103,7 +103,7 @@ class ElasticService
         $client = ClientBuilder::create()->setHosts([$elasticHost])->build();
 
         if (!$client->indices()->exists(['index' => $indexConfig->getElasticSearchName()])) {
-            throw new \RuntimeException('Index must be created before populating it.');
+            throw new \RuntimeException('Index must be created before populating it. Please run \'fos:elastica:create\' for the relevant env to create it.');
         }
 
         return $indexConfig->getElasticSearchName();
