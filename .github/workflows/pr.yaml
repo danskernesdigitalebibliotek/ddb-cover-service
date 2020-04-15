@@ -109,13 +109,10 @@ jobs:
             - name: Install Dependencies
               run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
-            - name: Setup tmate session
-              uses: mxschmitt/action-tmate@v2
-
             - name: Behaviour tests
               run: |
-                  APP_ENV=test ELASTIC_URL=http://elasticsearch:9200/ bin/console fos:elatica:create
-                  ELASTIC_URL=http://elasticsearch:9200/ phpdbg -qrr ./vendor/bin/behat
+                  APP_ENV=test ELASTIC_URL=http://localhost:9200/ bin/console fos:elatica:create
+                  ELASTIC_URL=http://localhost:9200/ phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
 
     runner-phpcs:
         runs-on: ubuntu-latest
