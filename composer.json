@@ -129,6 +129,13 @@
         "phpunit": [
             "./vendor/bin/phpunit"
         ],
+        "behat": [
+            "./vendor/bin/behat"
+        ],
+        "test-suite": [
+            "@phpunit",
+            "@behat"
+        ],
         "actions/phpcs": [
             "phpcs --standard=phpcs.xml.dist --report=checkstyle"
         ],
