@@ -8,7 +8,7 @@ info:
     ### Authentication notes
 
     Authentication is done via OAuth2 against auth.dbc.dk. To obtain a valid token follow instructions in
-    [1.2. Password Grant](https://github.com/DBCDK/hejmdal/blob/oAuth2/src/oAuth2/README.md#12-password-grant).
+    [1.2. Password Grant](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md#12-password-grant).
     To use the "Authorize" option in this tool use your 'client_id' and 'client_secret' and fill in '@' for
     both username and password.
 
@@ -368,8 +368,8 @@ components:
       type: oauth2
       description: >-
         Authentication is done via OAuth2 against auth.dbc.dk. To obtain a valid token follow instructions in
-        [1.2. Password Grant](https://github.com/DBCDK/hejmdal/blob/oAuth2/src/oAuth2/README.md#12-password-grant)
+        [1.2. Password Grant](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md#12-password-grant)
       flows:
         password:
-          tokenUrl: 'https://auth.dbc.dk/oauth/token'
+          tokenUrl: 'https://login.bib.dk/oauth/token'
           scopes: {}
