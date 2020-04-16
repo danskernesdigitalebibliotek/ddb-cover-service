@@ -14,12 +14,11 @@
 ###> phpunit/phpunit ###
 /phpunit.xml
 ###< phpunit/phpunit ###
-
-###> behat/symfony2-extension ###
-behat.yml
-###< behat/symfony2-extension ###
-
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
+
+###> friends-of-behat/symfony-extension ###
+/behat.yml
+###< friends-of-behat/symfony-extension ###

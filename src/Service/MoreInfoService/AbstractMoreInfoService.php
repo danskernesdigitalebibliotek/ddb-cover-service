@@ -7,8 +7,11 @@
  * This class was created using wsdl2php. Modified for 'moreInfo' service.
  *
  * @wsdl2php  Wed, 21 Nov 2018 13:11:08 +0100 - Last modified
+ *
  * @WSDL      moreinfo.wsdl
+ *
  * @Processed Tue, 20 Nov 2018 20:44:22 +0100
+ *
  * @Hash      c0e22cf73947f4676ad67c6b82085672
  */
 
@@ -50,6 +53,9 @@ abstract class AbstractMoreInfoService extends SoapClient
 {
     private const FALLBACK_CODE = 'fallback';
     private const FALLBACK_IMAGE_URL = 'https://res.cloudinary.com/dandigbib/image/upload/v1576082092/default/forside-mangler-c.jpg';
+    // Note: If the fallback image is changed the width and height should be updated to match the dimensions of the new image.
+    private const FALLBACK_IMAGE_WIDTH = 2500;
+    private const FALLBACK_IMAGE_HEIGHT = 3256;
 
     /**
      * Default class mapping for this service.
@@ -547,16 +553,18 @@ abstract class AbstractMoreInfoService extends SoapClient
             $identifierInformation->identifierKnown = true;
             $identifierInformation->coverImage = [];
 
-            $urls = $this->transformer->transformAll($result['imageUrl']);
+            $urls = $this->transformer->transformAll($result['imageUrl'], $result['width'], $result['height']);
             // Unset the original image size as it's not used in soap end-point.
             unset($urls['original']);
             foreach ($urls as $size => $url) {
-                $image = new ImageType();
-                $image->_ = $url;
-                $image->imageSize = $this->imageSizeMapping($size);
-                // @TODO Implement format. Currently all formats return jpeg.
-                $image->imageFormat = $this->getImageFormat('jpeg');
-                $identifierInformation->coverImage[] = $image;
+                if (!is_null($url)) {
+                    $image = new ImageType();
+                    $image->_ = $url;
+                    $image->imageSize = $this->imageSizeMapping($size);
+                    // @TODO Implement format. Currently all formats return jpeg.
+                    $image->imageFormat = $this->getImageFormat('jpeg');
+                    $identifierInformation->coverImage[] = $image;
+                }
             }
         }
 
@@ -610,7 +618,9 @@ abstract class AbstractMoreInfoService extends SoapClient
 
         if ($this->provideDefaultCover()) {
             $image = new ImageType();
-            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL);
+            // We do not allow upscaling so the image size here should be the size of the default image or at least the default image should be
+            // bigger then the default transformation.
+            $image->_ = $this->transformer->transform(self::FALLBACK_IMAGE_URL, self::FALLBACK_IMAGE_WIDTH, self::FALLBACK_IMAGE_HEIGHT, 'default');
             $image->imageSize = 'detail';
             $image->imageFormat = $this->getImageFormat(FormatType::JPEG);
             // Set source to fallback code to allow no hits filtering

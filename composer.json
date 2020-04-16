@@ -5,13 +5,17 @@
     "license": "proprietary",
     "require": {
         "php": "^7.1.3",
+        "ext-apcu": "*",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
         "ext-redis": "*",
         "ext-soap": "*",
         "ext-xmlreader": "*",
         "ext-zend-opcache": "*",
         "api-platform/api-pack": "^1.1",
+        "elasticsearch/elasticsearch": "^6.7",
         "endclothing/prometheus_client_php": "^1.0",
         "enqueue/enqueue-bundle": "^0.10.0",
         "enqueue/redis": "^0.10.0",
@@ -33,19 +37,21 @@
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
-        "behat/mink": "1.7.x-dev",
-        "behat/mink-browserkit-driver": "^1.3",
-        "behat/mink-extension": "^2.3",
-        "behat/symfony2-extension": "^2.1",
-        "behatch/contexts": "^3.2",
+        "behatch/contexts": "^3.3",
         "escapestudios/symfony2-coding-standard": "^3.10",
+        "friends-of-behat/mink": "^1.8",
+        "friends-of-behat/mink-browserkit-driver": "^1.4",
+        "friends-of-behat/mink-extension": "^2.4",
+        "friends-of-behat/symfony-extension": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "friendsoftwig/twigcs": "^3.2",
-        "fzaninotto/faker": "^1.8",
+        "fzaninotto/faker": "^1.9",
+        "matthiasnoback/behat-local-code-coverage-extension": "^0.4.0",
         "phan/phan": "^2.4",
         "phpmd/phpmd": "^2.7",
         "phpunit/phpunit": "^7",
-        "symfony/debug-pack": "^1.0"
+        "symfony/debug-pack": "^1.0",
+        "symfony/maker-bundle": "^1.14"
     },
     "config": {
         "preferred-install": {

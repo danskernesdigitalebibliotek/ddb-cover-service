@@ -2,19 +2,16 @@ default:
     suites:
         default:
             contexts:
-                - FeatureContext: { kernel: "@kernel", managerRegistry: "@doctrine" }
+                - App\Tests\Behat\FixturesContext
                 - Behat\MinkExtension\Context\MinkContext
-                - Behatch\Context\RestContext
-                - Behatch\Context\JsonContext
+                - behatch:context:json
+                - behatch:context:rest
+                - behatch:context:browser
 
     extensions:
-        Behat\Symfony2Extension:
-            kernel:
-                bootstrap: "features/bootstrap/bootstrap.php"
-                class: "App\\Kernel"
-        Behat\MinkExtension:
-            base_url: "http://localhost/"
-            sessions:
-                default:
-                    symfony2: ~
+        FriendsOfBehat\SymfonyExtension: null
         Behatch\Extension: ~
+        Behat\MinkExtension:
+            sessions:
+                symfony:
+                    symfony: ~
