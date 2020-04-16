@@ -1,6 +1,8 @@
 default:
     suites:
         default:
+            local_coverage_enabled: true
+            paths: [ '%paths.base%/tests/Behat/features' ]
             contexts:
                 - App\Tests\Behat\FixturesContext
                 - Behat\MinkExtension\Context\MinkContext
@@ -15,3 +17,5 @@ default:
             sessions:
                 symfony:
                     symfony: ~
+        BehatLocalCodeCoverage\LocalCodeCoverageExtension:
+            target_directory: '%paths.base%/coverage'
