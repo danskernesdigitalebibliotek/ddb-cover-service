@@ -48,7 +48,6 @@
         "fzaninotto/faker": "^1.9",
         "matthiasnoback/behat-local-code-coverage-extension": "^0.4.0",
         "phan/phan": "^2.4",
-        "phpmd/phpmd": "^2.7",
         "phpunit/phpcov": "^5.0",
         "phpunit/phpunit": "^7.0",
         "symfony/debug-pack": "^1.0",
@@ -122,9 +121,6 @@
         ],
         "phan": [
             "./vendor/bin/phan --allow-polyfill-parser"
-        ],
-        "md":[
-            "./vendor/bin/phpmd ./src/ text cleancode,codesize,controversial,design,naming,unusedcode --suffixes php"
         ],
         "phpunit": [
             "./vendor/bin/phpunit"
