@@ -34,7 +34,8 @@ class ElasticService
     public function __construct(ConfigManager $fosElasticaConfigManager, Client $fosElasticaClient)
     {
         $clientConfig = $fosElasticaClient->getConfig();
-        $this->elasticHost = $clientConfig['connections'][0]['url'];
+        // Fos\Elastica has a trailing slash for the elasticsearch url. Elastics own client does not accept a trailing slash.
+        $this->elasticHost = rtrim($clientConfig['connections'][0]['url'], '/');
 
         $this->fosElasticaConfigManager = $fosElasticaConfigManager;
     }
@@ -73,7 +74,7 @@ class ElasticService
             ];
         }
 
-        $client->bulk($params);
+        $result = $client->bulk($params);
     }
 
     /**
@@ -97,10 +98,8 @@ class ElasticService
         $indexName = array_pop($indexes);
         $indexConfig = $this->fosElasticaConfigManager->getIndexConfiguration($indexName);
 
-        // Fos\Elastica has a trailing slash for the elasticsearch url. Elastics own client does not accept a trailing slash.
         // @TODO When Fos\Elastica is removed this needs to be adapted for new implementation
-        $elasticHost = rtrim($this->elasticHost, '/');
-        $client = ClientBuilder::create()->setHosts([$elasticHost])->build();
+        $client = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
 
         if (!$client->indices()->exists(['index' => $indexConfig->getElasticSearchName()])) {
             throw new \RuntimeException('Index must be created before populating it. Please run \'fos:elastica:create\' for the relevant env to create it.');
