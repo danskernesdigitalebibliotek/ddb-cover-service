@@ -257,9 +257,6 @@
     "pagerfanta/pagerfanta": {
         "version": "v1.1.0"
     },
-    "pdepend/pdepend": {
-        "version": "2.5.2"
-    },
     "phan/phan": {
         "version": "2.4.4"
     },
@@ -283,9 +280,6 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
-    },
-    "phpmd/phpmd": {
-        "version": "2.7.0"
     },
     "phpspec/prophecy": {
         "version": "v1.10.3"
