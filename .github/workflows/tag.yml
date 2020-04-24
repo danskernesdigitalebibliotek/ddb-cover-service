@@ -67,8 +67,8 @@ jobs:
         uses: azure/aks-set-context@v1
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS_PROD }}'
-          cluster-name: ${{ env.RSG }}
-          resource-group: ${{ env.CNAME }}
+          cluster-name: ${{ env.CNAME }}
+          resource-group: ${{ env.RSG }}
 
       - uses: azure/setup-helm@v1
         name: Install helm
@@ -79,4 +79,4 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
           MAJOR_VERSION: ${{ steps.get_version.outputs.VERSION }}
-        run: helm upgrade --install cover-service --namespace ${{ env.NAMESPACE }} --set app.image.version=${{ RELEASE_VERSION }} --set hpa.enabled=true --set ingress.enableAuth=false --set ingress.enableTLS=true --set ingress.mail='itkdev@mkb-itkdev.dk' --set ingress.path=/v${{ MAJOR_VERSION }}/  --set ingress.domain=cover.dandigbib.org
+        run: helm upgrade --install cover-service-v${{ MAJOR_VERSION }} --namespace ${{ env.NAMESPACE }} --set app.image.version=${{ RELEASE_VERSION }} --set hpa.enabled=true --set ingress.enableAuth=false --set ingress.enableTLS=true --set ingress.mail='itkdev@mkb-itkdev.dk' --set ingress.path=/v${{ MAJOR_VERSION }}/  --set ingress.domain=cover.dandigbib.org
