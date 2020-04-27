@@ -7,6 +7,7 @@ parameters:
     locale: 'en'
     app.enable.no.hits: '%env(bool:APP_ENABLE_NO_HITS)%'
     elastic.min.image.size: '%env(ELASTIC_MIN_IMAGE_SIZE)%'
+    app.path.prefix: '%env(APP_PATH_PREFIX)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,7 +23,6 @@ services:
             $statsLogger: '@monolog.logger.statistics'
             $cloudinaryUrl: '%env(CLOUDINARY_URL)%'
             $cloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
-            $pathPrefix: '%env(APP_PATH_PREFIX)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -58,11 +58,6 @@ services:
         autoconfigure: false
         arguments:
             $index: '@fos_elastica.index.app.search'
-
-    App\OpenApi\DocumentationDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: [ '@App\OpenApi\DocumentationDecorator.inner']
-        autoconfigure: false
 
     # APCU is not available when testing through behat using the Symfony KernelDriver
     # so we need to be able manually configure the right adapter for testing
