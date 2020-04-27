@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ .Release.Name }}-configmap
 data:
+  APP_PATH_PREFIX: {{ ingress.path | quote }}
   APP_CORS_ALLOW_ORIGIN: {{ .Values.app.cors_allow_origin | quote }}
   APP_REDIS_SERVER: {{ .Values.app.redis.server | quote }}
   APP_REDIS_PORT: {{ .Values.app.redis.port | quote }}

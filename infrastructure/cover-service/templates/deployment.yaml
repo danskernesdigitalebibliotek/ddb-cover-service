@@ -20,7 +20,7 @@ spec:
         tier: frontend
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/path: '/metrics'
+        prometheus.io/path: {{ ingress.path }}'/metrics'
         prometheus.io/scheme: 'http'
         # Ensure rolling updates on config changes.
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}

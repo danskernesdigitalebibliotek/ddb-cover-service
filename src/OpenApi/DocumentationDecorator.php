@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class DocumentationDecorator implements NormalizerInterface
 {
     private $decorated;
+    private $pathPrefix;
 
     /**
      * DocumentationDecorator constructor.
@@ -24,9 +25,10 @@ class DocumentationDecorator implements NormalizerInterface
      * @param NormalizerInterface $decorated
      *   Service to normalize an object into a set of arrays/scalars
      */
-    public function __construct(NormalizerInterface $decorated)
+    public function __construct(NormalizerInterface $decorated, String $pathPrefix)
     {
         $this->decorated = $decorated;
+        $this->pathPrefix = $pathPrefix;
     }
 
     /**
@@ -41,8 +43,8 @@ class DocumentationDecorator implements NormalizerInterface
         // the docs to avoid duplicate definitions in the generated documentation.
         $docs = $this->decorated->normalize($object, $format, $context);
 
-        $paths['/api/cover/{type}'] = $docs['paths']['/api/cover/{type}'];
-        $paths['/api/cover/{type}/{id}'] = $docs['paths']['/api/cover/{type}/{id}'];
+        $paths[$this->pathPrefix.'/cover/{type}'] = $docs['paths'][$this->pathPrefix.'/cover/{type}'];
+        $paths[$this->pathPrefix.'/cover/{type}/{id}'] = $docs['paths'][$this->pathPrefix.'/cover/{type}/{id}'];
         $docs['paths'] = $paths;
 
         $definitions['Cover-read'] = $docs['definitions']['Cover-read'];
