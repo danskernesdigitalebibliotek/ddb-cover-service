@@ -18,7 +18,7 @@ spec:
       labels:
         app: {{ .Release.Name }}-app
         tier: frontend
-        path: {{ .Values.ingress.path | quote }}
+        #path: {{ .Values.ingress.path | quote }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'
