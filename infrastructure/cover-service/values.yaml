@@ -9,6 +9,7 @@ ingress:
   enableAuth: false
   enableTLS: false
   cert: "letsencrypt"
+  path: "/"
 
 hpa:
   enabled: false

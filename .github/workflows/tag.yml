@@ -1,51 +1,74 @@
 ---
 on:
   push:
+    branches-ignore:
+      - '*'
     tags:
       - '*'
-name: Release
+name: Production release
 
 env:
   ORG_NAME: danskernesdigitalebibliotek
-  APP_VERSION: ${{ github.event.ref }}
   NAMESPACE: cover-service
+  RSG: CoverService
+  CNAME: ddb-cover-service
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event.ref_type == 'tag'
     steps:
       - uses: actions/checkout@master
       - name: Login to github package registry
         run: docker login --username secrets.DOCKER_USERNAME --password "${{ secrets.DOCKER_PASSWORD }}"
 
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
       - name: Build CoverService image
-        run: docker build --build-arg APP_VERSION=${{ env.APP_VERSION }} --tag="danskernesdigitalebibliotek/cover-service:${{ env.APP_VERSION }}" --file="infrastructure/docker/cover-service/Dockerfile" infrastructure/docker/cover-service
+        env:
+          RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: docker build --build-arg APP_VERSION=${{ RELEASE_VERSION }} --tag="danskernesdigitalebibliotek/cover-service:${{ RELEASE_VERSION }}" --file="infrastructure/docker/cover-service/Dockerfile" infrastructure/docker/cover-service
 
       - name: Build nginx side-car image
-        run: docker build --build-arg VERSION=${{ env.APP_VERSION }} --tag="danskernesdigitalebibliotek/cover-service-nginx:${{ env.APP_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" infrastructure/docker/nginx
+        env:
+          RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: docker build --build-arg VERSION=${{ RELEASE_VERSION }} --tag="danskernesdigitalebibliotek/cover-service-nginx:${{ RELEASE_VERSION }}" --file="infrastructure/docker/nginx/Dockerfile" infrastructure/docker/nginx
 
       - name: Push CoverService image
-        run: docker push danskernesdigitalebibliotek/cover-service:${{ env.APP_VERSION }}
+        env:
+          RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: docker push danskernesdigitalebibliotek/cover-service:${{ RELEASE_VERSION }}
 
       - name: Push CoverService Nginx image
-        run: docker push danskernesdigitalebibliotek/cover-service-nginx:${{ env.APP_VERSION }}
+        env:
+          RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: docker push danskernesdigitalebibliotek/cover-service-nginx:${{ RELEASE_VERSION }}
 
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.ref_type == 'tag'
     needs:
       build
     steps:
       - uses: actions/checkout@master
-      
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Get the major version
+        env:
+          RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        id: get_major_version
+        run: echo ::set-output name=VERSION::${RELEASE_VERSION:0:1}
+
       # Set the target Azure Kubernetes Service (AKS) cluster. 
       - name: Set AKS Context (Prod)
         uses: azure/aks-set-context@v1
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS_PROD }}'
-          cluster-name: ddb-cover-service
-          resource-group: CoverService
+          cluster-name: ${{ env.CNAME }}
+          resource-group: ${{ env.RSG }}
 
       - uses: azure/setup-helm@v1
         name: Install helm
@@ -53,4 +76,7 @@ jobs:
           id: install
 
       - name: Deploy cover service
-        run: helm upgrade --install cover-service --namespace ${{ env.NAMESPACE }} --set app.image.version=${{ env.APP_VERSION }} --set hpa.enabled=true --set ingress.enableAuth=false --set ingress.enableTLS=true --set ingress.mail='itkdev@mkb-itkdev.dk' --set ingress.domain=cover.dandigbib.org
+        env:
+          RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          MAJOR_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: helm upgrade --install cover-service-v${{ MAJOR_VERSION }} --namespace ${{ env.NAMESPACE }} --set app.image.version=${{ RELEASE_VERSION }} --set hpa.enabled=true --set ingress.enableAuth=false --set ingress.enableTLS=true --set ingress.mail='itkdev@mkb-itkdev.dk' --set ingress.path=/v${{ MAJOR_VERSION }}/  --set ingress.domain=cover.dandigbib.org
