@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ .Release.Name }}-configmap
 data:
+  APP_PATH_PREFIX: {{ .Values.ingress.path | quote }}
   APP_CORS_ALLOW_ORIGIN: {{ .Values.app.cors_allow_origin | quote }}
   APP_REDIS_SERVER: {{ .Values.app.redis.server | quote }}
   APP_REDIS_PORT: {{ .Values.app.redis.port | quote }}
@@ -26,5 +27,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ .Release.Name }}-nginx-config
 data:
+  APP_PATH_PREFIX: {{ .Values.ingress.path | quote }}
   PHP_FPM_SERVER: "127.0.0.1"
   PHP_FPM_SERVER_PORT: "9000"
