@@ -27,6 +27,7 @@ app:
   elastic_url: "http://elasticsearch-es-http:9200/"
   redis:
     server: "redis"
+    prefix: "DDBCover"
     port: "6379"
     cache_db: "10"
   php:

@@ -20,7 +20,7 @@ framework:
     cache:
         # Put the unique name of your app here: the prefix seed
         # is used to compute stable namespaces for cache keys.
-        prefix_seed: DDBCover
+        prefix_seed: '%env(REDIS_CACHE_PREFIX)%'
 
         # Redis
         system: cache.adapter.redis
