@@ -20,6 +20,8 @@ RUN APP_ENV=prod composer install --no-dev -o --no-scripts --classmap-authoritat
     && awk '!/system: cache.adapter.redis/' config/packages/framework.yaml > temp && mv temp config/packages/framework.yaml \
     && APP_ENV=prod REDIS_CACHE_SYSTEM_BACKEND=cache.adapter.system composer docker-build \
     && cp -f /tmp/framework.yaml config/packages/framework.yaml \
+    && rm -rf var/cache/* \
+    && rm -rf infrastructure \
     && composer clear-cache
 
 ####
