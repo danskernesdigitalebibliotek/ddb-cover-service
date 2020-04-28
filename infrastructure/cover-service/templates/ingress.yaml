@@ -27,7 +27,7 @@ spec:
   tls:
     - hosts:
         - {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
-      secretName: {{ .Release.Name }}-ingress-tls-secret
+      secretName: coverservice-frontend-tls-secret
   {{- end }}
   rules:
     - host: {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
