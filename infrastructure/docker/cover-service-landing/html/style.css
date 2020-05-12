@@ -1,0 +1,39 @@
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+body {
+  margin: 70px 0 0;
+  background: #f0f0f0;
+}
+
+header:before {
+  content: "";
+  height: 70px;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+  box-shadow: none;
+}
+
+header #logo {
+  position: fixed;
+  top: 35px;
+  right: 40px;
+  z-index: 102;
+  transform: translateY(-50%);
+}
+
+header #logo img {
+  height: 50px;
+  background-color: #fff;
+}
