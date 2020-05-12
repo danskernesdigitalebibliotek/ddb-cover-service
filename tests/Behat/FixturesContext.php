@@ -53,13 +53,13 @@ class FixturesContext implements Context
     public function theFollowingIdentifiersExists(TableNode $table): void
     {
         $searches = [];
-        $searchId = 1;
+        $elasticId = 1;
 
         foreach ($table->getHash() as $row) {
             $search = new Search();
 
-            $search->setId($searchId);
-            $search->setIsIdentifier($row['identifier']);
+            $search->setId($elasticId);
+            $search->setIsIdentifier($row['identifiers']);
             $search->setIsType(strtolower($row['type']));
             $search->setImageUrl($row['url']);
             $search->setImageFormat($row['image_format']);
@@ -68,7 +68,7 @@ class FixturesContext implements Context
 
             $searches[] = $search;
 
-            ++$searchId;
+            ++$elasticId;
         }
 
         $this->elasticService->index(...$searches);

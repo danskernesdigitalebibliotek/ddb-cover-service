@@ -1,8 +1,11 @@
 services:
   monolog.elastica.client:
+    # @TODO use official client instead of Ruflin\Elastica\Client
+    # (Symfony 5 supports Monolog 2 which supports the official client)
     class: Elastica\Client
     arguments:
-      $config: { url: '%env(ELASTIC_URL)%' }
+      # Ruflin\Elastica\Client requires trailing slash
+      $config: { url: '%env(ELASTIC_URL)%/' }
 
 monolog:
   #

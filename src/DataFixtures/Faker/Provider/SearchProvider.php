@@ -108,7 +108,7 @@ final class SearchProvider extends BaseProvider
      */
     public function imageUrl(): string
     {
-        return 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover/v1576082092/foobar/'.$this->generator->isbn13().'.jpg';
+        return 'https://res.cloudinary.com/dandigbib/image/upload/v1543609481/bogportalen.dk/'.$this->generator->isbn13().'.jpg';
     }
 
     /**
