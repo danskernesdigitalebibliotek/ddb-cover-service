@@ -15,7 +15,7 @@ use App\Api\Dto\Cover;
 use App\Api\Dto\IdentifierInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-final class CoverItemDataProvider extends AbstractElasticSearchDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
+final class CoverItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
      * {@inheritdoc}
