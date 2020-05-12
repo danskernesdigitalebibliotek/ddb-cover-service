@@ -12,8 +12,6 @@ namespace App\Api\DataProvider;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
-use App\Api\Dto\IdentifierInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 final class CoverItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
