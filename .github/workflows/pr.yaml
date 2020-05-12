@@ -111,8 +111,8 @@ jobs:
 
             - name: Behaviour tests
               run: |
-                  APP_ENV=test ELASTIC_URL=http://localhost:9200/ bin/console fos:elastica:create
-                  ELASTIC_URL=http://localhost:9200/ phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
+                  APP_ENV=test ELASTIC_URL=http://localhost:9200 bin/console fos:elastica:create
+                  ELASTIC_URL=http://localhost:9200 phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
 
     runner-phpcs:
         runs-on: ubuntu-latest
