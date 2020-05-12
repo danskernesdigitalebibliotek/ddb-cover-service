@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Wrapper for search no hit.
