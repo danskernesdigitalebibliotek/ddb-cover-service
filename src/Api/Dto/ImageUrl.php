@@ -9,6 +9,9 @@
 
 namespace App\Api\Dto;
 
+/**
+ * Class ImageUrl.
+ */
 final class ImageUrl
 {
     private $url;

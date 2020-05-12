@@ -2,6 +2,9 @@
 
 namespace App\Utils\Types;
 
+/**
+ * Class IdentifierType.
+ */
 class IdentifierType
 {
     public const PID = 'pid';

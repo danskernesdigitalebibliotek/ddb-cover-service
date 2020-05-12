@@ -19,6 +19,9 @@ use App\Api\Statistics\CollectionStatsLogger;
 use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
 
+/**
+ * Class CoverCollectionDataProvider.
+ */
 final class CoverCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     private $searchService;
@@ -32,6 +35,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param SearchServiceInterface $searchService
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
+     * @param CollectionStatsLogger $collectionStatsLogger
      */
     public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger)
     {
@@ -133,7 +137,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     /**
      * Get sizes from request context.
      *
-     * @param array context
+     * @param array $context
      *   The Api-platform request context
      *
      * @return array

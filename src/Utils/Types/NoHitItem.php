@@ -6,11 +6,20 @@
 
 namespace App\Utils\Types;
 
+/**
+ * Class NoHitItem.
+ */
 class NoHitItem
 {
     private $isType;
     private $isIdentifier;
 
+    /**
+     * NoHitItem constructor.
+     *
+     * @param string $isType
+     * @param string $isIdentifier
+     */
     public function __construct(string $isType, string $isIdentifier)
     {
         $this->isType = $isType;
