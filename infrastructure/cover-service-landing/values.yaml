@@ -1,0 +1,23 @@
+# Default values for cover-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+env: "prod"
+
+ingress:
+  enabled: true
+  enableAuth: false
+  enableTLS: true
+  cert: "letsencrypt"
+  path: "/"
+
+app:
+  image:
+    version: "latest"
+    imagePullPolicy: "IfNotPresent"
+
+nginx:
+  exporter:
+    image:
+      version: 0.6.0
+
