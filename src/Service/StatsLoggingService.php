@@ -10,6 +10,7 @@ namespace App\Service;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -43,8 +44,8 @@ class StatsLoggingService implements LoggerInterface
         $logger = $this->logger;
 
         $this->dispatcher->addListener(
-            KernelEvents::TERMINATE,
-            function (TerminateEvent $event) use ($level, $logger, $message, $context) {
+            KernelEvents::FINISH_REQUEST,
+            function (FinishRequestEvent $event) use ($level, $logger, $message, $context) {
                 switch ($level) {
                     case LogLevel::EMERGENCY:
                         $logger->emergency($message, $context);

@@ -1,0 +1,11 @@
+framework:
+    cache:
+        # Put the unique name of your app here: the prefix seed
+        # is used to compute stable namespaces for cache keys.
+        prefix_seed: '%env(REDIS_CACHE_PREFIX)%'
+
+        # Default cache
+        system: cache.adapter.filesystem
+        app: cache.adapter.system
+
+        default_redis_provider: '%env(REDIS_CACHE_DSN)%'

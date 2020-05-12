@@ -9,16 +9,11 @@
 
 namespace App\Api\Factory;
 
-use App\Api\Dto\Faust;
-use App\Api\Dto\IdentifierInterface;
+use App\Api\Dto\Cover;
 use App\Api\Dto\ImageUrl;
-use App\Api\Dto\Isbn;
-use App\Api\Dto\Issn;
-use App\Api\Dto\Pid;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
-use App\Utils\Types\IdentifierType;
 
-class IdentifierFactory
+class CoverFactory
 {
     private $transformer;
 
@@ -43,30 +38,31 @@ class IdentifierFactory
      * @param array $data
      *   An array of key => values to set on the relevant properties
      *
-     * @return IdentifierInterface
+     * @return Cover
      *   A new {type} identifier data transfer object (DTO) with values set from {data}
      */
-    public function createIdentifierDto(string $type, array $imageSizes, array $data): IdentifierInterface
+    public function createCoverDto(string $type, array $imageSizes, array $data): Cover
     {
-        $identifier = $this->createDto($type);
-        $this->setIdentifierData($identifier, $imageSizes, $data);
+        $cover = new Cover();
+        $this->setData($cover, $imageSizes, $data);
 
-        return $identifier;
+        return $cover;
     }
 
     /**
-     * Set identifier data.
+     * Set cover data.
      *
-     * @param IdentifierInterface $identifier
+     * @param Cover $cover
      *   The identifier type (e.g. 'pid', 'isbn', etc).
      * @param array $imageSizes
      *   The image sizes requested
      * @param array $data
      *   An array of key => values to set on the relevant properties
      */
-    private function setIdentifierData(IdentifierInterface $identifier, array $imageSizes, array $data): void
+    private function setData(Cover $cover, array $imageSizes, array $data): void
     {
-        $identifier->setId($data['isIdentifier']);
+        $cover->setId($data['isIdentifier']);
+        $cover->setType($data['isType']);
 
         $urls = $this->transformer->transformAll($data['imageUrl'], $data['width'], $data['height']);
         $urls = array_filter($urls, function (?string $url, string $size) use ($imageSizes) {
@@ -76,11 +72,10 @@ class IdentifierFactory
         foreach ($urls as $size => $url) {
             $imageUrl = new ImageUrl();
             $imageUrl->setUrl($url);
-            // @TODO Implement format
             $imageUrl->setFormat($this->getFormat($size, $data['imageFormat']));
             $imageUrl->setSize($size);
 
-            $identifier->addImageUrl($imageUrl);
+            $cover->addImageUrl($imageUrl);
         }
     }
 
@@ -126,34 +121,6 @@ class IdentifierFactory
                 return 'jpeg';
             default:
                 return $extension;
-        }
-    }
-
-    /**
-     * Create new blank Identifier object from identifier type.
-     *
-     * @param string $type
-     *   The identifier type (e.g. 'pid', 'isbn', etc).
-     *
-     * @return identifierInterface
-     *   A new blank {type} identifier data transfer object (DTO)
-     *
-     * @throws UnknownIdentifierTypeException
-     *   If identifier is not defined in App\Utils\Types\IdentifierType
-     */
-    private function createDto(string $type): IdentifierInterface
-    {
-        switch ($type) {
-            case IdentifierType::ISBN:
-                return new Isbn();
-            case IdentifierType::ISSN:
-                return new Issn();
-            case IdentifierType::PID:
-                return new Pid();
-            case IdentifierType::FAUST:
-                return new Faust();
-            default:
-                throw new UnknownIdentifierTypeException($type.' is an unknown identifier type');
         }
     }
 }
