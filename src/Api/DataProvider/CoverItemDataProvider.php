@@ -13,6 +13,9 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
 
+/**
+ * Class CoverItemDataProvider.
+ */
 final class CoverItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
