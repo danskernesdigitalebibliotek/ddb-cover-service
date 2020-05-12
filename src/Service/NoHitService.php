@@ -10,7 +10,6 @@ namespace App\Service;
 use App\Event\SearchNoHitEvent;
 use App\Utils\Types\NoHitItem;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
