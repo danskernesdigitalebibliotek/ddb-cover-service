@@ -7,7 +7,6 @@ WORKDIR ${APP_PATH}
 
 RUN mkdir -p ${APP_PATH}/public
 COPY html/ ${APP_PATH}
-RUN chown www-data:www-data ${APP_PATH}
 
 # Copy configuration.
 COPY etc/ /etc/
