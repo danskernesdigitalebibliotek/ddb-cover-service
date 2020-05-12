@@ -60,7 +60,7 @@ services:
 
     App\Api\Elastic\SearchServiceInterface: '@App\Api\Elastic\SearchService'
 
-    # NohitsService
+    # NoHitsService
     App\Service\NoHitService:
         arguments:
             $noHitsProcessingEnabled: '%app.enable.no.hits%'
@@ -76,8 +76,15 @@ services:
         arguments: [ '@App\Api\OpenApi\OpenApiDecorator.inner' ]
         autoconfigure: false
 
-    # Statslogger
+    # Statistics logger
     App\Service\StatsLoggingService:
         arguments:
             $statsLogger: '@monolog.logger.statistics'
 
+    # Fixtures Service
+    App\Command\FixturesLoadCommand:
+        lazy: true
+    App\DataFixtures\AppFixtures:
+        lazy: true
+    App\DataFixtures\AppFixtures\Elastic\ElasticService:
+        lazy: true
