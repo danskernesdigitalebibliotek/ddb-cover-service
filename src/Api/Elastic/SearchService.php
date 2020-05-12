@@ -1,13 +1,18 @@
 <?php
-
+/**
+ * @file
+ * ElasticSearch Service
+ */
 
 namespace App\Api\Elastic;
-
 
 use App\Service\MetricsService;
 use Elastica\Query;
 use Elasticsearch\Client;
 
+/**
+ * Class SearchService.
+ */
 class SearchService implements SearchServiceInterface
 {
     private $client;
@@ -17,6 +22,15 @@ class SearchService implements SearchServiceInterface
 
     private $metricsService;
 
+    /**
+     * SearchService constructor.
+     *
+     * @param Client $client
+     * @param string $index
+     * @param string $type
+     * @param int $minImageSize
+     * @param MetricsService $metricsService
+     */
     public function __construct(Client $client, string $index, string $type, int $minImageSize, MetricsService $metricsService)
     {
         $this->client = $client;
@@ -27,6 +41,9 @@ class SearchService implements SearchServiceInterface
         $this->metricsService = $metricsService;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function search(string $type, array $identifiers): array
     {
         $query = $this->buildElasticQuery($type, $identifiers);

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Collection Statitics Logger
+ */
 
 namespace App\Api\Statistics;
 
@@ -6,6 +10,9 @@ use App\Service\MetricsService;
 use App\Service\StatsLoggingService;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Class CollectionStatsLogger.
+ */
 class CollectionStatsLogger
 {
     private $statsLoggingService;

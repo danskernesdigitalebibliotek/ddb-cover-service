@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Identifier DTO factory.
+ * Cover DTO factory.
  *
  * @see https://api-platform.com/docs/core/dto/
  */
@@ -13,6 +13,9 @@ use App\Api\Dto\Cover;
 use App\Api\Dto\ImageUrl;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
 
+/**
+ * Class CoverFactory.
+ */
 class CoverFactory
 {
     private $transformer;
