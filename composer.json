@@ -24,9 +24,11 @@
         "symfony/dotenv": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.0",
+        "symfony/http-client": "4.4.*",
         "symfony/monolog-bundle": "^3.5",
         "symfony/process": "^4.0",
         "symfony/proxy-manager-bridge": "^4.0",
+        "symfony/security-bundle": "4.4.*",
         "symfony/translation": "^4.0",
         "symfony/yaml": "^4.0"
     },
@@ -45,7 +47,8 @@
         "phpunit/phpcov": "^5.0",
         "phpunit/phpunit": "^7.0",
         "symfony/debug-pack": "^1.0",
-        "symfony/maker-bundle": "^1.17"
+        "symfony/maker-bundle": "^1.17",
+        "symfony/profiler-pack": "^1.0"
     },
     "config": {
         "preferred-install": {
