@@ -22,6 +22,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *          "get"={
  *              "method"="GET",
  *              "path": "/covers",
+ *              "security"="is_granted('ROLE_COVER_READ')",
  *              "openapi_context" = {
  *                  "summary" = "Search multiple covers",
  *                  "description" = "Get covers by identifier in specific image format(s), specific image size(s) and with or without generic covers.",
@@ -94,7 +95,11 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *               }
  *          }
  *     },
- *     itemOperations={"get"}
+ *     itemOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_COVER_READ')"
+ *          }
+ *     }
  * )
  */
 class Cover
