@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Test cases for the token authentication service.
+ */
+
 namespace App\Tests;
 
 use App\Security\TokenAuthenticator;
@@ -12,6 +17,9 @@ use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * Class TokenAuthenticatorTest.
+ */
 class TokenAuthenticatorTest extends TestCase
 {
     private $httpClient;
