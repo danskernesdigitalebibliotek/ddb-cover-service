@@ -149,13 +149,27 @@ helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
 --set controller.metrics.enabled=true \
 --set controller.stats.enabled=true \
 --set controller.podAnnotations."prometheus\.io/scrape"=true \
---set controller.podAnnotations."prometheus\.io/port"=10254 
+--set controller.podAnnotations."prometheus\.io/port"=10254 \
+--set controller.service.externalTrafficPolicy=Local
 ```
 
 Wait for the public IP to be assigned.
 ```sh
 watch --interval=1 kubectl --namespace ingress get services -o wide ingress-nginx-ingress-controller
 ```
+
+### External Traffic Policy
+This is only need if you do not set it to local in the install step above. 
+
+To ensure that client ip's are correctly set in headers and forwarded to the nginx backend pod's you need to ensure that
+`External Traffic Policy` is changed from `Cluster` to `Local`. Edit the service configuration and change the value for 
+`externalTrafficPolicy` to local.   
+
+```
+kubectl edit service/ingress-nginx-ingress-controller
+```
+
+For more information see https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typenodeport
 
 # Certificate manager
 
