@@ -7,6 +7,7 @@ metadata:
 data:
   APP_PATH_PREFIX: {{ .Values.ingress.path | quote }}
   APP_CORS_ALLOW_ORIGIN: {{ .Values.app.cors_allow_origin | quote }}
+  APP_TRUSTED_PROXIES: {{ .Values.app.trusted_proxies | quote }}
   APP_REDIS_SERVER: {{ .Values.app.redis.server | quote }}
   APP_REDIS_PORT: {{ .Values.app.redis.port | quote }}
   APP_REDIS_CACHE_SERVER: {{ .Values.app.redis.server | quote }}
