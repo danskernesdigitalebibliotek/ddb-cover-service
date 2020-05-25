@@ -82,6 +82,7 @@ services:
             $statsLogger: '@monolog.logger.statistics'
 
     # Fixtures Service
+    # Used in 'dev' and 'test' env only
     App\Command\FixturesLoadCommand:
         lazy: true
     App\DataFixtures\AppFixtures:
