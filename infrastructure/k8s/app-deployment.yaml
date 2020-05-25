@@ -6,6 +6,7 @@ metadata:
   name: cover-service-config
 data:
   APP_CORS_ALLOW_ORIGIN: '*'
+  APP_TRUSTED_PROXIES: '127.0.0.1,10.240.0.0/16'
   APP_REDIS_SERVER: 'redis'
   APP_REDIS_PORT: '6379'
   APP_REDIS_CACHE_SERVER: 'redis'
