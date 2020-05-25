@@ -4,7 +4,7 @@ services:
     # (Symfony 5 supports Monolog 2 which supports the official client)
     class: Elastica\Client
     arguments:
-      # Ruflin\Elastica\Client requires trailing slash
+      # Ruflin\Elastica\Client used by monolog requires trailing slash
       $config: { url: '%env(ELASTIC_URL)%/' }
 
 monolog:

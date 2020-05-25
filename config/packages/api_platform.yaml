@@ -47,8 +47,6 @@ api_platform:
         enabled: false
 
     elasticsearch:
-        # Note: trailing slash added (Fos\Elastica requires elastic host without trailing slash)
-        # @TODO change when Fos\Elastica is removed from stack
         hosts: ['%env(ELASTIC_URL)%']
 
     graphql:
