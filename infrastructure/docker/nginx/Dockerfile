@@ -1,4 +1,4 @@
-ARG APP_VERSION="1.2.11"
+ARG APP_VERSION="1.2.12"
 FROM danskernesdigitalebibliotek/cover-service:${APP_VERSION} as APPLICATION
 
 FROM nginx:1.17-alpine
