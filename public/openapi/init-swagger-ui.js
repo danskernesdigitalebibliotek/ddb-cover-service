@@ -5,7 +5,7 @@ window.onload = () => {
     const ui = SwaggerUIBundle({
         // @TODO find a nicer way to do this.
         // spec: data.spec,
-        url: '/openapi/coverservice-2.0.0.yaml',
+        url: '/api/openapi/coverservice-2.0.0.yaml',
         dom_id: '#swagger-ui',
         validatorUrl: null,
         presets: [
