@@ -25,7 +25,7 @@ app:
   enbled_no_hits: "false"
   cors_allow_origin: "*"
   trusted_proxies: "127.0.0.1,10.240.0.0/16"
-  elastic_url: "http://elasticsearch-es-http:9200/"
+  elastic_url: "http://elasticsearch-es-http:9200"
   redis:
     server: "redis"
     prefix: "DDBCoverV2"
