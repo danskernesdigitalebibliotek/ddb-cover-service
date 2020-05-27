@@ -13,7 +13,7 @@ parameters:
     cloudinary.transformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
     openPlatform.id: '%env(OPENPLATFORM_ID)%'
     openPlatform.secret: '%env(OPENPLATFORM_SECRET)%'
-    openPlatform.introspection.url: '%env(OPENPLATFORM_INTTOSPRECTION_URL)%'
+    openPlatform.introspection.url: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
 
 services:
 
