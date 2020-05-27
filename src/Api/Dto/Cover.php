@@ -55,16 +55,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                              "items" : {
  *                                  "type" : "string",
  *                                  "example" : {
- *                                      "736830-basis:70773147",
- *                                      "889500-basis:7197281"
+ *                                      "870970-basis:29862885",
+ *                                      "870970-basis:27992625"
  *                                  },
  *                              },
  *                          },
  *                          "style" : "form",
  *                          "explode" : false,
  *                          "example" : {
- *                              "736830-basis:70773147",
- *                              "889500-basis:7197281"
+ *                              "870970-basis:29862885",
+ *                              "870970-basis:27992625"
  *                          },
  *                      },
  *                      {
@@ -78,6 +78,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                                  "type" : "string",
  *                                  "enum": {"default", "original", "small", "medium", "large"},
  *                                  "example" : {
+ *                                      "original",
+ *                                      "small",
  *                                      "medium",
  *                                      "large"
  *                                  },
@@ -86,6 +88,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                          "style" : "form",
  *                          "explode" : false,
  *                          "example" : {
+ *                              "original",
+ *                              "small",
  *                              "medium",
  *                              "large"
  *                          },
