@@ -12,6 +12,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behatch\Context\RestContext;
 use Faker\Factory;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 /**
@@ -36,6 +37,10 @@ class AuthContext implements Context
      * @BeforeScenario @login
      *
      * @see https://symfony.com/doc/current/security/entity_provider.html#creating-your-first-user
+     *
+     * @param BeforeScenarioScope $scope
+     *
+     * @throws InvalidArgumentException
      */
     public function login(BeforeScenarioScope $scope)
     {

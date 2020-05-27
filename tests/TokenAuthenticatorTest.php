@@ -12,6 +12,9 @@ use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * Class TokenAuthenticatorTest.
+ */
 class TokenAuthenticatorTest extends TestCase
 {
     private $httpClient;
