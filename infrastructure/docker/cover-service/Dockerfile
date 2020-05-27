@@ -1,7 +1,7 @@
 FROM danskernesdigitalebibliotek/php7.3-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION="1.2.12"
+ARG APP_VERSION="1.2.14"
 ENV APP_PATH=/var/www/html \
     FILEPATH=infrastructure/docker/cover-service
 
