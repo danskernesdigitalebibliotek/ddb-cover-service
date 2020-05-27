@@ -529,6 +529,12 @@
             "src/Kernel.php"
         ]
     },
+    "symfony/http-client": {
+        "version": "v4.4.8"
+    },
+    "symfony/http-client-contracts": {
+        "version": "v2.1.1"
+    },
     "symfony/http-foundation": {
         "version": "v4.4.7"
     },
