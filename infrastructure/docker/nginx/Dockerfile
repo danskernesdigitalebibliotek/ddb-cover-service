@@ -1,5 +1,5 @@
 ARG APP_VERSION="1.2.11"
-FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-cover-service/cover-service:${APP_VERSION} as APPLICATION
+FROM danskernesdigitalebibliotek/cover-service:${APP_VERSION} as APPLICATION
 
 FROM nginx:1.17-alpine
 ARG APP_VERSION

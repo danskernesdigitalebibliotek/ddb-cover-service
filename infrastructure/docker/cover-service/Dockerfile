@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-base-images-k8s/php7.3-fpm-base AS APP_BUILDER
+FROM danskernesdigitalebibliotek/php7.3-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="1.2.11"
@@ -26,7 +26,7 @@ RUN APP_ENV=prod composer install --no-dev -o --no-scripts --classmap-authoritat
 ####
 ## Build main application image.
 ####
-FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-base-images-k8s/php7.3-fpm-base
+FROM danskernesdigitalebibliotek/php7.3-fpm-base
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html \
