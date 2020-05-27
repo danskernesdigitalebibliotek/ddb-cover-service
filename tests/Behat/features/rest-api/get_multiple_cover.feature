@@ -2,10 +2,10 @@ Feature:
   As a developer I want to get multiple covers by type and ID in specific image format(s),
   specific image size(s) and with or without generic covers.
 
-    # We only create schema and add test data once because we have to do "wait(1)" after
-    # adding search entries to give elasticsearch time to build the index
+  # We only create schema and add test data once pr. feature because we have to do "wait(1)"
+  # after adding search entries to give elasticsearch time to build the index
 
-  @createFixtures
+  @login
   Scenario: Build and index test data
     Given the following search entries exists:
       | identifiers             | type  | url                                                                                            | image_format | width | height |
@@ -24,6 +24,7 @@ Feature:
       | type        | isbn          |
     Then the response status code should be 200
 
+  @login
   Scenario Outline: Get multiple covers by type and identifier
     Given I add "Accept" header equal to "application/json"
     And I send a "GET" request to "/api/v2/covers" with parameters:
@@ -47,6 +48,7 @@ Feature:
       | 45126216,55126216,65126216,75126216                                 | faust | 55126216              | 65126216              | 75126216                |
       | 870970-basis:52182794,870970-katalog:52182794,870970-basis:52182796 | pid   | 870970-basis:52182794 | 870970-basis:52182796 | 870970-katalog:52182794 |
 
+  @login
   Scenario Outline: Search for unknown covers should return an ampty list
     Given I add "Accept" header equal to "application/json"
     And I send a "GET" request to "/api/v2/covers" with parameters:

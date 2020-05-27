@@ -56,6 +56,16 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-secret
                   key: APP_SECRET
+            - name: APP_OPENPLATFORM_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: APP_OPENPLATFORM_ID
+            - name: APP_OPENPLATFORM_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: APP_OPENPLATFORM_SECRET
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-configmap

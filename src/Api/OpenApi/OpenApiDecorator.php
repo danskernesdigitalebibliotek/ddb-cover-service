@@ -38,6 +38,12 @@ final class OpenApiDecorator implements NormalizerInterface
         // so we need to manually remove it from the docs.
         unset($docs['paths']['/api/v2/covers/{id}']);
 
+        // Remove "authorizationUrl". Not allowed for "password grant"
+        unset($docs['components']['securitySchemes']['oauth']['flows']['password']['authorizationUrl']);
+
+        // "scopes" should be object, not array
+        $docs['components']['securitySchemes']['oauth']['flows']['password']['scopes'] = new \stdClass();
+
         return $docs;
     }
 
