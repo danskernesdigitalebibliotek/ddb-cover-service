@@ -1,7 +1,7 @@
 FROM docker.pkg.github.com/danskernesdigitalebibliotek/ddb-base-images-k8s/php7.3-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION="1.2.10"
+ARG APP_VERSION="1.2.11"
 ENV APP_PATH=/var/www/html \
     FILEPATH=infrastructure/docker/cover-service
 
