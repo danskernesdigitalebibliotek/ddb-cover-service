@@ -33,7 +33,7 @@ class User implements UserInterface
     /**
      * Set this users "password" expire date.
      *
-     * @param mixed $expires
+     * @param DateTime $expires
      */
     public function setExpires(DateTime $expires): void
     {
@@ -55,7 +55,7 @@ class User implements UserInterface
      *
      * @param string $agency
      */
-    public function setAgency($agency): void
+    public function setAgency(string $agency): void
     {
         $this->agency = $agency;
     }
@@ -63,7 +63,7 @@ class User implements UserInterface
     /**
      * Get users authentication type.
      *
-     * @return mixed
+     * @return string
      */
     public function getAuthType(): string
     {
@@ -73,9 +73,9 @@ class User implements UserInterface
     /**
      * Set users authentication type.
      *
-     * @param mixed $authType
+     * @param string $authType
      */
-    public function setAuthType($authType): void
+    public function setAuthType(string $authType): void
     {
         $this->authType = $authType;
     }
@@ -83,7 +83,7 @@ class User implements UserInterface
     /**
      * Get users client id.
      *
-     * @return mixed
+     * @return string
      */
     public function getClientId(): string
     {
@@ -93,9 +93,9 @@ class User implements UserInterface
     /**
      * Set users client id.
      *
-     * @param mixed $clientId
+     * @param string $clientId
      */
-    public function setClientId($clientId): void
+    public function setClientId(string $clientId): void
     {
         $this->clientId = $clientId;
     }
