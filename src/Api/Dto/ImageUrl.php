@@ -9,23 +9,13 @@
 
 namespace App\Api\Dto;
 
-use Symfony\Component\Serializer\Annotation\Groups;
-
+/**
+ * Class ImageUrl.
+ */
 final class ImageUrl
 {
-    /**
-     * @Groups({"read"})
-     */
     private $url;
-
-    /**
-     * @Groups({"read"})
-     */
     private $format;
-
-    /**
-     * @Groups({"read"})
-     */
     private $size;
 
     /**

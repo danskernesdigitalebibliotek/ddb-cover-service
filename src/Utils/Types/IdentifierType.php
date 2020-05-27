@@ -2,13 +2,14 @@
 
 namespace App\Utils\Types;
 
+/**
+ * Class IdentifierType.
+ */
 class IdentifierType
 {
     public const PID = 'pid';
     public const ISBN = 'isbn';
     public const ISSN = 'issn';
-    public const ISMN = 'ismn';
-    public const ISRC = 'isrc';
     public const FAUST = 'faust';
 
     /**
@@ -17,8 +18,6 @@ class IdentifierType
      * @return array
      *   An array of known identifiers.
      *   Uppercase identifier name in key, lower case identifier in value.
-     *
-     * @throws \ReflectionException
      */
     public static function getTypeList(): array
     {
