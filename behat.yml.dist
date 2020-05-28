@@ -4,6 +4,7 @@ default:
             local_coverage_enabled: true
             paths: [ '%paths.base%/tests/Behat/features' ]
             contexts:
+                - App\Tests\Behat\AuthContext
                 - App\Tests\Behat\FixturesContext
                 - Behat\MinkExtension\Context\MinkContext
                 - behatch:context:json

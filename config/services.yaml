@@ -11,6 +11,9 @@ parameters:
     elastic.min.image.size: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
     cloudinary.transformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+    openPlatform.id: '%env(OPENPLATFORM_ID)%'
+    openPlatform.secret: '%env(OPENPLATFORM_SECRET)%'
+    openPlatform.introspection.url: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
 
 services:
 
@@ -81,6 +84,13 @@ services:
         arguments:
             $statsLogger: '@monolog.logger.statistics'
 
+    # Open Platform TokenAuthenticator
+    App\Security\TokenAuthenticator:
+        arguments:
+            $openPlatformId: '%env(OPEN_PLATFORM_ID)%'
+            $openPlatformSecret: '%env(OPEN_PLATFORM_SECRET)%'
+            $openPlatformUrl: '%env(OPEN_PLATFORM_INTROSPECTION_URL)%'
+
     # Fixtures Service
     # Used in 'dev' and 'test' env only
     App\Command\FixturesLoadCommand:
@@ -89,3 +99,4 @@ services:
         lazy: true
     App\DataFixtures\AppFixtures\Elastic\ElasticService:
         lazy: true
+

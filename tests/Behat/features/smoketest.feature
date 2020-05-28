@@ -7,7 +7,7 @@ Feature:
     Then the response status code should be 200
     And the header "Content-Type" should be equal to "text/html; charset=UTF-8"
 
-  @createFixtures
+  @createFixtures @login
   Scenario: View single cover
     Given the following search entries exists:
       | identifiers | type | url                                                                                   | image_format | width | height |
