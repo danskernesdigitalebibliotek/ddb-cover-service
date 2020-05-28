@@ -15,12 +15,8 @@ COPY --from=composer:1.9.1 /usr/bin/composer /usr/bin/composer
 WORKDIR ${APP_PATH}
 
 ## Install assets, which requires a HACK as redis is not available (should be removed later on).
-RUN APP_ENV=prod composer install --no-dev -o --no-scripts --classmap-authoritative \
-    && cp config/packages/framework.yaml /tmp \
-    && awk '!/system: cache.adapter.redis/' config/packages/framework.yaml > temp && mv temp config/packages/framework.yaml \
-    && APP_ENV=prod REDIS_CACHE_SYSTEM_BACKEND=cache.adapter.system composer docker-build \
-    && cp -f /tmp/framework.yaml config/packages/framework.yaml \
-    && rm -rf var/cache/* \
+RUN APP_ENV=github_actions composer install --no-dev -o --no-scripts --classmap-authoritative \
+    && APP_ENV=github_actions composer docker-build \
     && rm -rf infrastructure \
     && composer clear-cache
 
@@ -37,7 +33,7 @@ COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
 RUN chown -R www-data:www-data ${APP_PATH}/var \
     && mkdir -p ${APP_PATH}/config/secrets \
     && chown -R www-data:www-data ${APP_PATH}/config/secrets \
-    && rm -rf ${APP_PATH}/infrastructure
+    && chown -R www-data:www-data ${APP_PATH}/public
 
 # Download prometheus php-fpm export.
 COPY --from=hipages/php-fpm_exporter /php-fpm_exporter /usr/local/bin/php-fpm_exporter
