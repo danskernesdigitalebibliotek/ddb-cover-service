@@ -5,7 +5,7 @@ framework:
         prefix_seed: '%env(REDIS_CACHE_PREFIX)%'
 
         # Default cache
-        system: cache.adapter.filesystem
-        app: cache.adapter.system
+        system: cache.adapter.system
+        app: cache.adapter.filesystem
 
         default_redis_provider: '%env(REDIS_CACHE_DSN)%'
