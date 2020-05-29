@@ -28,7 +28,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                  "description" = "Get covers by identifier in specific image format(s), specific image size(s) and with or without generic covers.",
  *                  "responses" = {
  *                      "200" = {
- *                          "description" = "A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original 'null' will be returned for 'url' and 'format for that size. - 'worst case' you will receive a 200 OK with an empty list."
+ *                          "description" = "A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original 'null' will be returned for 'url' and 'format for that size. - 'worst case' you will receive a 200 OK with an empty list.",
+ *                          "content": {
+ *                              "application/json": {
+ *                                  "schema": {
+ *                                      "type": "array",
+ *                                      "items": {
+ *                                          "$ref": "#/components/schemas/Cover"
+ *                                      }
+ *                                  }
+ *                              }
+ *                          }
  *                      },
  *                      "400" = {
  *                          "description" = "Bad request, e.g. required parameters missing."
