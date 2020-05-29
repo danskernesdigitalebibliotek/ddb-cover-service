@@ -42,6 +42,12 @@ class AppFixtures
         $faker->seed(self::FAKER_SEED);
         $faker->addProvider(new SearchProvider($faker));
 
+        $isbnNumbers = [];
+        for ($i = 0; $i < 202; ++$i) {
+            $isbnNumbers[] = $faker->isbn13;
+        }
+        $string = implode(',', $isbnNumbers);
+
         $searches = [];
 
         for ($i = 1; $i <= self::CREATE_TOTAL; ++$i) {

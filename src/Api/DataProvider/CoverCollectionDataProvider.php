@@ -12,6 +12,7 @@ use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
 use App\Api\Elastic\SearchServiceInterface;
+use App\Api\Exception\IdentifierCountExceededException;
 use App\Api\Exception\RequiredParameterMissingException;
 use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\CoverFactory;
@@ -24,6 +25,8 @@ use App\Utils\Types\IdentifierType;
  */
 final class CoverCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
+    private const MAX_IDENTIFIER_COUNT = 200;
+
     private $searchService;
     private $coverFactory;
     private $noHitService;
@@ -115,6 +118,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      *   Array of identifiers
      *
      * @throws RequiredParameterMissingException If the 'id' parameter is not found in the request
+     * @throws IdentifierCountExceededException
      */
     private function getIdentifiers(array $context): array
     {
@@ -130,6 +134,11 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
 
         $isIdentifiers = explode(',', $identifiers);
         $isIdentifiers = \is_array($isIdentifiers) ? $isIdentifiers : [$isIdentifiers];
+
+        $identifierCount = count($isIdentifiers);
+        if ($identifierCount > self::MAX_IDENTIFIER_COUNT) {
+            throw new IdentifierCountExceededException('Maximum identifiers per request exceeded. '.self::MAX_IDENTIFIER_COUNT.' allowed. '.$identifierCount.' received.');
+        }
 
         return $isIdentifiers;
     }
