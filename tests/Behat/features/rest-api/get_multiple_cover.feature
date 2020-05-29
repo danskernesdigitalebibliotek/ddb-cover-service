@@ -5,7 +5,7 @@ Feature:
   # We only create schema and add test data once pr. feature because we have to do "wait(1)"
   # after adding search entries to give elasticsearch time to build the index
 
-  @login
+  @createFixtures @login
   Scenario: Build and index test data
     Given the following search entries exists:
       | identifiers             | type  | url                                                                                            | image_format | width | height |
@@ -66,3 +66,13 @@ Feature:
       | 8788711829100,9788711829100,9788711829101,9788711829102 | pid   |
       | 45126200,55126200,65126200,75126200                     | faust |
       | 970970-basis:52182794,970970-katalog:52182794           | faust |
+
+  # APP_API_MAX_IDENTIFIERS is 5 for .env.test
+  @login
+  Scenario: I should get a 400 bad request if i send to many identifiers
+    Given I add "Accept" header equal to "application/json"
+    And I send a "GET" request to "/api/v2/covers" with parameters:
+      | key         | value                                                                               |
+      | identifiers | 9780119135640,9799913633580,9792806497771,9781351129428,9798058560423,9789318143272 |
+      | type        | isbn                                                                                |
+    Then the response status code should be 400

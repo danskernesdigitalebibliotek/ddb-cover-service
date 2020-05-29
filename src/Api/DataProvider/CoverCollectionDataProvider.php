@@ -12,6 +12,7 @@ use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Dto\Cover;
 use App\Api\Elastic\SearchServiceInterface;
+use App\Api\Exception\IdentifierCountExceededException;
 use App\Api\Exception\RequiredParameterMissingException;
 use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Factory\CoverFactory;
@@ -28,6 +29,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     private $coverFactory;
     private $noHitService;
     private $collectionStatsLogger;
+    private $maxIdentifierCount;
 
     /**
      * CoverCollectionDataProvider constructor.
@@ -36,13 +38,15 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param CollectionStatsLogger $collectionStatsLogger
+     * @param int $maxIdentifierCount
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger)
+    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $maxIdentifierCount)
     {
         $this->searchService = $searchService;
         $this->coverFactory = $coverFactory;
         $this->noHitService = $noHitService;
         $this->collectionStatsLogger = $collectionStatsLogger;
+        $this->maxIdentifierCount = $maxIdentifierCount;
     }
 
     /**
@@ -115,6 +119,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      *   Array of identifiers
      *
      * @throws RequiredParameterMissingException If the 'id' parameter is not found in the request
+     * @throws IdentifierCountExceededException
      */
     private function getIdentifiers(array $context): array
     {
@@ -130,6 +135,11 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
 
         $isIdentifiers = explode(',', $identifiers);
         $isIdentifiers = \is_array($isIdentifiers) ? $isIdentifiers : [$isIdentifiers];
+
+        $identifierCount = count($isIdentifiers);
+        if ($identifierCount > $this->maxIdentifierCount) {
+            throw new IdentifierCountExceededException('Maximum identifiers per request exceeded. '.$this->maxIdentifierCount.' allowed. '.$identifierCount.' received.');
+        }
 
         return $isIdentifiers;
     }

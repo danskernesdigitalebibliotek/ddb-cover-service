@@ -18,8 +18,6 @@ api_platform:
 
         * Generic Covers: parameter is currently ignored. Service doesn't yet provide generic covers.
 
-        * Pagination: not implemented.
-
     version: '2.0'
 
     show_webby: false
@@ -63,5 +61,13 @@ api_platform:
             enabled: false
 
     exception_to_status:
+        # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
+        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Core\Exception\FilterValidationException: 400
+        Doctrine\ORM\OptimisticLockException: 409
+
+        # App mapping
+        App\Api\Exception\IdentifierCountExceededException: 'HTTP_BAD_REQUEST'
         App\Api\Exception\RequiredParameterMissingException: 'HTTP_BAD_REQUEST'
         App\Api\Exception\UnknownIdentifierTypeException: 'HTTP_BAD_REQUEST'
