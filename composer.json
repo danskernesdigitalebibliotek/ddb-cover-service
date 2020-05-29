@@ -5,47 +5,49 @@
     "license": "proprietary",
     "require": {
         "php": "^7.1.3",
+        "ext-apcu": "*",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
         "ext-redis": "*",
-        "ext-soap": "*",
-        "ext-xmlreader": "*",
         "ext-zend-opcache": "*",
         "api-platform/api-pack": "^1.1",
+        "elasticsearch/elasticsearch": "^6.7",
         "endclothing/prometheus_client_php": "^1.0",
         "enqueue/enqueue-bundle": "^0.10.0",
         "enqueue/redis": "^0.10.0",
-        "friendsofsymfony/elastica-bundle": "^5.0",
-        "predis/predis": "^1.1",
+        "friendsofsymfony/elastica-bundle": "^5.1",
         "ruflin/elastica": "^6.0",
-        "symfony/browser-kit": "^4.0",
-        "symfony/cache": "^4.0",
+        "sensio/framework-extra-bundle": "^5.5",
         "symfony/console": "^4.0",
         "symfony/dotenv": "^4.0",
-        "symfony/event-dispatcher": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.0",
-        "symfony/lock": "^4.0",
-        "symfony/monolog-bundle": "^3.3",
-        "symfony/orm-pack": "^1.0",
+        "symfony/http-client": "4.4.*",
+        "symfony/monolog-bundle": "^3.5",
         "symfony/process": "^4.0",
-        "symfony/translation": "4.4.*",
+        "symfony/proxy-manager-bridge": "^4.0",
+        "symfony/security-bundle": "4.4.*",
+        "symfony/translation": "^4.0",
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
-        "behat/mink": "1.7.x-dev",
-        "behat/mink-browserkit-driver": "^1.3",
-        "behat/mink-extension": "^2.3",
-        "behat/symfony2-extension": "^2.1",
-        "behatch/contexts": "^3.2",
+        "behatch/contexts": "^3.3",
         "escapestudios/symfony2-coding-standard": "^3.10",
+        "friends-of-behat/mink": "^1.8",
+        "friends-of-behat/mink-browserkit-driver": "^1.4",
+        "friends-of-behat/mink-extension": "^2.4",
+        "friends-of-behat/symfony-extension": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "friendsoftwig/twigcs": "^3.2",
-        "fzaninotto/faker": "^1.8",
-        "phan/phan": "^2.4",
-        "phpmd/phpmd": "^2.7",
-        "phpunit/phpunit": "^7",
-        "symfony/debug-pack": "^1.0"
+        "fzaninotto/faker": "^1.9",
+        "matthiasnoback/behat-local-code-coverage-extension": "^0.4.0",
+        "phan/phan": "^3.0",
+        "phpunit/phpcov": "^5.0",
+        "phpunit/phpunit": "^7.0",
+        "symfony/debug-pack": "^1.0",
+        "symfony/maker-bundle": "^1.17"
     },
     "config": {
         "preferred-install": {
@@ -77,8 +79,7 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "docker-build": [
-            "bin/console --env=prod assets:install",
-            "bin/console --env=prod cache:warmup"
+            "bin/console --env=prod assets:install"
         ],
         "post-install-cmd": [
             "@auto-scripts"
@@ -116,11 +117,15 @@
         "phan": [
             "./vendor/bin/phan --allow-polyfill-parser"
         ],
-        "md":[
-            "./vendor/bin/phpmd ./src/ text cleancode,codesize,controversial,design,naming,unusedcode --suffixes php"
-        ],
         "phpunit": [
             "./vendor/bin/phpunit"
+        ],
+        "behat": [
+            "./vendor/bin/behat"
+        ],
+        "test-suite": [
+            "@phpunit",
+            "@behat"
         ],
         "actions/phpcs": [
             "phpcs --standard=phpcs.xml.dist --report=checkstyle"

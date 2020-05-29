@@ -1,0 +1,7 @@
+apiVersion: v2
+name: cover-service
+description: DDB Cover service - front end
+
+type: application
+
+version: 0.1.0

@@ -1,0 +1,9 @@
+# Import settings from 'prod' to match that env.
+imports:
+    - { resource: '../prod/' }
+
+# Overwrite prod cache settings. Redis not available when building on Github.
+framework:
+    cache:
+        system: cache.adapter.system
+        app: cache.adapter.filesystem

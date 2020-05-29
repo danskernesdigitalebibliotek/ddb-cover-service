@@ -10,6 +10,9 @@ namespace App\EnvVarProcessor;
 use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class YmlEnvVarProcessor.
+ */
 class YmlEnvVarProcessor implements EnvVarProcessorInterface
 {
     /**

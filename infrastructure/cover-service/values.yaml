@@ -1,0 +1,46 @@
+# Default values for cover-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+env: "prod"
+
+ingress:
+  enabled: true
+  enableAuth: false
+  enableTLS: false
+  cert: "letsencrypt"
+  path: "/api"
+
+hpa:
+  enabled: false
+  minReplicas: 5
+  maxReplicas: 15
+  targetAverageUtilization: 70
+  targetAverageUtilization: 80
+
+app:
+  image:
+    version: "latest"
+    imagePullPolicy: "IfNotPresent"
+  enbled_no_hits: "false"
+  cors_allow_origin: "*"
+  trusted_proxies: "127.0.0.1,10.240.0.0/16"
+  elastic_url: "http://elasticsearch-es-http:9200"
+  redis:
+    server: "redis"
+    prefix: "DDBCoverV2"
+    port: "6379"
+    cache_db: "10"
+  php:
+    max_children: "80"
+    start_servers: "15"
+    min_spare_servers: "15"
+    max_spare_servers: "30"
+    slowlog_timeout: "1"
+
+
+nginx:
+  exporter:
+    image:
+      version: 0.6.0
+

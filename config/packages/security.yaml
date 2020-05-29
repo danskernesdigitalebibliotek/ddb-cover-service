@@ -1,27 +1,21 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
+        users_in_memory: { memory: null }
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        soap:
-            pattern: ^/(fbs|2.11)/
-            security: false
+        api:
+            pattern: '^%app.path.prefix%'
+            stateless: true
+            anonymous: lazy
+            guard:
+                authenticators:
+                    - App\Security\TokenAuthenticator
         main:
             anonymous: true
 
-            # activate different ways to authenticate
-
-            # http_basic: true
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: true
-            # https://symfony.com/doc/current/security/form_login_setup.html
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # Allows accessing the Swagger UI
+        - { path: '^%app.path.prefix%/docs', roles: IS_AUTHENTICATED_ANONYMOUSLY }

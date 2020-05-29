@@ -9,29 +9,21 @@
 
 namespace App\Api\Dto;
 
-use Symfony\Component\Serializer\Annotation\Groups;
-
+/**
+ * Class ImageUrl.
+ */
 final class ImageUrl
 {
-    /**
-     * @Groups({"read"})
-     */
     private $url;
-
-    /**
-     * @Groups({"read"})
-     */
     private $format;
-
-    /**
-     * @Groups({"read"})
-     */
     private $size;
 
     /**
-     * @return string
+     * Get url.
+     *
+     * @return string|null
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -39,11 +31,11 @@ final class ImageUrl
     /**
      * Set url.
      *
-     * @param string $url
+     * @param string|null $url
      *
-     * @return ImageUrl
+     * @return $this
      */
-    public function setUrl(string $url): self
+    public function setUrl(?string $url): self
     {
         $this->url = $url;
 

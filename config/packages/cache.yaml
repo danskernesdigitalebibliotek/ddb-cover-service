@@ -1,0 +1,18 @@
+framework:
+    cache:
+        # Put the unique name of your app here: the prefix seed
+        # is used to compute stable namespaces for cache keys.
+        prefix_seed: '%env(REDIS_CACHE_PREFIX)%'
+
+        # Default cache
+        system: cache.adapter.system
+        app: cache.adapter.filesystem
+
+        default_redis_provider: '%env(REDIS_CACHE_DSN)%'
+
+        pools:
+            # Creates a "token.cache" service
+            token.cache:
+                adapter: cache.adapter.filesystem
+                # Default expire set to one day
+                default_lifetime: 86400

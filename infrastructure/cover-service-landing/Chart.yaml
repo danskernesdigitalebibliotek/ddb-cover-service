@@ -1,0 +1,7 @@
+apiVersion: v2
+name: cover-service-landing
+description: DDB Cover service - landing page
+
+type: application
+
+version: 1.0.0

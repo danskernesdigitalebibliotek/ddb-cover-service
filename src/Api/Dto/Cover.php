@@ -13,58 +13,131 @@
 
 namespace App\Api\Dto;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Api\Filter\SearchFilter;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
  *     collectionOperations={
  *          "get"={
  *              "method"="GET",
- *              "path"="/cover/{type}",
- *          },
+ *              "path": "/covers",
+ *              "security"="is_granted('ROLE_COVER_READ')",
+ *              "openapi_context" = {
+ *                  "summary" = "Search multiple covers",
+ *                  "description" = "Get covers by identifier in specific image format(s), specific image size(s) and with or without generic covers.",
+ *                  "responses" = {
+ *                      "200" = {
+ *                          "description" = "A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original 'null' will be returned for 'url' and 'format for that size. - 'worst case' you will receive a 200 OK with an empty list."
+ *                      },
+ *                      "400" = {
+ *                          "description" = "Bad request, e.g. required parameters missing."
+ *                      }
+ *                  },
+ *                  "parameters" = {
+ *                      {
+ *                          "name" = "type",
+ *                          "in" = "query",
+ *                          "description" = "The type of the identifier, i.e. 'isbn', 'faust', 'pid' or 'issn'",
+ *                          "required" = true,
+ *                          "schema" : {
+ *                              "type": "string",
+ *                              "enum": {"faust", "isbn", "issn", "pid"},
+ *                              "example"="pid"
+ *                          }
+ *                      },
+ *                      {
+ *                          "name" = "identifiers",
+ *                          "in" = "query",
+ *                          "description" = "A list of identifiers of {type}",
+ *                          "required" = true,
+ *                          "schema" : {
+ *                              "type": "array",
+ *                              "items" : {
+ *                                  "type" : "string",
+ *                                  "example" : {
+ *                                      "870970-basis:29862885",
+ *                                      "870970-basis:27992625"
+ *                                  },
+ *                              },
+ *                          },
+ *                          "style" : "form",
+ *                          "explode" : false,
+ *                          "example" : {
+ *                              "870970-basis:29862885",
+ *                              "870970-basis:27992625"
+ *                          },
+ *                      },
+ *                      {
+ *                          "name" = "sizes",
+ *                          "in" = "query",
+ *                          "description" = "A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive.",
+ *                          "required" = false,
+ *                          "schema" : {
+ *                              "type": "array",
+ *                              "items" : {
+ *                                  "type" : "string",
+ *                                  "enum": {"default", "original", "small", "medium", "large"},
+ *                                  "example" : {
+ *                                      "original",
+ *                                      "small",
+ *                                      "medium",
+ *                                      "large"
+ *                                  },
+ *                              },
+ *                          },
+ *                          "style" : "form",
+ *                          "explode" : false,
+ *                          "example" : {
+ *                              "original",
+ *                              "small",
+ *                              "medium",
+ *                              "large"
+ *                          },
+ *                      }
+ *                  }
+ *               }
+ *          }
  *     },
  *     itemOperations={
  *          "get"={
- *              "method"="GET",
- *              "path"="/cover/{type}/{id}",
+ *              "security"="is_granted('ROLE_COVER_READ')"
  *          }
- *     },
+ *     }
  * )
- *
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "format": "exact", "generic": "exact", "size": "exact"})
  */
-class Cover implements IdentifierInterface
+class Cover
 {
     /**
      * @ApiProperty(
      *     identifier=true,
+     *     attributes={
+     *         "openapi_context"={
+     *             "type"="string",
+     *             "example"="736830-basis:70773147"
+     *         }
+     *     }
      * )
-     *
-     * @Groups({"read"})
      */
     private $id;
 
     /**
-     * @ApiProperty()
-     *
-     * @Groups({"read"})
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *             "type"="string",
+     *             "enum"={"pid", "isbn"},
+     *             "example"="pid"
+     *         }
+     *     }
+     * )
      */
     private $type;
 
-    /**
-     * @ApiProperty()
-     *
-     * @Groups({"read"})
-     */
     private $imageUrls;
 
     /**
-     * Get the id.
+     * Get the isIdentifier.
      *
      * @return string
      */
@@ -74,15 +147,15 @@ class Cover implements IdentifierInterface
     }
 
     /**
-     * Set the id.
+     * Set the isIdentifier.
      *
-     * @param string $id
+     * @param string $isIdentifier
      *
-     * @return IdentifierInterface
+     * @return $this
      */
-    public function setId(string $id): IdentifierInterface
+    public function setId(string $isIdentifier): self
     {
-        $this->id = $id;
+        $this->id = $isIdentifier;
 
         return $this;
     }
@@ -102,9 +175,9 @@ class Cover implements IdentifierInterface
      *
      * @param string $type
      *
-     * @return IdentifierInterface
+     * @return $this
      */
-    public function setType(string $type): IdentifierInterface
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -126,11 +199,11 @@ class Cover implements IdentifierInterface
      *
      * @param ImageUrl $imageUrl
      *
-     * @return IdentifierInterface
+     * @return $this
      */
-    public function addImageUrl(ImageUrl $imageUrl): IdentifierInterface
+    public function addImageUrl(ImageUrl $imageUrl): self
     {
-        $this->imageUrls[] = $imageUrl;
+        $this->imageUrls[$imageUrl->getSize()] = $imageUrl;
 
         return $this;
     }
