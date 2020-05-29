@@ -81,7 +81,6 @@ class CollectionStatsLogger
      */
     private function logMetrics(): void
     {
-        $this->metricsService->counter('rest_requests_total', 'Total rest requests', 1, ['type' => 'collection']);
         $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);
     }
 
