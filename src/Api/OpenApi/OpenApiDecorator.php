@@ -50,7 +50,7 @@ final class OpenApiDecorator implements NormalizerInterface
         // Set max identifier count from .env
         $description = sprintf($docs['paths']['/api/v2/covers']['get']['parameters'][1]['description'], $this->maxIdentifierCount);
         $docs['paths']['/api/v2/covers']['get']['parameters'][1]['description'] = $description;
-        $docs['paths']['/api/v2/covers']['get']['parameters'][1]['schema']['maxLength'] = 10;
+        $docs['paths']['/api/v2/covers']['get']['parameters'][1]['schema']['maxLength'] = $this->maxIdentifierCount;
 
         return $docs;
     }
