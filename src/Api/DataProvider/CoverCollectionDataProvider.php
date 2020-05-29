@@ -25,12 +25,11 @@ use App\Utils\Types\IdentifierType;
  */
 final class CoverCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private const MAX_IDENTIFIER_COUNT = 200;
-
     private $searchService;
     private $coverFactory;
     private $noHitService;
     private $collectionStatsLogger;
+    private $maxIdentifierCount;
 
     /**
      * CoverCollectionDataProvider constructor.
@@ -39,13 +38,15 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param CollectionStatsLogger $collectionStatsLogger
+     * @param int $maxIdentifierCount
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger)
+    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $maxIdentifierCount)
     {
         $this->searchService = $searchService;
         $this->coverFactory = $coverFactory;
         $this->noHitService = $noHitService;
         $this->collectionStatsLogger = $collectionStatsLogger;
+        $this->maxIdentifierCount = $maxIdentifierCount;
     }
 
     /**
@@ -136,8 +137,8 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
         $isIdentifiers = \is_array($isIdentifiers) ? $isIdentifiers : [$isIdentifiers];
 
         $identifierCount = count($isIdentifiers);
-        if ($identifierCount > self::MAX_IDENTIFIER_COUNT) {
-            throw new IdentifierCountExceededException('Maximum identifiers per request exceeded. '.self::MAX_IDENTIFIER_COUNT.' allowed. '.$identifierCount.' received.');
+        if ($identifierCount > $this->maxIdentifierCount) {
+            throw new IdentifierCountExceededException('Maximum identifiers per request exceeded. '.$this->maxIdentifierCount.' allowed. '.$identifierCount.' received.');
         }
 
         return $isIdentifiers;

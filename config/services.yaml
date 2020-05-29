@@ -6,6 +6,7 @@
 parameters:
     app.enable.no.hits: '%env(bool:APP_ENABLE_NO_HITS)%'
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
+    app.api.max.identifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
     elastic.index: '%env(resolve:ELASTIC_INDEX)%'
     elastic.type: '%env(ELASTIC_TYPE)%'
     elastic.min.image.size: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
@@ -52,6 +53,11 @@ services:
         autowire: false
         class: Prometheus\Storage\APC
 
+    # CoverCollectionDataProvider
+    App\Api\DataProvider\CoverCollectionDataProvider:
+        arguments:
+            $maxIdentifierCount: '%app.api.max.identifiers%'
+
     # SearchService
     App\Api\Elastic\SearchService:
         arguments:
@@ -76,7 +82,7 @@ services:
     # OpenApi/Swagger
     App\Api\OpenApi\OpenApiDecorator:
         decorates: 'api_platform.swagger.normalizer.api_gateway'
-        arguments: [ '@App\Api\OpenApi\OpenApiDecorator.inner' ]
+        arguments: [ '@App\Api\OpenApi\OpenApiDecorator.inner', '%app.api.max.identifiers%' ]
         autoconfigure: false
 
     # Statistics logger
