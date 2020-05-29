@@ -49,7 +49,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                      {
  *                          "name" = "identifiers",
  *                          "in" = "query",
- *                          "description" = "A list of identifiers of {type}. Maximum number os identifiers per reqeust is 200",
+ *                          "description" = "A list of identifiers of {type}. Maximum number os identifiers per reqeust is %d",
  *                          "required" = true,
  *                          "schema" : {
  *                              "type": "array",

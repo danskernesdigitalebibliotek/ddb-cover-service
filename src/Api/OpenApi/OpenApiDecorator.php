@@ -16,15 +16,18 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 final class OpenApiDecorator implements NormalizerInterface
 {
     private $decorated;
+    private $maxIdentifierCount;
 
     /**
      * OpenApiDecorator constructor.
      *
      * @param NormalizerInterface $decorated
+     * @param int $maxIdentifierCount
      */
-    public function __construct(NormalizerInterface $decorated)
+    public function __construct(NormalizerInterface $decorated, int $maxIdentifierCount)
     {
         $this->decorated = $decorated;
+        $this->maxIdentifierCount = $maxIdentifierCount;
     }
 
     /**
@@ -43,6 +46,11 @@ final class OpenApiDecorator implements NormalizerInterface
 
         // "scopes" should be object, not array
         $docs['components']['securitySchemes']['oauth']['flows']['password']['scopes'] = new \stdClass();
+
+        // Set max identifier count from .env
+        $description = sprintf($docs['paths']['/api/v2/covers']['get']['parameters'][1]['description'], $this->maxIdentifierCount);
+        $docs['paths']['/api/v2/covers']['get']['parameters'][1]['description'] = $description;
+        $docs['paths']['/api/v2/covers']['get']['parameters'][1]['schema']['maxLength'] = 10;
 
         return $docs;
     }
