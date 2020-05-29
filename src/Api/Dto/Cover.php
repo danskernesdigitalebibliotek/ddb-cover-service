@@ -53,7 +53,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                          "required" = true,
  *                          "schema" : {
  *                              "type": "array",
- *                              "maxLength": 200,
+ *                              "maxLength": "DECORATED_ENV_VALUE",
  *                              "minLength": 1,
  *                              "items" : {
  *                                  "type" : "string",
