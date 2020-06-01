@@ -15,7 +15,6 @@ namespace App\Api\Dto;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ApiResource(
