@@ -15,6 +15,7 @@ namespace App\Api\Dto;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ApiResource(
@@ -146,6 +147,54 @@ class Cover
      */
     private $type;
 
+    /**
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *             "type"="object",
+     *             "properties"={
+     *                  "default"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "original"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "small"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "medium"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "large"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *              },
+     *              "example"={
+     *                  "original": {
+     *                      "url": "https://res.cloudinary.com/dandigbib/image/upload/v1543590725/bogportalen.dk/9788779161948.jpg",
+     *                      "format": "jpeg",
+     *                      "size": "original"
+     *                  },
+     *                  "small": {
+     *                      "url": "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_small/v1543590725/bogportalen.dk/9788779161948.jpg",
+     *                      "format": "jpeg",
+     *                      "size": "small"
+     *                  },
+     *                  "medium": {
+     *                      "url": "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_medium/v1543590725/bogportalen.dk/9788779161948.jpg",
+     *                      "format": "jpeg",
+     *                      "size": "medium"
+     *                  },
+     *                  "large": {
+     *                      "url": null,
+     *                      "format": "jpeg",
+     *                      "size": "large"
+     *                  },
+     *              }
+     *         }
+     *     }
+     * )
+     */
     private $imageUrls;
 
     /**

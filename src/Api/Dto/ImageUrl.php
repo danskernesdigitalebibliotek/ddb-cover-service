@@ -9,13 +9,50 @@
 
 namespace App\Api\Dto;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
+
 /**
  * Class ImageUrl.
  */
 final class ImageUrl
 {
+    /**
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *              "type"="string",
+     *              "format"="url",
+     *              "nullable"="true",
+     *              "example"="https://res.cloudinary.com/dandigbib/image/upload/v1543609481/bogportalen.dk/9788702246841.jpg"
+     *          }
+     *     }
+     * )
+     */
     private $url;
+
+    /**
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *              "type": "string",
+     *              "example"="jpeg"
+     *          }
+     *     }
+     * )
+     */
     private $format;
+
+    /**
+     * @ApiProperty(
+     *     attributes={
+     *          "openapi_context"={
+     *              "type" : "string",
+     *              "enum": {"default", "original", "small", "medium", "large"},
+     *              "example" : "large"
+     *          }
+     *     }
+     * )
+     */
     private $size;
 
     /**
