@@ -9,6 +9,7 @@ namespace App\Api\Statistics;
 use App\Service\MetricsService;
 use App\Service\StatsLoggingService;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class CollectionStatsLogger.
@@ -18,9 +19,9 @@ class CollectionStatsLogger
     private $statsLoggingService;
     private $metricsService;
     private $requestStack;
+    private $security;
 
     private const SERVICE = 'CoverCollectionDataProvider';
-    private const CLIENT_ID = 'REST_API';
     private const MESSAGE = 'Cover request/response';
 
     /**
@@ -29,12 +30,14 @@ class CollectionStatsLogger
      * @param StatsLoggingService $statsLoggingService
      * @param MetricsService $metricsService
      * @param RequestStack $requestStack
+     * @param \Symfony\Component\Security\Core\Security $security
      */
-    public function __construct(StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack)
+    public function __construct(StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, Security $security)
     {
         $this->statsLoggingService = $statsLoggingService;
         $this->metricsService = $metricsService;
         $this->requestStack = $requestStack;
+        $this->security = $security;
     }
 
     /**
@@ -67,7 +70,7 @@ class CollectionStatsLogger
 
         $this->statsLoggingService->info(self::MESSAGE, [
             'service' => self::SERVICE,
-            'clientID' => self::CLIENT_ID,
+            'clientID' => $this->security->getUser()->getAgency(),
             'remoteIP' => $clientIp,
             'isType' => $type,
             'isIdentifiers' => $identifiers,
