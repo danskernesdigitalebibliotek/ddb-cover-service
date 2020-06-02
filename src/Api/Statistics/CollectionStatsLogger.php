@@ -30,7 +30,7 @@ class CollectionStatsLogger
      * @param StatsLoggingService $statsLoggingService
      * @param MetricsService $metricsService
      * @param RequestStack $requestStack
-     * @param \Symfony\Component\Security\Core\Security $security
+     * @param Security $security
      */
     public function __construct(StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, Security $security)
     {
