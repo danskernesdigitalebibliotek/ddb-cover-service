@@ -28,7 +28,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                  "description" = "Get covers by identifier in specific image format(s), specific image size(s) and with or without generic covers.",
  *                  "responses" = {
  *                      "200" = {
- *                          "description" = "A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original 'null' will be returned for 'url' and 'format for that size. - 'worst case' you will receive a 200 OK with an empty list."
+ *                          "description" = "A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original 'null' will be returned for 'url' and 'format for that size. - 'worst case' you will receive a 200 OK with an empty list.",
+ *                          "content": {
+ *                              "application/json": {
+ *                                  "schema": {
+ *                                      "type": "array",
+ *                                      "items": {
+ *                                          "$ref": "#/components/schemas/Cover"
+ *                                      }
+ *                                  }
+ *                              }
+ *                          }
  *                      },
  *                      "400" = {
  *                          "description" = "Bad request, e.g. required parameters missing."
@@ -49,10 +59,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                      {
  *                          "name" = "identifiers",
  *                          "in" = "query",
- *                          "description" = "A list of identifiers of {type}",
+ *                          "description" = "A list of identifiers of {type}. Maximum number os identifiers per reqeust is %d",
  *                          "required" = true,
  *                          "schema" : {
  *                              "type": "array",
+ *                              "maxLength": "DECORATED_ENV_VALUE",
+ *                              "minLength": 1,
  *                              "items" : {
  *                                  "type" : "string",
  *                                  "example" : {
@@ -134,6 +146,54 @@ class Cover
      */
     private $type;
 
+    /**
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *             "type"="object",
+     *             "properties"={
+     *                  "default"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "original"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "small"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "medium"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "large"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *              },
+     *              "example"={
+     *                  "original": {
+     *                      "url": "https://res.cloudinary.com/dandigbib/image/upload/v1543590725/bogportalen.dk/9788779161948.jpg",
+     *                      "format": "jpeg",
+     *                      "size": "original"
+     *                  },
+     *                  "small": {
+     *                      "url": "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_small/v1543590725/bogportalen.dk/9788779161948.jpg",
+     *                      "format": "jpeg",
+     *                      "size": "small"
+     *                  },
+     *                  "medium": {
+     *                      "url": "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_medium/v1543590725/bogportalen.dk/9788779161948.jpg",
+     *                      "format": "jpeg",
+     *                      "size": "medium"
+     *                  },
+     *                  "large": {
+     *                      "url": null,
+     *                      "format": "jpeg",
+     *                      "size": "large"
+     *                  },
+     *              }
+     *         }
+     *     }
+     * )
+     */
     private $imageUrls;
 
     /**

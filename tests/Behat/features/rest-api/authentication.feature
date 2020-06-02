@@ -16,7 +16,7 @@ Feature:
       | type        | isbn          |
     Then the response status code should be 401
 
-  @login
+  @createFixtures @login
   Scenario: Trying to access the api with proper credentials should be allowed
     Given I add "Accept" header equal to "application/json"
     And I send a "GET" request to "/api/v2/covers" with parameters:

@@ -10,3 +10,5 @@ monolog:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
+        statistics:
+            index: '%env(ELASTIC_STATS_INDEX)%_test'
