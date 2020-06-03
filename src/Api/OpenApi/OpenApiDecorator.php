@@ -22,12 +22,12 @@ final class OpenApiDecorator implements NormalizerInterface
      * OpenApiDecorator constructor.
      *
      * @param NormalizerInterface $decorated
-     * @param int $envApiMaxIdentifiers
+     * @param int $bindApiMaxIdentifiers
      */
-    public function __construct(NormalizerInterface $decorated, int $envApiMaxIdentifiers)
+    public function __construct(NormalizerInterface $decorated, int $bindApiMaxIdentifiers)
     {
         $this->decorated = $decorated;
-        $this->maxIdentifierCount = $envApiMaxIdentifiers;
+        $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 
     /**

@@ -38,15 +38,15 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param CollectionStatsLogger $collectionStatsLogger
-     * @param int $envApiMaxIdentifiers
+     * @param int $bindApiMaxIdentifiers
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $envApiMaxIdentifiers)
+    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $bindApiMaxIdentifiers)
     {
         $this->searchService = $searchService;
         $this->coverFactory = $coverFactory;
         $this->noHitService = $noHitService;
         $this->collectionStatsLogger = $collectionStatsLogger;
-        $this->maxIdentifierCount = $envApiMaxIdentifiers;
+        $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 
     /**

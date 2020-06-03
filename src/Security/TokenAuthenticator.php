@@ -34,20 +34,20 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * TokenAuthenticator constructor.
      *
-     * @param string $envOpenPlatformId
-     * @param string $envOpenPlatformSecret
-     * @param string $envOpenPlatformIntrospectionUrl
+     * @param string $bindOpenPlatformId
+     * @param string $bindOpenPlatformSecret
+     * @param string $bindOpenPlatformIntrospectionUrl
      * @param AdapterInterface $tokenCache
      * @param HttpClientInterface $httpClient
      */
-    public function __construct(string $envOpenPlatformId, string $envOpenPlatformSecret, string $envOpenPlatformIntrospectionUrl, AdapterInterface $tokenCache, HttpClientInterface $httpClient)
+    public function __construct(string $bindOpenPlatformId, string $bindOpenPlatformSecret, string $bindOpenPlatformIntrospectionUrl, AdapterInterface $tokenCache, HttpClientInterface $httpClient)
     {
         $this->client = $httpClient;
         $this->cache = $tokenCache;
 
-        $this->clientId = $envOpenPlatformId;
-        $this->clientSecret = $envOpenPlatformSecret;
-        $this->endPoint = $envOpenPlatformIntrospectionUrl;
+        $this->clientId = $bindOpenPlatformId;
+        $this->clientSecret = $bindOpenPlatformSecret;
+        $this->endPoint = $bindOpenPlatformIntrospectionUrl;
     }
 
     /**

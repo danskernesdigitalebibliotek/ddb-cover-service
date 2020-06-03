@@ -21,19 +21,19 @@ services:
 
         bind:
             # Bound env variables
-            $envEnableNoHits: '%env(bool:APP_ENABLE_NO_HITS)%'
-            $envApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
-            $envElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
-            $envElasticType: '%env(ELASTIC_TYPE)%'
-            $envElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
-            $envCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
-            $envOpenPlatformId: '%env(OPENPLATFORM_ID)%'
-            $envOpenPlatformSecret: '%env(OPENPLATFORM_SECRET)%'
-            $envOpenPlatformIntrospectionUrl: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
+            $bindEnableNoHits: '%env(bool:APP_ENABLE_NO_HITS)%'
+            $bindApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
+            $bindElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
+            $bindElasticType: '%env(ELASTIC_TYPE)%'
+            $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
+            $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+            $bindOpenPlatformId: '%env(OPENPLATFORM_ID)%'
+            $bindOpenPlatformSecret: '%env(OPENPLATFORM_SECRET)%'
+            $bindOpenPlatformIntrospectionUrl: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
-            $statsLogger: '@monolog.logger.statistics'
+            $bindStatsLogger: '@monolog.logger.statistics'
 
 
     # makes classes in src/ available to be used as services
