@@ -4,17 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    app.enable.no.hits: '%env(bool:APP_ENABLE_NO_HITS)%'
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
-    app.api.max.identifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
-    elastic.index: '%env(resolve:ELASTIC_INDEX)%'
-    elastic.type: '%env(ELASTIC_TYPE)%'
-    elastic.min.image.size: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
-    cloudinary.transformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
-    openPlatform.id: '%env(OPENPLATFORM_ID)%'
-    openPlatform.secret: '%env(OPENPLATFORM_SECRET)%'
-    openPlatform.introspection.url: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
 
 services:
 
@@ -24,6 +15,26 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+        bind:
+            # Bound env variables
+            $envEnableNoHits: '%env(bool:APP_ENABLE_NO_HITS)%'
+            $envApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
+            $envElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
+            $envElasticType: '%env(ELASTIC_TYPE)%'
+            $envElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
+            $envCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+            $envOpenPlatformId: '%env(OPENPLATFORM_ID)%'
+            $envOpenPlatformSecret: '%env(OPENPLATFORM_SECRET)%'
+            $envOpenPlatformIntrospectionUrl: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
+
+            # Bound services
+            Elasticsearch\Client: '@api_platform.elasticsearch.client'
+            $statsLogger: '@monolog.logger.statistics'
+
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -41,8 +52,8 @@ services:
     #### App ####
 
     # Manually wire the MetricsService:
-    # APC storage requires APCU is not available when testing through behat
-    # using the Symfony KernelDriver so we need to be able manually configure
+    # APC storage requires APCU which is not available when testing through behat
+    # using the Symfony KernelDriver. So we need to be able manually configure
     # the right adapter for testing
     App\Service\MetricsService:
         autowire: false
@@ -53,49 +64,12 @@ services:
         autowire: false
         class: Prometheus\Storage\APC
 
-    # CoverCollectionDataProvider
-    App\Api\DataProvider\CoverCollectionDataProvider:
-        arguments:
-            $maxIdentifierCount: '%app.api.max.identifiers%'
-
-    # SearchService
-    App\Api\Elastic\SearchService:
-        arguments:
-            $client: '@api_platform.elasticsearch.client'
-            $index : '%elastic.index%'
-            $type : '%elastic.type%'
-            $minImageSize : '%elastic.min.image.size%'
-            $metricsService : '@App\Service\MetricsService'
-
-    App\Api\Elastic\SearchServiceInterface: '@App\Api\Elastic\SearchService'
-
-    # NoHitsService
-    App\Service\NoHitService:
-        arguments:
-            $noHitsProcessingEnabled: '%app.enable.no.hits%'
-
-    # Cloudinary
-    App\Service\CoverStore\CloudinaryTransformationService:
-        arguments:
-            $cloudinaryTransformations: '%cloudinary.transformations%'
-
-    # OpenApi/Swagger
+    # OpenApi/Swagger decoration
     App\Api\OpenApi\OpenApiDecorator:
         decorates: 'api_platform.swagger.normalizer.api_gateway'
-        arguments: [ '@App\Api\OpenApi\OpenApiDecorator.inner', '%app.api.max.identifiers%' ]
+        arguments:
+            $decorated: '@App\Api\OpenApi\OpenApiDecorator.inner'
         autoconfigure: false
-
-    # Statistics logger
-    App\Service\StatsLoggingService:
-        arguments:
-            $statsLogger: '@monolog.logger.statistics'
-
-    # Open Platform TokenAuthenticator
-    App\Security\TokenAuthenticator:
-        arguments:
-            $openPlatformId: '%env(OPENPLATFORM_ID)%'
-            $openPlatformSecret: '%env(OPENPLATFORM_SECRET)%'
-            $openPlatformUrl: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
 
     # Fixtures Service
     # Used in 'dev' and 'test' env only

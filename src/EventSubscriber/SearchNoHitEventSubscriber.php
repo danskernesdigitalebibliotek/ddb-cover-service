@@ -27,18 +27,13 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      *
      * @param producerInterface $producer
      *   Queue producer to send messages (jobs)
-     * @param ParameterBagInterface $params
-     *   Access to environment variables
+     * @param bool $envEnableNoHits
+     *   Is no hits processing enabled
      */
-    public function __construct(ProducerInterface $producer, ParameterBagInterface $params)
+    public function __construct(ProducerInterface $producer, bool $envEnableNoHits)
     {
         $this->producer = $producer;
-
-        try {
-            $this->enabled = $params->get('app.enable.no.hits');
-        } catch (ParameterNotFoundException $exception) {
-            $this->enabled = true;
-        }
+        $this->enabled = $envEnableNoHits;
     }
 
     /**
