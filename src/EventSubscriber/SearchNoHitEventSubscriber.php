@@ -10,8 +10,6 @@ use App\Event\SearchNoHitEvent;
 use App\Utils\Message\ProcessMessage;
 use Enqueue\Client\ProducerInterface;
 use Enqueue\Util\JSON;
-use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
