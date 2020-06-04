@@ -103,10 +103,36 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             $content = $response->getContent();
             $data = json_decode($content);
 
-            // Token not valid, hence not active at the introspection end-point.
-            if (false === $data->active) {
+            // Invalid json
+            if (false === $data) {
+                // @TODO Log error
                 return null;
             }
+
+            // Error from Open Platform
+            if (isset($data->error)) {
+                // @TODO Log error
+                return null;
+            }
+
+            // Unknown format/token type
+            if (isset($date->type) && 'anonymous' !== $data->type) {
+                // @TODO Log error
+                return null;
+            }
+
+            // Token not active at the introspection end-point.
+            if (isset($data->active) && false === $data->active) {
+                return null;
+            }
+
+            // Token expired
+            $tokenExpireDataTime = new \DateTime($data->expires, new \DateTimeZone('Europe/Copenhagen'));
+            $now = new \DateTime();
+            if ($now > $tokenExpireDataTime) {
+                return null;
+            }
+
         } catch (HttpExceptionInterface $e) {
             return null;
         } catch (ExceptionInterface $e) {
@@ -114,7 +140,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         }
 
         // Create user object.
-        $tokenExpireDataTime = new \DateTime($data->expires, new \DateTimeZone('Europe/Copenhagen'));
         $user = new User();
         $user->setPassword($token);
         $user->setExpires($tokenExpireDataTime);

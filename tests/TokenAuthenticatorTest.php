@@ -150,6 +150,70 @@ class TokenAuthenticatorTest extends TestCase
     }
 
     /**
+     * Test that access denied if token is expired.
+     *
+     * @throws \Exception
+     */
+    public function testExpiredTokenIsDenied()
+    {
+        $this->cache->method('getItem')->willReturn($this->item);
+        $this->item->method('isHit')->willReturn(false);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn('200');
+        $expires = new \DateTime('now - 2 days', new \DateTimeZone('UTC'));
+        $json = '{
+            "active": true,
+            "clientId": "client-id-hash",
+            "expires": "'.$expires->format('Y-m-d\TH:i:s.u\Z').'",
+            "agency": "888777",
+            "uniqueId": null,
+            "search": {
+                "profile": "abcd",
+                "agency": "888777"
+            },
+            "type": "anonymous",
+            "name": "DDB CMS",
+            "contact": {
+                "owner": {
+                    "name": "Hans Hansen",
+                    "email": "hans@hansen.dk",
+                    "phone": "11 22 33 44"
+                }
+            }
+        }';
+        $response->method('getContent')->willReturn($json);
+
+        $this->httpClient->method('request')->willReturn($response);
+
+        $user = $this->tokenAuthenticator->getUser('Bearer 12345678', $this->userProvider);
+        $this->assertNull($user, 'TokenAuthenticator should return null (access denied) if token expired');
+    }
+
+    /**
+     * Test that access denied if we receive an error from Open Platform.
+     *
+     * @throws \Exception
+     */
+    public function testErrorTokenIsDenied()
+    {
+        $this->cache->method('getItem')->willReturn($this->item);
+        $this->item->method('isHit')->willReturn(false);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn('200');
+        $json = '{
+            "error":"Invalid client and/or secret"
+        }';
+        $response->method('getContent')->willReturn($json);
+
+        $this->httpClient->method('request')->willReturn($response);
+
+        $user = $this->tokenAuthenticator->getUser('Bearer 12345678', $this->userProvider);
+        $this->assertNull($user, 'TokenAuthenticator should return null (access denied) if error received from Open Platform');
+    }
+
+    /**
      * Test that access granted if user is 'active' in Open Platform.
      *
      * @throws \Exception
