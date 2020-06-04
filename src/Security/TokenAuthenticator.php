@@ -6,6 +6,7 @@
 
 namespace App\Security;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     private $client;
     private $cache;
+    private $logger;
 
     private $clientId;
     private $clientSecret;
@@ -40,10 +42,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * @param AdapterInterface $tokenCache
      * @param HttpClientInterface $httpClient
      */
-    public function __construct(string $openPlatformId, string $openPlatformSecret, string $openPlatformUrl, AdapterInterface $tokenCache, HttpClientInterface $httpClient)
+    public function __construct(string $openPlatformId, string $openPlatformSecret, string $openPlatformUrl, AdapterInterface $tokenCache, HttpClientInterface $httpClient, LoggerInterface $logger)
     {
         $this->client = $httpClient;
         $this->cache = $tokenCache;
+        $this->logger = $logger;
 
         $this->clientId = $openPlatformId;
         $this->clientSecret = $openPlatformSecret;
@@ -97,27 +100,25 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             ]);
 
             if (200 !== $response->getStatusCode()) {
+                $this->logger->error(self::class.' http call to Open Platform returned status: '.$response->getStatusCode());
+
                 return null;
             }
 
             $content = $response->getContent();
-            $data = json_decode($content);
-
-            // Invalid json
-            if (false === $data) {
-                // @TODO Log error
-                return null;
-            }
+            $data = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
 
             // Error from Open Platform
             if (isset($data->error)) {
-                // @TODO Log error
+                $this->logger->error(self::class.' token call to Open Platform returned error: '.$data->error);
+
                 return null;
             }
 
             // Unknown format/token type
             if (isset($date->type) && 'anonymous' !== $data->type) {
-                // @TODO Log error
+                $this->logger->error(self::class.' token call to Open Platform returned unknown type: '.$data->type);
+
                 return null;
             }
 
@@ -132,10 +133,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             if ($now > $tokenExpireDataTime) {
                 return null;
             }
-
         } catch (HttpExceptionInterface $e) {
+            $this->logger->error(self::class.' http exception: '.$e->getMessage());
+
             return null;
         } catch (ExceptionInterface $e) {
+            $this->logger->error(self::class.' exception: '.$e->getMessage());
+
+            return null;
+        } catch (\JsonException $e) {
+            $this->logger->error(self::class.' json decode exception: '.$e->getMessage());
+
             return null;
         }
 
