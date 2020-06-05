@@ -116,7 +116,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             }
 
             // Unknown format/token type
-            if (isset($date->type) && 'anonymous' !== $data->type) {
+            if (isset($data->type) && 'anonymous' !== $data->type) {
                 $this->logger->error(self::class.' token call to Open Platform returned unknown type: '.$data->type);
 
                 return null;
