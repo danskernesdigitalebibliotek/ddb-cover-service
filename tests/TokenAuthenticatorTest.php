@@ -4,7 +4,9 @@ namespace App\Tests;
 
 use App\Security\TokenAuthenticator;
 use App\Security\User;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -22,6 +24,7 @@ class TokenAuthenticatorTest extends TestCase
     private $item;
     private $userProvider;
     private $tokenAuthenticator;
+    private $logger;
 
     /**
      * Setup mocks.
@@ -34,8 +37,9 @@ class TokenAuthenticatorTest extends TestCase
         $this->cache = $this->createMock(AdapterInterface::class);
         $this->item = $this->createMock(ItemInterface::class);
         $this->userProvider = $this->createMock(UserProviderInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
-        $this->tokenAuthenticator = new TokenAuthenticator('id', 'secret', 'https://auth.test', $this->cache, $this->httpClient);
+        $this->tokenAuthenticator = new TokenAuthenticator('id', 'secret', 'https://auth.test', $this->cache, $this->httpClient, $this->logger);
     }
 
     /**
@@ -111,7 +115,7 @@ class TokenAuthenticatorTest extends TestCase
     /**
      * Test that access denied if user non 'active' in Open Platform.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function testNonActiveUserDenied()
     {
@@ -150,9 +154,155 @@ class TokenAuthenticatorTest extends TestCase
     }
 
     /**
+     * Test that access denied if user not 'anonymous' e.g. unknown user type in Open Platform.
+     *
+     * @throws Exception
+     */
+    public function testNonAnonymousTokenTypeDenied()
+    {
+        $this->cache->method('getItem')->willReturn($this->item);
+        $this->item->method('isHit')->willReturn(false);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn('200');
+        $expires = new \DateTime('now + 2 days', new \DateTimeZone('UTC'));
+        $json = '{
+            "active": false,
+            "clientId": "client-id-hash",
+            "expires": "'.$expires->format('Y-m-d\TH:i:s.u\Z').'",
+            "agency": "888777",
+            "uniqueId": null,
+            "search": {
+                "profile": "abcd",
+                "agency": "888777"
+            },
+            "type": "user",
+            "name": "DDB CMS",
+            "contact": {
+                "owner": {
+                    "name": "Hans Hansen",
+                    "email": "hans@hansen.dk",
+                    "phone": "11 22 33 44"
+                }
+            }
+        }';
+        $response->method('getContent')->willReturn($json);
+
+        $this->httpClient->method('request')->willReturn($response);
+
+        $user = $this->tokenAuthenticator->getUser('Bearer 12345678', $this->userProvider);
+        $this->assertNull($user, 'TokenAuthenticator should return null (access denied) if user not active');
+    }
+
+    /**
+     * Test that access denied if token is expired.
+     *
+     * @throws Exception
+     */
+    public function testExpiredTokenIsDenied()
+    {
+        $this->cache->method('getItem')->willReturn($this->item);
+        $this->item->method('isHit')->willReturn(false);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn('200');
+        $expires = new \DateTime('now - 2 days', new \DateTimeZone('UTC'));
+        $json = '{
+            "active": true,
+            "clientId": "client-id-hash",
+            "expires": "'.$expires->format('Y-m-d\TH:i:s.u\Z').'",
+            "agency": "888777",
+            "uniqueId": null,
+            "search": {
+                "profile": "abcd",
+                "agency": "888777"
+            },
+            "type": "anonymous",
+            "name": "DDB CMS",
+            "contact": {
+                "owner": {
+                    "name": "Hans Hansen",
+                    "email": "hans@hansen.dk",
+                    "phone": "11 22 33 44"
+                }
+            }
+        }';
+        $response->method('getContent')->willReturn($json);
+
+        $this->httpClient->method('request')->willReturn($response);
+
+        $user = $this->tokenAuthenticator->getUser('Bearer 12345678', $this->userProvider);
+        $this->assertNull($user, 'TokenAuthenticator should return null (access denied) if token expired');
+    }
+
+    /**
+     * Test that access denied if we receive an error from Open Platform.
+     *
+     * @throws Exception
+     */
+    public function testErrorTokenIsDenied()
+    {
+        $this->cache->method('getItem')->willReturn($this->item);
+        $this->item->method('isHit')->willReturn(false);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn('200');
+        $json = '{
+            "error":"Invalid client and/or secret"
+        }';
+        $response->method('getContent')->willReturn($json);
+
+        $this->httpClient->method('request')->willReturn($response);
+
+        $user = $this->tokenAuthenticator->getUser('Bearer 12345678', $this->userProvider);
+        $this->assertNull($user, 'TokenAuthenticator should return null (access denied) if error received from Open Platform');
+    }
+
+    /**
+     * Test that access denied if we receive invalid json from Open Platform.
+     *
+     * @throws Exception
+     */
+    public function testInvalidJsonTokenIsDenied()
+    {
+        $this->cache->method('getItem')->willReturn($this->item);
+        $this->item->method('isHit')->willReturn(false);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn('200');
+        $expires = new \DateTime('now - 2 days', new \DateTimeZone('UTC'));
+        $json = '{
+            "active": true,error
+            "clientId": "client-id-hash",
+            "expires": "'.$expires->format('Y-m-d\TH:i:s.u\Z').'",
+            "agency": "888777",
+            "uniqueId": null,
+            "search": {
+                "profile": "abcd",
+                "agency": "888777"
+            },
+            "type": "anonymous",
+            "name": "DDB CMS",
+            "contact": {
+                "owner": {
+                    "name": "Hans Hansen",
+                    "email": "hans@hansen.dk",
+                    "phone": "11 22 33 44"
+                }
+            }
+        }';
+        $response->method('getContent')->willReturn($json);
+
+        $this->httpClient->method('request')->willReturn($response);
+
+        $user = $this->tokenAuthenticator->getUser('Bearer 12345678', $this->userProvider);
+        $this->assertNull($user, 'TokenAuthenticator should return null (access denied) if error received from Open Platform');
+    }
+
+    /**
      * Test that access granted if user is 'active' in Open Platform.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function testActiveUSerAllowed()
     {
