@@ -52,11 +52,11 @@ class ElasticStatsTemplateCommand extends Command
                 $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
                 return 0;
-            } else {
-                $io->error('Unknown error when creating template');
-
-                return 1;
             }
+
+            $io->error('Unknown error when creating template');
+
+            return 1;
         } catch (\Exception $exception) {
             $io->error($exception->getMessage());
 
