@@ -10,8 +10,6 @@ use App\Event\SearchNoHitEvent;
 use App\Utils\Message\ProcessMessage;
 use Enqueue\Client\ProducerInterface;
 use Enqueue\Util\JSON;
-use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -27,18 +25,13 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      *
      * @param producerInterface $producer
      *   Queue producer to send messages (jobs)
-     * @param ParameterBagInterface $params
-     *   Access to environment variables
+     * @param bool $bindEnableNoHits
+     *   Is no hits processing enabled
      */
-    public function __construct(ProducerInterface $producer, ParameterBagInterface $params)
+    public function __construct(ProducerInterface $producer, bool $bindEnableNoHits)
     {
         $this->producer = $producer;
-
-        try {
-            $this->enabled = $params->get('app.enable.no.hits');
-        } catch (ParameterNotFoundException $exception) {
-            $this->enabled = true;
-        }
+        $this->enabled = $bindEnableNoHits;
     }
 
     /**

@@ -26,17 +26,17 @@ class SearchService implements SearchServiceInterface
      * SearchService constructor.
      *
      * @param Client $client
-     * @param string $index
-     * @param string $type
-     * @param int $minImageSize
+     * @param string $bindElasticIndex
+     * @param string $bindElasticType
+     * @param int $bindElasticMinImageSize
      * @param MetricsService $metricsService
      */
-    public function __construct(Client $client, string $index, string $type, int $minImageSize, MetricsService $metricsService)
+    public function __construct(Client $client, string $bindElasticIndex, string $bindElasticType, int $bindElasticMinImageSize, MetricsService $metricsService)
     {
         $this->client = $client;
-        $this->index = $index;
-        $this->type = $type;
-        $this->minImageSize = $minImageSize;
+        $this->index = $bindElasticIndex;
+        $this->type = $bindElasticType;
+        $this->minImageSize = $bindElasticMinImageSize;
 
         $this->metricsService = $metricsService;
     }
