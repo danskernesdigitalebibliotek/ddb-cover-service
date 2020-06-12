@@ -37,7 +37,7 @@ class ElasticStatsTemplateCommand extends Command
     /** {@inheritdoc} */
     protected function configure()
     {
-        $this->setDescription('Verify the stats index template');
+        $this->setDescription('Create dynamic stats index template');
     }
 
     /** {@inheritdoc} */
@@ -49,7 +49,7 @@ class ElasticStatsTemplateCommand extends Command
             $result = $this->createStatsTemplate();
 
             if ($result['acknowledged']) {
-                $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+                $io->success('Dynamic index template created.');
 
                 return 0;
             }
