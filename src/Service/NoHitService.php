@@ -27,13 +27,13 @@ final class NoHitService
      *
      * @param EventDispatcherInterface $dispatcher
      * @param MetricsService $metricsService
-     * @param bool $noHitsProcessingEnabled
+     * @param bool $bindEnableNoHits
      */
-    public function __construct(EventDispatcherInterface $dispatcher, MetricsService $metricsService, bool $noHitsProcessingEnabled)
+    public function __construct(EventDispatcherInterface $dispatcher, MetricsService $metricsService, bool $bindEnableNoHits)
     {
         $this->dispatcher = $dispatcher;
         $this->metricsService = $metricsService;
-        $this->noHitsProcessingEnabled = $noHitsProcessingEnabled;
+        $this->noHitsProcessingEnabled = $bindEnableNoHits;
     }
 
     /**
