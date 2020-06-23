@@ -12,12 +12,6 @@ api_platform:
         To use the "Authorize" option in this tool use your 'client_id' and 'client_secret' and fill in '@agency'
         (e.g. '@123456') for both username and password.
 
-        ### Implementation notes
-
-        Currently the API is not fully implemented. The following features are missing:
-
-        * Generic Covers: parameter is currently ignored. Service doesn't yet provide generic covers.
-
     version: '2.0'
 
     show_webby: false
