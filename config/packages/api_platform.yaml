@@ -65,3 +65,4 @@ api_platform:
         App\Api\Exception\IdentifierCountExceededException: 'HTTP_BAD_REQUEST'
         App\Api\Exception\RequiredParameterMissingException: 'HTTP_BAD_REQUEST'
         App\Api\Exception\UnknownIdentifierTypeException: 'HTTP_BAD_REQUEST'
+        App\Api\Exception\UnknownImageSizeException: 'HTTP_BAD_REQUEST'
