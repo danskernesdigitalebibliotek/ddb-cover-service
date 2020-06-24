@@ -62,7 +62,9 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * {@inheritdoc}
      *
      * @throws RequiredParameterMissingException
-     * @throws UnknownIdentifierTypeException|IdentifierCountExceededException|UnknownImageSizeException
+     * @throws UnknownIdentifierTypeException
+     * @throws IdentifierCountExceededException
+     * @throws UnknownImageSizeException
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): \Traversable
     {
