@@ -76,3 +76,23 @@ Feature:
       | identifiers | 9780119135640,9799913633580,9792806497771,9781351129428,9798058560423,9789318143272 |
       | type        | isbn                                                                                |
     Then the response status code should be 400
+
+  @login
+  Scenario: I should get a 400 bad request if i send an empty sizes parameter
+    Given I add "Accept" header equal to "application/json"
+    And I send a "GET" request to "/api/v2/covers" with parameters:
+      | key         | value                       |
+      | identifiers | 9780119135640,9799913633580 |
+      | type        | isbn                        |
+      | sizes       |                             |
+    Then the response status code should be 400
+
+  @login
+  Scenario: I should get a 400 bad request if i request unknown sizes
+    Given I add "Accept" header equal to "application/json"
+    And I send a "GET" request to "/api/v2/covers" with parameters:
+      | key         | value                       |
+      | identifiers | 9780119135640,9799913633580 |
+      | type        | isbn                        |
+      | sizes       | unknown                     |
+    Then the response status code should be 400
