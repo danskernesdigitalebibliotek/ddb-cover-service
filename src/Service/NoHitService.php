@@ -150,7 +150,7 @@ class NoHitService
      *
      * @param array $keyedSearchNoHitsItems
      *   Array og cacheKey => App\Utils\Types\NoHitItem pairs
-     * @param CacheItemInterface[] $nonCachedSearchNoHits
+     * @param CacheItemInterface ...$nonCachedSearchNoHits
      *   List of non cached cache items to dispatch search no hit events for
      */
     private function dispatchNoHits(array $keyedSearchNoHitsItems, CacheItemInterface ...$nonCachedSearchNoHits): void
