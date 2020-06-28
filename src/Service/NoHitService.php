@@ -22,9 +22,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 final class NoHitService
 {
+    private $noHitsProcessingEnabled;
     private $dispatcher;
     private $metricsService;
-    private $noHitsProcessingEnabled;
+    private $noHitsCache;
 
     /**
      * NoHitService constructor.
@@ -42,8 +43,6 @@ final class NoHitService
         $this->metricsService = $metricsService;
         $this->noHitsCache = $noHitsCache;
     }
-
-    private $noHitsCache;
 
     /**
      * Send event to register identifiers that gave no search results.
@@ -149,7 +148,8 @@ final class NoHitService
      *
      * @param string $type
      *   The type ('pid', 'isbn', etc) of identifiers given
-     * @param CacheItemInterface[] $identifierItems
+     * @param CacheItemInterface ...$identifierItems
+     *   A list of identifier cache items
      */
     private function dispatchNoHits(string $type, CacheItemInterface ...$identifierItems): void
     {
