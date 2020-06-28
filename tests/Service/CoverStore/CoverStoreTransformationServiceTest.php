@@ -5,7 +5,7 @@
  * Test cases for the Cover store transformation service.
  */
 
-namespace Tests;
+namespace App\Tests\Service\CoverStore;
 
 use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CloudinaryTransformationService;

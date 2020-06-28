@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Security;
 
 use App\Security\TokenAuthenticator;
 use App\Security\User;
