@@ -13,6 +13,12 @@ framework:
         pools:
             # Creates a "token.cache" service
             token.cache:
-                adapter: cache.adapter.filesystem
+                adapter: cache.adapter.redis
                 # Default expire set to one day
                 default_lifetime: 86400
+
+            # Creates a "no.hits.cache" service
+            no.hits.cache:
+                adapter: cache.adapter.redis
+                # Default expire set to one day
+                default_lifetime: 172800
