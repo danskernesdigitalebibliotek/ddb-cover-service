@@ -11,8 +11,8 @@ use App\Event\SearchNoHitEvent;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -33,9 +33,9 @@ final class NoHitService
      * @param bool $bindEnableNoHits
      * @param EventDispatcherInterface $dispatcher
      * @param MetricsService $metricsService
-     * @param AdapterInterface $noHitsCache
+     * @param CacheItemPoolInterface $noHitsCache
      */
-    public function __construct(bool $bindEnableNoHits, EventDispatcherInterface $dispatcher, MetricsService $metricsService, AdapterInterface $noHitsCache)
+    public function __construct(bool $bindEnableNoHits, EventDispatcherInterface $dispatcher, MetricsService $metricsService, CacheItemPoolInterface $noHitsCache)
     {
         $this->noHitsProcessingEnabled = $bindEnableNoHits;
 
