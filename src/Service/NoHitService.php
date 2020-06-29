@@ -157,7 +157,7 @@ final class NoHitService
             $noHits = [];
 
             foreach ($identifierItems as $identifierItem) {
-                $noHits[] = new NoHitItem($type, $identifierItem->getKey());
+                $noHits[] = new NoHitItem($type, $identifierItem->get());
 
                 $this->noHitsCache->saveDeferred($identifierItem);
             }

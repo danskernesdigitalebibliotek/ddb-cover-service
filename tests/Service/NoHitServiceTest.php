@@ -12,7 +12,7 @@ use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -34,7 +34,7 @@ class NoHitServiceTest extends TestCase
 
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->metricsService = $this->createMock(MetricsService::class);
-        $this->noHitsCache = $this->createMock(AdapterInterface::class);
+        $this->noHitsCache = $this->createMock(CacheItemPoolInterface::class);
     }
 
     /**
@@ -68,6 +68,7 @@ class NoHitServiceTest extends TestCase
         $nonCachedItem = $this->createMock(CacheItemInterface::class);
         $nonCachedItem->method('isHit')->willReturn(false);
         $nonCachedItem->method('getKey')->willReturn('pid.870970_basis_34563456');
+        $nonCachedItem->method('get')->willReturn('870970-basis:34563456');
 
         $this->noHitsCache->method('getItems')->willReturn([$cachedItem, $nonCachedItem]);
 
