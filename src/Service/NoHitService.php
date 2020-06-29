@@ -74,10 +74,8 @@ class NoHitService
     private function getKeyedSearchNoHitArray(array $searchNoHitsItems): array
     {
         $result = [];
+        /** @var NoHitItem $searchNoHitsItem */
         foreach ($searchNoHitsItems as $searchNoHitsItem) {
-            /**
-             * @var NoHitItem $searchNoHitsItem
-             */
             $key = $this->getValidCacheKey($searchNoHitsItem->getIsType(), $searchNoHitsItem->getIsIdentifier());
             $result[$key] = $searchNoHitsItem;
         }
@@ -126,12 +124,10 @@ class NoHitService
         try {
             $keys = array_keys($keyedSearchNoHitsItems);
             $cacheItems = $this->noHitsCache->getItems($keys);
+            /** @var CacheItemInterface $cacheItem */
             foreach ($cacheItems as $cacheItem) {
                 if (!$cacheItem->isHit()) {
-                    /**
-                     * @var CacheItemInterface $cacheItem
-                     * @var NoHitItem $searchNoHitItem
-                     */
+                    /** @var NoHitItem $searchNoHitItem */
                     $searchNoHitItem = $keyedSearchNoHitsItems[$cacheItem->getKey()];
                     $identifier = $searchNoHitItem->getIsIdentifier();
                     $cacheItem->set($identifier);
