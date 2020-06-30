@@ -11,8 +11,6 @@ use App\Service\MetricsService;
 use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
 use PHPUnit\Framework\TestCase;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 

@@ -8,7 +8,7 @@ namespace App\EventSubscriber;
 
 use App\Event\SearchNoHitEvent;
 use App\Utils\Message\ProcessMessage;
-Use App\Utils\Types\IdentifierType;
+use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Enqueue\Client\ProducerInterface;
 use Enqueue\Util\JSON;
