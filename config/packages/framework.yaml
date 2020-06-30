@@ -24,5 +24,12 @@ framework:
         app: cache.adapter.redis
         default_redis_provider: '%env(REDIS_CACHE_DSN)%'
 
+        pools:
+            # Creates a "no.hits.cache" service
+            no.hits.cache:
+                adapter: cache.adapter.redis
+                # Default expire set to one day
+                default_lifetime: 172800
+
 parameters:
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
