@@ -322,6 +322,9 @@
     "pimple/pimple": {
         "version": "v3.3.0"
     },
+    "predis/predis": {
+        "version": "v1.1.1"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
