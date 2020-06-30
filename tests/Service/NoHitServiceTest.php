@@ -23,7 +23,6 @@ class NoHitServiceTest extends TestCase
 {
     private $dispatcher;
     private $metricsService;
-    private $noHitsCache;
 
     /**
      * {@inheritdoc}
@@ -34,7 +33,6 @@ class NoHitServiceTest extends TestCase
 
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->metricsService = $this->createMock(MetricsService::class);
-        $this->noHitsCache = $this->createMock(CacheItemPoolInterface::class);
     }
 
     /**
@@ -46,7 +44,6 @@ class NoHitServiceTest extends TestCase
         $requestIdentifiers = ['123456', '234567', '345678'];
         $foundIdentifiers = ['123456'];
 
-        $this->noHitsCache->expects($this->never())->method('getItems');
         $this->dispatcher->expects($this->never())->method('addListener');
 
         $noHitsService->handleSearchNoHits(IdentifierType::ISBN, $requestIdentifiers, $foundIdentifiers);
@@ -60,25 +57,6 @@ class NoHitServiceTest extends TestCase
         $noHitsService = $this->getNoHitsService(true);
         $requestIdentifiers = ['870970-basis:12341234', '870970-basis:23452345', '870970-basis:34563456'];
         $foundIdentifiers = ['870970-basis:12341234'];
-
-        $cachedItem = $this->createMock(CacheItemInterface::class);
-        $cachedItem->method('isHit')->willReturn(true);
-        $cachedItem->method('getKey')->willReturn('pid.870970_basis_23452345');
-
-        $nonCachedItem = $this->createMock(CacheItemInterface::class);
-        $nonCachedItem->method('isHit')->willReturn(false);
-        $nonCachedItem->method('getKey')->willReturn('pid.870970_basis_34563456');
-        $nonCachedItem->method('get')->willReturn('870970-basis:34563456');
-
-        $this->noHitsCache->method('getItems')->willReturn([$cachedItem, $nonCachedItem]);
-
-        // Assert that identifier get set for cached item
-        $nonCachedItem->expects($this->once())->method('set')
-            ->with('870970-basis:34563456');
-
-        // Assert that item is save deferred and committed
-        $this->noHitsCache->expects($this->once())->method('saveDeferred');
-        $this->noHitsCache->expects($this->once())->method('commit');
 
         // Assert that Kernel terminate Event is used
         $this->dispatcher->expects($this->once())->method('addListener')
@@ -98,6 +76,6 @@ class NoHitServiceTest extends TestCase
      */
     private function getNoHitsService(bool $enabled): NoHitService
     {
-        return new NoHitService($enabled, $this->dispatcher, $this->metricsService, $this->noHitsCache);
+        return new NoHitService($enabled, $this->dispatcher, $this->metricsService);
     }
 }
