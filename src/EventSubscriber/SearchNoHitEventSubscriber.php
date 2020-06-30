@@ -8,6 +8,7 @@ namespace App\EventSubscriber;
 
 use App\Event\SearchNoHitEvent;
 use App\Utils\Message\ProcessMessage;
+Use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Enqueue\Client\ProducerInterface;
 use Enqueue\Util\JSON;
@@ -71,8 +72,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
                 $keyedNoHits[$cacheKey] = $noHit;
             }
 
-            $cacheKeys = array_keys($keyedNoHits);
-            $nonCommittedCacheItems = $this->getNonCachedNoHits($cacheKeys);
+            $nonCommittedCacheItems = $this->getNonCachedNoHits($keyedNoHits);
             $this->sendSearchNoHitEvents($nonCommittedCacheItems);
         }
     }
@@ -113,12 +113,13 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     {
         $nonCommittedCacheItems = [];
         try {
-            $keys = array_keys($keyedNoHits);
-            $cacheItems = $this->noHitsCache->getItems($keys);
+            $cacheKeys = array_keys($keyedNoHits);
+            $cacheItems = $this->noHitsCache->getItems($cacheKeys);
             foreach ($cacheItems as $cacheItem) {
                 if (!$cacheItem->isHit()) {
                     /** @var NoHitItem $noHitItem */
-                    $noHitItem = $keyedNoHits[$cacheItem->getKey()];
+                    $cacheKey = $cacheItem->getKey();
+                    $noHitItem = $keyedNoHits[$cacheKey];
                     $cacheItem->set($noHitItem);
                     $nonCommittedCacheItems[] = $cacheItem;
                 }
