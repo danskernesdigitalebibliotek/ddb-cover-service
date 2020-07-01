@@ -29,7 +29,7 @@ framework:
             no.hits.cache:
                 adapter: cache.adapter.redis
                 # Default expire set to one day
-                default_lifetime: 172800
+                default_lifetime: '%env(int:APP_NO_HITS_CACHE_TTL)%'
 
 parameters:
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
