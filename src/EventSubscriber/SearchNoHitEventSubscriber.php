@@ -61,7 +61,14 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Event handler.
+     * Handle 'SearchNoHit' event.
+     *
+     * If a request for an unknown identifier is received we need to
+     * perform additional indexing for that identifier to ensure we
+     * don't have a cover for it. Given the expensive nature of the
+     * indexing operations we cache weather a 'NoHit' has been generated
+     * for this identifier within a specific time frame. This is
+     * controlled by the lifetime config of the configured cache pool.
      *
      * @param SearchNoHitEvent $event
      *   Search no hit event
@@ -109,7 +116,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      * Get cache items for the identifiers not present in the cache.
      *
      * @param array $keyedNoHits
-     *   Array og cacheKey => NoHitItem pairs
+     *   Array of cacheKey => NoHitItem pairs
      *
      * @return array
      *   Array of cache items not yet committed to cache
@@ -159,6 +166,6 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
             $identifier = str_replace('-', '_', $identifier);
         }
 
-        return $key = $type.'.'.$identifier;
+        return $type.'.'.$identifier;
     }
 }
