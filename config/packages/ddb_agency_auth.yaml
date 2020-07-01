@@ -1,0 +1,18 @@
+ddb_agency_auth:
+    # Your client id supplied by DBC
+    openplatform_id: '%env(OPENPLATFORM_ID)%'
+
+    # Your client secret supplied by DBC
+    openplatform_secret: '%env(OPENPLATFORM_SECRET)%'
+
+    # The introspection URL to query against
+    openplatform_introspection_url: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
+
+    # A comma separated allow list of CLIENT_IDs. An empty list allows all.
+    openplatform_allowed_clients: '%env(OPENPLATFORM_ALLOWED_CLIENTS)%'
+
+    # [Optional] A service id for the cache service to use for caching token/user pairs
+    auth_token_cache: token.cache
+
+    # [Optional] A service id for the logger to use for error logging.
+    auth_logger: logger
