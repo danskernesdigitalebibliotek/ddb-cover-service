@@ -1,0 +1,10 @@
+framework:
+    cache:
+        pools:
+            # Use filesystem for CI tests on Github Actions
+            token.cache:
+                adapter: cache.adapter.filesystem
+
+            # Use filesystem for CI tests on Github Actions
+            no.hits.cache:
+                adapter: cache.adapter.filesystem
