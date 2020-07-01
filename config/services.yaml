@@ -27,9 +27,6 @@ services:
             $bindElasticType: '%env(ELASTIC_TYPE)%'
             $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
-            $bindOpenPlatformId: '%env(OPENPLATFORM_ID)%'
-            $bindOpenPlatformSecret: '%env(OPENPLATFORM_SECRET)%'
-            $bindOpenPlatformIntrospectionUrl: '%env(OPENPLATFORM_INTROSPECTION_URL)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
