@@ -7,10 +7,10 @@
 
 namespace App\Tests\Behat;
 
-use App\Security\User;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behatch\Context\RestContext;
+use DanskernesDigitaleBibliotek\AgencyAuthBundle\Security\User;
 use Faker\Factory;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
