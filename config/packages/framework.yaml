@@ -28,7 +28,7 @@ framework:
             # Creates a "no.hits.cache" service
             no.hits.cache:
                 adapter: cache.adapter.redis
-                # Default expire set to one day
+                # Default expire set to two days in .env
                 default_lifetime: '%env(int:APP_NO_HITS_CACHE_TTL)%'
 
 parameters:
