@@ -12,10 +12,13 @@ security:
             anonymous: lazy
             guard:
                 authenticators:
-                    - App\Security\TokenAuthenticator
+                    - DanskernesDigitaleBibliotek\AgencyAuthBundle\Security\TokenAuthenticator
         main:
             anonymous: true
 
     access_control:
         # Allows accessing the Swagger UI
         - { path: '^%app.path.prefix%/docs', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+    role_hierarchy:
+        ROLE_OPENPLATFORM_AGENCY: [ROLE_COVER_READ]

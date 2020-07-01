@@ -37,6 +37,9 @@
     "container-interop/container-interop": {
         "version": "1.2.0"
     },
+    "danskernesdigitalebibliotek/agency-auth-bundle": {
+        "version": "1.0.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -636,15 +639,6 @@
         ]
     },
     "symfony/security-core": {
-        "version": "v4.4.7"
-    },
-    "symfony/security-csrf": {
-        "version": "v4.4.7"
-    },
-    "symfony/security-guard": {
-        "version": "v4.4.7"
-    },
-    "symfony/security-http": {
         "version": "v4.4.7"
     },
     "symfony/serializer": {

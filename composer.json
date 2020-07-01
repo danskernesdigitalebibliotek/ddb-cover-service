@@ -13,6 +13,7 @@
         "ext-redis": "*",
         "ext-zend-opcache": "*",
         "api-platform/api-pack": "^1.1",
+        "danskernesdigitalebibliotek/agency-auth-bundle": "^1.0",
         "elasticsearch/elasticsearch": "^6.7",
         "endclothing/prometheus_client_php": "^1.0",
         "enqueue/enqueue-bundle": "^0.10.0",
