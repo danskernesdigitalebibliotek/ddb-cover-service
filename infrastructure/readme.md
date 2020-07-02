@@ -16,7 +16,48 @@ region=westeurope
 version=$(az aks get-versions -l ${region} --query 'orchestrators[-1].orchestratorVersion' -o tsv)
 ```
 
-## Create services and the cluster
+## Networking
+To enable network policies inside the cluster we need to create custom network.
+
+```sh
+vnetname=CoverServiceVnet
+vnetsubname=CoverServiceSubnet
+```
+
+```sh
+az network vnet create \
+    --resource-group $res \
+    --name $vnetname \
+    --address-prefixes 10.0.0.0/8 \
+    --subnet-name $vnetsubname \
+    --subnet-prefix 10.240.0.0/16
+```
+
+Create a service principal and read in the application ID
+```sh
+SP=$(az ad sp create-for-rbac --output json)
+SP_ID=$(echo $SP | jq -r .appId)
+SP_PASSWORD=$(echo $SP | jq -r .password)
+```
+
+Get the virtual network resource ID
+```sh
+VNET_ID=$(az network vnet show --resource-group $res --name $vnetname --query id -o tsv)
+```
+
+Assign the service principal Contributor permissions to the virtual network resource
+```sh
+az role assignment create --assignee $SP_ID --scope $VNET_ID --role Contributor
+```
+
+Get the virtual network subnet resource ID
+```sh
+SUBNET_ID=$(az network vnet subnet show --resource-group $res --vnet-name $vnetname --name $vnetsubname --query id -o tsv)
+```
+
+
+
+## Create services, and the cluster
 
 Create the cluster and wait for it to create the 3 nodes in the standard cluster (it takes a bit of time, so go ahead 
 and get yourself a cup of coffee).
@@ -27,10 +68,18 @@ az aks create \
     --name ${ksname} \
     --node-count 3 \
     --node-vm-size Standard_DS3_v2 \
-    --kubernetes-version ${version}
+    --kubernetes-version ${version} \
+    --network-plugin azure \
+    --service-cidr 10.0.0.0/16 \
+    --dns-service-ip 10.0.0.10 \
+    --docker-bridge-address 172.17.0.1/16 \
+    --vnet-subnet-id $SUBNET_ID \
+    --service-principal $SP_ID \
+    --client-secret $SP_PASSWORD \
+    --network-policy azure
 ```
 
-Configure kubeclt to connect to the new cluster
+Configure kubectl to connect to the new cluster
 ```sh
 az aks get-credentials --resource-group ${res} --name ${ksname}
 ```
@@ -80,6 +129,22 @@ helm repo update
 
 ## Ingress
 
+Get the resource group create to hold cluster related resources for your cluster
+```sh
+mcres=$(az aks show --resource-group $res --name $ksname --query nodeResourceGroup -o tsv)
+```
+
+Create static public IP.
+```
+az network public-ip create \
+--resource-group $mcres \
+--name CoverServicePublicIP \
+--sku Standard \
+--allocation-method static \
+--query publicIp.ipAddress -o tsv
+```
+
+
 Create namespace and change into the namespace.
 ```sh
 kubectl create namespace ingress
@@ -92,12 +157,9 @@ helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
 --set controller.stats.enabled=true \
 --set controller.podAnnotations."prometheus\.io/scrape"=true \
 --set controller.podAnnotations."prometheus\.io/port"=10254 \
---set controller.service.externalTrafficPolicy=Local
-```
-
-Wait for the public IP to be assigned.
-```sh
-watch --interval=1 kubectl --namespace ingress get services -o wide ingress-nginx-ingress-controller
+--set controller.service.externalTrafficPolicy=Local \
+--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
+--set controller.service.loadBalancerIP=IP
 ```
 
 ### External Traffic Policy
@@ -149,7 +211,6 @@ kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
 
 ## Horizontal pod autoscaler (HPA)
 The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
-
 
 # Application install
 To install the application into the kubernetes cluster helm chars are included with the source code.
