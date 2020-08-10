@@ -9,29 +9,58 @@
 
 namespace App\Api\Dto;
 
-use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiProperty;
 
+/**
+ * Class ImageUrl.
+ */
 final class ImageUrl
 {
     /**
-     * @Groups({"read"})
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *              "type"="string",
+     *              "format"="url",
+     *              "nullable"="true",
+     *              "example"="https://res.cloudinary.com/dandigbib/image/upload/v1543609481/bogportalen.dk/9788702246841.jpg"
+     *          }
+     *     }
+     * )
      */
     private $url;
 
     /**
-     * @Groups({"read"})
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *              "type": "string",
+     *              "example"="jpeg"
+     *          }
+     *     }
+     * )
      */
     private $format;
 
     /**
-     * @Groups({"read"})
+     * @ApiProperty(
+     *     attributes={
+     *          "openapi_context"={
+     *              "type" : "string",
+     *              "enum": {"default", "original", "small", "medium", "large"},
+     *              "example" : "large"
+     *          }
+     *     }
+     * )
      */
     private $size;
 
     /**
-     * @return string
+     * Get url.
+     *
+     * @return string|null
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -39,11 +68,11 @@ final class ImageUrl
     /**
      * Set url.
      *
-     * @param string $url
+     * @param string|null $url
      *
-     * @return ImageUrl
+     * @return $this
      */
-    public function setUrl(string $url): self
+    public function setUrl(?string $url): self
     {
         $this->url = $url;
 

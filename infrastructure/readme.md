@@ -1,0 +1,282 @@
+# Azure kubernetes service
+This document explains how to configure AKS to run Cover Service in Kubernetes with virtual node scaling and monitoring.
+
+Log in through CLI and list available regions. You should use a region in the EU to ensure data safety.
+```sh
+az login
+az account list-locations -o table
+```
+
+Set basic configuration variables used in this guide more than once. They are only set in the current terminal window 
+used and only as long as it is not closed.
+```sh
+ksname=ddb-cover-service
+res=CoverService 
+region=westeurope
+version=$(az aks get-versions -l ${region} --query 'orchestrators[-1].orchestratorVersion' -o tsv)
+```
+
+## Networking
+To enable network policies inside the cluster we need to create custom network.
+
+```sh
+vnetname=CoverServiceVnet
+vnetsubname=CoverServiceSubnet
+```
+
+```sh
+az network vnet create \
+    --resource-group $res \
+    --name $vnetname \
+    --address-prefixes 10.0.0.0/8 \
+    --subnet-name $vnetsubname \
+    --subnet-prefix 10.240.0.0/16
+```
+
+Create a service principal and read in the application ID
+```sh
+SP=$(az ad sp create-for-rbac --output json)
+SP_ID=$(echo $SP | jq -r .appId)
+SP_PASSWORD=$(echo $SP | jq -r .password)
+```
+
+Get the virtual network resource ID
+```sh
+VNET_ID=$(az network vnet show --resource-group $res --name $vnetname --query id -o tsv)
+```
+
+Assign the service principal Contributor permissions to the virtual network resource
+```sh
+az role assignment create --assignee $SP_ID --scope $VNET_ID --role Contributor
+```
+
+Get the virtual network subnet resource ID
+```sh
+SUBNET_ID=$(az network vnet subnet show --resource-group $res --vnet-name $vnetname --name $vnetsubname --query id -o tsv)
+```
+
+
+
+## Create services, and the cluster
+
+Create the cluster and wait for it to create the 3 nodes in the standard cluster (it takes a bit of time, so go ahead 
+and get yourself a cup of coffee).
+
+```sh
+az aks create \
+    --resource-group ${res} \
+    --name ${ksname} \
+    --node-count 3 \
+    --node-vm-size Standard_DS3_v2 \
+    --kubernetes-version ${version} \
+    --network-plugin azure \
+    --service-cidr 10.0.0.0/16 \
+    --dns-service-ip 10.0.0.10 \
+    --docker-bridge-address 172.17.0.1/16 \
+    --vnet-subnet-id $SUBNET_ID \
+    --service-principal $SP_ID \
+    --client-secret $SP_PASSWORD \
+    --network-policy azure
+```
+
+Configure kubectl to connect to the new cluster
+```sh
+az aks get-credentials --resource-group ${res} --name ${ksname}
+```
+
+Verify that you are connected to the cluster now.
+```sh
+kubectl get nodes
+```
+
+### Storage account
+
+```sh
+AKS_PERS_STORAGE_ACCOUNT_NAME=coverservice
+AKS_PERS_RESOURCE_GROUP=CoverService
+AKS_PERS_LOCATION=westeurope
+AKS_PERS_SHARE_NAME=coverservice
+```
+
+Create a storage account
+```sh
+az storage account create -n $AKS_PERS_STORAGE_ACCOUNT_NAME -g $AKS_PERS_RESOURCE_GROUP -l $AKS_PERS_LOCATION --sku Premium_LRS --kind FileStorage
+```
+
+Get storage account key
+```sh
+STORAGE_KEY=$(az storage account keys list --resource-group $AKS_PERS_RESOURCE_GROUP --account-name $AKS_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
+```
+
+Create cluster secret to access storage account.
+```sh
+kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+```
+
+## Helm
+We are going to use https://helm.sh/ to install ingress and cert-manager into the cluster setup. Note that we here are using helm version 3. We also install the kubectx helper tool as it makes switching cluster and namespaces easier.
+```sh
+brew install helm
+brew install kubectx
+```
+
+Add stable official and bitnami helm charts repositories.
+```sh
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+```
+
+## Ingress
+
+Get the resource group create to hold cluster related resources for your cluster
+```sh
+mcres=$(az aks show --resource-group $res --name $ksname --query nodeResourceGroup -o tsv)
+```
+
+Create static public IP.
+```
+az network public-ip create \
+--resource-group $mcres \
+--name CoverServicePublicIP \
+--sku Standard \
+--allocation-method static \
+--query publicIp.ipAddress -o tsv
+```
+
+
+Create namespace and change into the namespace.
+```sh
+kubectl create namespace ingress
+```
+
+Install nginx ingress using helm chart.
+```sh
+helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
+--set controller.metrics.enabled=true \
+--set controller.stats.enabled=true \
+--set controller.podAnnotations."prometheus\.io/scrape"=true \
+--set controller.podAnnotations."prometheus\.io/port"=10254 \
+--set controller.service.externalTrafficPolicy=Local \
+--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
+--set controller.service.loadBalancerIP=IP
+```
+
+### External Traffic Policy
+This is only need if you do not set it to local in the install step above. 
+
+To ensure that client ip's are correctly set in headers and forwarded to the nginx backend pod's you need to ensure that
+`External Traffic Policy` is changed from `Cluster` to `Local`. Edit the service configuration and change the value for 
+`externalTrafficPolicy` to local.   
+
+```
+kubectl edit service/ingress-nginx-ingress-controller
+```
+
+For more information see https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typenodeport
+
+# Certificate manager
+
+Create the namespace for cert-manager
+```sh
+kubectl create namespace cert-manager
+```
+
+Add the Jetstack Helm repository
+```sh
+helm repo add jetstack https://charts.jetstack.io
+```
+
+Update your local Helm chart repository cache
+```sh
+helm repo update
+```
+
+Install the cert-manager Helm chart to enable support for lets-encrypt.
+```sh
+helm install cert-manager --namespace cert-manager --version v0.15.1 jetstack/cert-manager --set installCRDs=true
+```
+
+## Monitoring
+
+Is handled in prometheus. 
+
+## Install ElasticSearch operator
+
+See https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html for more information about ECK.1
+
+```sh
+kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
+```
+
+## Horizontal pod autoscaler (HPA)
+The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
+
+# Application install
+To install the application into the kubernetes cluster helm chars are included with the source code.
+
+### Prepare (shard configuration)
+The first step is to prepare the cluster with services that are used across the different services that makes up the complete CoverService application (frontend, upload service, faktor export, importers etc.).
+
+```sh
+kubectl create namespace cover-service
+helm upgrade --install shared-config infrastructure/shared-config --namespace cover-service
+```
+
+
+### CoverService
+
+```yaml
+{{- if eq .Values.env "prod" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-secret
+type: Opaque
+stringData:
+  APP_SECRET: "yyyyy"
+{{- end }}
+
+{{- if eq .Values.env "stg" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-secret
+type: Opaque
+stringData:
+  APP_SECRET: "xxxxx"
+
+{{- if .Values.ingress.enableAuth }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-basic-auth
+type: Opaque
+data:
+  auth: BASE64-ENCODED-STRING
+{{- end }}
+{{- end }}
+```
+
+Get the main application up and running.
+```sh
+helm upgrade --install cover-service infrastructure/cover-service --namespace cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
+```
+
+Jump into the new namespace.
+```sh
+kubens cover-service
+```
+
+### The other services
+
+* [Vendor Importers service](https://github.com/danskernesdigitalebibliotek/ddb-cover-service-importers)
+* [Upload service](https://github.com/danskernesdigitalebibliotek/ddb-cover-service-upload)
+* [Faktor export service](https://github.com/danskernesdigitalebibliotek/ddb-cover-service-faktor-export)
+

@@ -5,6 +5,8 @@
     <file>src/</file>
     <file>tests/</file>
 
+    <exclude-pattern>src/Kernel.php</exclude-pattern>
+
     <config name="installed_paths" value="vendor/escapestudios/symfony2-coding-standard" />
 
     <arg name="basepath" value="."/>

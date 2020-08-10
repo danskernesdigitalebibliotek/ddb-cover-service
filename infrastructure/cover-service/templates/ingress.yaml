@@ -1,0 +1,40 @@
+{{- if .Values.ingress.enabled }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .Values.ingress.enableTLS }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.cert }}
+    {{- end }}
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+    {{- if .Values.ingress.enableAuth }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: {{ .Release.Name }}-basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    {{- end }}
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: {{ .Values.app.cors_allow_origin | quote }}
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  {{- if .Values.ingress.enableTLS }}
+  tls:
+    - hosts:
+        - {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
+      secretName: coverservice-frontend-tls-secret
+  {{- end }}
+  rules:
+    - host: {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ .Release.Name }}-service
+              servicePort: 80
+            path: {{ .Values.ingress.path | quote }}
+{{- end }}

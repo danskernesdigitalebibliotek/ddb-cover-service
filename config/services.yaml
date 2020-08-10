@@ -4,10 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: 'en'
-    app.enable.no.hits: '%env(bool:APP_ENABLE_NO_HITS)%'
+    app.path.prefix: '%env(APP_PATH_PREFIX)%'
+    env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
 
 services:
+
+    #### Symfony ####
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -15,50 +18,62 @@ services:
         public: false       # Allows optimizing the container by removing unused services; this also means
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
+
         bind:
-            $projectDir: '%kernel.project_dir%'
-            $resourcesDir: '%kernel.project_dir%/resources'
-            $statsLogger: '@monolog.logger.statistics'
-            $cloudinaryUrl: '%env(CLOUDINARY_URL)%'
-            $cloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+            # Bound env variables
+            $bindEnableNoHits: '%env(bool:APP_ENABLE_NO_HITS)%'
+            $bindApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
+            $bindElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
+            $bindElasticType: '%env(ELASTIC_TYPE)%'
+            $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
+            $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+
+            # Bound services
+            Elasticsearch\Client: '@api_platform.elasticsearch.client'
+            $bindStatsLogger: '@monolog.logger.statistics'
+
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{DependencyInjection,Migrations,Tests,Kernel.php}'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    App\Service\MoreInfoService\DdbMoreInfoService:
-        autoconfigure: false
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+
+    #### App ####
+
+    # Manually wire the MetricsService:
+    # APC storage requires APCU which is not available when testing through behat
+    # using the Symfony KernelDriver. So we need to be able manually configure
+    # the right adapter for testing
+    App\Service\MetricsService:
+        autowire: false
         arguments:
-            $index: '@fos_elastica.index.app.search'
+            $adapter: '@app.metrics_service.adapter'
 
-    App\Service\MoreInfoService\DbcMoreInfoService:
-        autoconfigure: false
+    app.metrics_service.adapter:
+        autowire: false
+        class: Prometheus\Storage\APC
+
+    # OpenApi/Swagger decoration
+    App\Api\OpenApi\OpenApiDecorator:
+        decorates: 'api_platform.swagger.normalizer.api_gateway'
         arguments:
-            $index: '@fos_elastica.index.app.search'
-
-    App\Service\MoreInfoService\DefaultCoverMoreInfoService:
+            $decorated: '@App\Api\OpenApi\OpenApiDecorator.inner'
         autoconfigure: false
-        arguments:
-            $index: '@fos_elastica.index.app.search'
 
-    App\Api\DataProvider\CoverCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
-        autoconfigure: false
-        arguments:
-            $index: '@fos_elastica.index.app.search'
-
-    App\Api\DataProvider\CoverItemDataProvider:
-        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
-        autoconfigure: false
-        arguments:
-            $index: '@fos_elastica.index.app.search'
-
-    App\OpenApi\DocumentationDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: [ '@App\OpenApi\DocumentationDecorator.inner']
-        autoconfigure: false
+    # Fixtures Service
+    # Used in 'dev' and 'test' env only
+    App\Command\FixturesLoadCommand:
+        lazy: true
+    App\DataFixtures\AppFixtures:
+        lazy: true
+    App\DataFixtures\AppFixtures\Elastic\ElasticService:
+        lazy: true
 

@@ -1,15 +1,43 @@
 api_platform:
-    # The title of the API.
+    # Documentation
     title: 'DDB Cover Service'
+    description: >-
+        This service provides covers for library materials indexed by isbn, issn, faust, pid.
+        The service is provided by [Danskernes Digitale Bibliotek](https://www.danskernesdigitalebibliotek.dk/)
 
-    # The description of the API.
-    description: 'Search for covers by ISBN/FAUST/PID'
+        ### Authentication notes
 
-    # The version of the API.
+        Authentication is done via OAuth2 against auth.dbc.dk. To obtain a valid token follow the instructions
+        here: [Open Platform](https://openplatform.dbc.dk/v3/).
+        To use the "Authorize" option in this tool use your 'client_id' and 'client_secret' and fill in '@agency'
+        (e.g. '@123456') for both username and password.
+
     version: '2.0'
 
+    show_webby: false
+
+    swagger:
+        versions: [3]
+
+    enable_re_doc: false
+
+    oauth:
+        enabled: true
+        type: 'oauth2'
+        flow: 'password'
+        tokenUrl: 'https://login.bib.dk/oauth/token'
+
+    formats:
+        json:
+            mime_types: ['application/json']
+        html:
+            mime_types: ['text/html']
+
     mapping:
-        paths: ['%kernel.project_dir%/src/Api/Dto']
+        paths:
+            - '%kernel.project_dir%/src/Api/Dto'
+    patch_formats:
+        json: ['application/merge-patch+json']
 
     collection:
         pagination:
@@ -18,21 +46,23 @@ api_platform:
     doctrine:
         enabled: false
 
-    doctrine_mongodb_odm:
-        enabled: false
+    elasticsearch:
+        hosts: ['%env(ELASTIC_URL)%']
 
-    formats:
-        # First in list is default format
-        json:     ['application/json']
-        jsonld:   ['application/ld+json']
-        xml:      ['application/xml', 'text/xml']
-        # Needed for generated documentation
-        html:     ['text/html']
+    graphql:
+        enabled: false
+        graphiql:
+            enabled: false
 
     exception_to_status:
-        # The 2 following handlers are registered by default, keep those lines to prevent unexpected side effects
-        Symfony\Component\Serializer\Exception\ExceptionInterface: 400
-        ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST'
+        # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
+        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Core\Exception\FilterValidationException: 400
+        Doctrine\ORM\OptimisticLockException: 409
 
-        App\Api\Exception\UnknownIdentifierTypeException: 404
+        # App mapping
+        App\Api\Exception\IdentifierCountExceededException: 'HTTP_BAD_REQUEST'
         App\Api\Exception\RequiredParameterMissingException: 'HTTP_BAD_REQUEST'
+        App\Api\Exception\UnknownIdentifierTypeException: 'HTTP_BAD_REQUEST'
+        App\Api\Exception\UnknownImageSizeException: 'HTTP_BAD_REQUEST'

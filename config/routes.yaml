@@ -1,6 +1,0 @@
-homepage:
-  path: /
-  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
-  defaults:
-    path: /api
-    permanent: false

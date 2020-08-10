@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Tests\Behat\:
+        resource: '../tests/Behat/*'
+
+    # APCU is not available when testing through Behat using the Symfony KernelDriver
+    app.metrics_service.adapter:
+        autowire: false
+        class: Prometheus\Storage\InMemory
+
+    # Manually wire the token.cache to ensure the same instance is injected in both Application and Behat Context
+    App\Tests\Behat\AuthContext:
+        autowire: false
+        arguments:
+            $tokenCache: '@token.cache'

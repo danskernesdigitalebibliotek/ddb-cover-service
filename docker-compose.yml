@@ -8,19 +8,6 @@ networks:
     internal: false
     
 services:
-  mariadb:
-    image: itkdev/mariadb
-    networks:
-      - app
-    ports:
-      - '3306'
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_USER=db
-      - MYSQL_PASSWORD=db
-      - MYSQL_DATABASE=db
-      #- ENCRYPT=1 # Uncomment to enable database encryption.
-
   phpfpm:
     image: itkdev/php7.3-fpm
     networks:
@@ -34,7 +21,7 @@ services:
       - DOCKER_HOST_DOMAIN=${COMPOSE_DOMAIN}
       - PHP_IDE_CONFIG=serverName=localhost
     depends_on:
-      - mariadb
+      - elasticsearch
     volumes:
       - .:/app:delegated
     tmpfs:

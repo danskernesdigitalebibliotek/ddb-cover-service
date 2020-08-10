@@ -1,0 +1,125 @@
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  overflow-y: scroll;
+  font-family: sans-serif;
+}
+
+body {
+  margin: 70px 0 0;
+  background: #f0f0f0;
+}
+
+p {
+  font-size: 14px;
+  font-family: sans-serif;
+  color: #3b4151;
+  margin: 1em auto;
+}
+
+li span {
+  font-size: 14px;
+  font-family: sans-serif;
+  color: #3b4151;
+}
+
+header:before {
+  content: "";
+  height: 70px;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+  box-shadow: none;
+}
+
+header #logo {
+  position: fixed;
+  top: 35px;
+  right: 40px;
+  z-index: 102;
+  transform: translateY(-50%);
+}
+
+header #logo img {
+  height: 50px;
+  background-color: #fff;
+}
+
+.information-container.wrapper {
+  padding-bottom: 0.5em;
+  padding-top: 10px;
+  margin: 0 0 30px;
+  width: 100%;
+  max-width: 100%;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+}
+
+.information-container.wrapper .info {
+  width: 100%;
+  max-width: 1460px;
+  padding: 0 50px;
+  margin: 0 auto;
+}
+
+.information-container.wrapper .info .title {
+  font-size: 36px;
+  color: rgb(40, 143, 136);
+  border-bottom: 1px solid rgb(40, 143, 136);
+  margin-bottom: 0.3em;
+  margin-top: 0;
+}
+
+.information-container.wrapper .info a {
+  font-size: 14px;
+  transition: all .4s;
+  font-family: sans-serif;
+  color: #4990e2;
+}
+
+.information-container.wrapper .info hgroup.main {
+  margin: 0 0 40px;
+}
+
+.api-container.wrapper {
+  margin: 0 0 20px;
+  padding: 30px 0;
+  background: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .15);
+}
+
+.api-container.wrapper .info {
+  width: 100%;
+  max-width: 1460px;
+  padding: 0 50px;
+  margin: 0 auto;
+}
+
+.api-container.wrapper td.name {
+  padding-left: 0.5em;
+}
+
+.api-container.wrapper td {
+  padding: 0 2em;
+}
+
+.api-container.wrapper .title {
+  font-size: 18px;
+  color: rgb(40, 143, 136);
+  margin-bottom: 0.3em;
+  margin-top: 0;
+}
+
+.api-container.wrapper a {
+  font-size: 14px;
+  transition: all .4s;
+  font-family: sans-serif;
+  color: #4990e2;
+}

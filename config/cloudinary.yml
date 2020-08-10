@@ -12,18 +12,22 @@ original:
 default:
   transformation: 't_ddb_cover'
   extension: 'jpg'
+  size: 1000
 
 # 160 px
 small:
   transformation: 't_ddb_cover_small'
   extension: 'jpg'
+  size: 160
 
 # 270 px
 medium:
   transformation: 't_ddb_cover_medium'
   extension: 'jpg'
+  size: 270
 
 # 540 px
 large:
   transformation: 't_ddb_cover_large'
   extension: 'jpg'
+  size: 540

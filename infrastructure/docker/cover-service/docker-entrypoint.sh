@@ -8,5 +8,8 @@ set -eux
 ## Start prometheus export
 /usr/local/bin/php-fpm_exporter server &
 
+## Warm-up symfony cache (with the current configuration).
+/var/www/html/bin/console --env=prod cache:warmup
+
 ## Start the PHP process.
 /usr/local/bin/docker-php-entrypoint php-fpm
