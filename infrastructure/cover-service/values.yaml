@@ -15,8 +15,8 @@ hpa:
   enabled: false
   minReplicas: 5
   maxReplicas: 15
-  targetAverageUtilization: 70
-  targetAverageUtilization: 80
+  cpuTargetAverageUtilization: 70
+  memoryTargetAverageUtilization: 80
 
 app:
   image:

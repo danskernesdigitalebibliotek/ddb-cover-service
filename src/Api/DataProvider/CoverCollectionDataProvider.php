@@ -15,6 +15,7 @@ use App\Api\Elastic\SearchServiceInterface;
 use App\Api\Exception\IdentifierCountExceededException;
 use App\Api\Exception\RequiredParameterMissingException;
 use App\Api\Exception\UnknownIdentifierTypeException;
+use App\Api\Exception\UnknownImageSizeException;
 use App\Api\Factory\CoverFactory;
 use App\Api\Statistics\CollectionStatsLogger;
 use App\Service\NoHitService;
@@ -38,15 +39,15 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param CollectionStatsLogger $collectionStatsLogger
-     * @param int $maxIdentifierCount
+     * @param int $bindApiMaxIdentifiers
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $maxIdentifierCount)
+    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $bindApiMaxIdentifiers)
     {
         $this->searchService = $searchService;
         $this->coverFactory = $coverFactory;
         $this->noHitService = $noHitService;
         $this->collectionStatsLogger = $collectionStatsLogger;
-        $this->maxIdentifierCount = $maxIdentifierCount;
+        $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 
     /**
@@ -62,6 +63,8 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      *
      * @throws RequiredParameterMissingException
      * @throws UnknownIdentifierTypeException
+     * @throws IdentifierCountExceededException
+     * @throws UnknownImageSizeException
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): \Traversable
     {
@@ -152,17 +155,28 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      *
      * @return array
      *   Array with size names
+     *
+     * @throws UnknownImageSizeException
      */
     private function getSizes(array $context): array
     {
         if (array_key_exists('filters', $context) && array_key_exists('sizes', $context['filters'])) {
             $sizes = $context['filters']['sizes'];
-        } else {
-            $sizes = 'default';
-        }
 
-        $sizes = explode(',', $sizes);
-        $sizes = \is_array($sizes) ? $sizes : [$sizes];
+            $sizes = explode(',', $sizes);
+            $sizes = \is_array($sizes) ? $sizes : [$sizes];
+
+            if (empty($sizes)) {
+                throw new UnknownImageSizeException('The "sizes parameter cannot be empty. Either omit the parameter or submit a list of valid image sizes.');
+            }
+
+            $diff = array_diff($sizes, $this->coverFactory->getValidImageSizes());
+            if (!empty($diff)) {
+                throw new UnknownImageSizeException('Unknown images size(s): '.implode(',', $diff));
+            }
+        } else {
+            $sizes = ['default'];
+        }
 
         return $sizes;
     }

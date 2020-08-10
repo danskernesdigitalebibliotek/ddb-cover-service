@@ -16,68 +16,52 @@ region=westeurope
 version=$(az aks get-versions -l ${region} --query 'orchestrators[-1].orchestratorVersion' -o tsv)
 ```
 
-## Create services and the cluster
-This setup is the more advanced AKS setup with virtual node 
-(https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli) to handle peak traffic better. This requires an AKS setup 
-with advanced network setup to enable communication between ACI (Azure container instance) and the cluster.
+## Networking
+To enable network policies inside the cluster we need to create custom network.
 
-Enable ACI for your subscription.
 ```sh
-az provider register --namespace Microsoft.ContainerInstance
+vnetname=CoverServiceVnet
+vnetsubname=CoverServiceSubnet
 ```
 
-Create resources group 
-```sh
-az group create --name ${res} --location ${region}
-```
-
-Create a VNET with the two subnets that are going to be used.
 ```sh
 az network vnet create \
-    --resource-group ${res} \
-    --name coverServiceVnet \
+    --resource-group $res \
+    --name $vnetname \
     --address-prefixes 10.0.0.0/8 \
-    --subnet-name coverServiceSubnet \
+    --subnet-name $vnetsubname \
     --subnet-prefix 10.240.0.0/16
 ```
 
-And an additional subnet to connect to ACI.
+Create a service principal and read in the application ID
 ```sh
-az network vnet subnet create \
-    --resource-group ${res} \
-    --vnet-name coverServiceVnet \
-    --name coverServiceVirtualNodeSubnet \
-    --address-prefix 10.241.0.0/16
+SP=$(az ad sp create-for-rbac --output json)
+SP_ID=$(echo $SP | jq -r .appId)
+SP_PASSWORD=$(echo $SP | jq -r .password)
 ```
 
-To connect to ACI you need a service principal assignment. So create the principal first.
+Get the virtual network resource ID
 ```sh
-az ad sp create-for-rbac --skip-assignment
+VNET_ID=$(az network vnet show --resource-group $res --name $vnetname --query id -o tsv)
 ```
 
-From the output of the previous command we need to save the application id and password (app secret).
+Assign the service principal Contributor permissions to the virtual network resource
 ```sh
-APPID=<id>
-PASSWORD=<passwd>
+az role assignment create --assignee $SP_ID --scope $VNET_ID --role Contributor
 ```
 
-Get the Azure id for the virtual network to allow it access to ACI.
+Get the virtual network subnet resource ID
 ```sh
-VNETID=$(az network vnet show --resource-group ${res} --name coverServiceVnet --query id -o tsv)
+SUBNET_ID=$(az network vnet subnet show --resource-group $res --vnet-name $vnetname --name $vnetsubname --query id -o tsv)
 ```
 
-Create the access rule.
-```sh
-az role assignment create --assignee $APPID --scope $VNETID --role Contributor
-```
 
-Get the Azure subnet id.
-```sh
-SUBNET=$(az network vnet subnet show --resource-group ${res} --vnet-name coverServiceVnet --name coverServiceSubnet --query id -o tsv)
-```
+
+## Create services, and the cluster
 
 Create the cluster and wait for it to create the 3 nodes in the standard cluster (it takes a bit of time, so go ahead 
 and get yourself a cup of coffee).
+
 ```sh
 az aks create \
     --resource-group ${res} \
@@ -89,21 +73,13 @@ az aks create \
     --service-cidr 10.0.0.0/16 \
     --dns-service-ip 10.0.0.10 \
     --docker-bridge-address 172.17.0.1/16 \
-    --vnet-subnet-id $SUBNET \
-    --service-principal $APPID \
-    --client-secret $PASSWORD 
+    --vnet-subnet-id $SUBNET_ID \
+    --service-principal $SP_ID \
+    --client-secret $SP_PASSWORD \
+    --network-policy azure
 ```
 
-Enable the virtual node in your cluster.
-````sh
-az aks enable-addons \
-    --resource-group ${res} \
-    --name ${ksname} \
-    --addons virtual-node \
-    --subnet-name coverServiceVirtualNodeSubnet
-````
-
-Configure kubeclt to connect to the new cluster
+Configure kubectl to connect to the new cluster
 ```sh
 az aks get-credentials --resource-group ${res} --name ${ksname}
 ```
@@ -116,10 +92,25 @@ kubectl get nodes
 ### Storage account
 
 ```sh
-AKS_PERS_STORAGE_ACCOUNT_NAME=coverserviceprod
+AKS_PERS_STORAGE_ACCOUNT_NAME=coverservice
 AKS_PERS_RESOURCE_GROUP=CoverService
 AKS_PERS_LOCATION=westeurope
 AKS_PERS_SHARE_NAME=coverservice
+```
+
+Create a storage account
+```sh
+az storage account create -n $AKS_PERS_STORAGE_ACCOUNT_NAME -g $AKS_PERS_RESOURCE_GROUP -l $AKS_PERS_LOCATION --sku Premium_LRS --kind FileStorage
+```
+
+Get storage account key
+```sh
+STORAGE_KEY=$(az storage account keys list --resource-group $AKS_PERS_RESOURCE_GROUP --account-name $AKS_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
+```
+
+Create cluster secret to access storage account.
+```sh
+kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
 ```
 
 ## Helm
@@ -138,6 +129,22 @@ helm repo update
 
 ## Ingress
 
+Get the resource group create to hold cluster related resources for your cluster
+```sh
+mcres=$(az aks show --resource-group $res --name $ksname --query nodeResourceGroup -o tsv)
+```
+
+Create static public IP.
+```
+az network public-ip create \
+--resource-group $mcres \
+--name CoverServicePublicIP \
+--sku Standard \
+--allocation-method static \
+--query publicIp.ipAddress -o tsv
+```
+
+
 Create namespace and change into the namespace.
 ```sh
 kubectl create namespace ingress
@@ -150,12 +157,9 @@ helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
 --set controller.stats.enabled=true \
 --set controller.podAnnotations."prometheus\.io/scrape"=true \
 --set controller.podAnnotations."prometheus\.io/port"=10254 \
---set controller.service.externalTrafficPolicy=Local
-```
-
-Wait for the public IP to be assigned.
-```sh
-watch --interval=1 kubectl --namespace ingress get services -o wide ingress-nginx-ingress-controller
+--set controller.service.externalTrafficPolicy=Local \
+--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
+--set controller.service.loadBalancerIP=IP
 ```
 
 ### External Traffic Policy
@@ -172,11 +176,6 @@ kubectl edit service/ingress-nginx-ingress-controller
 For more information see https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typenodeport
 
 # Certificate manager
-
-Install the CustomResourceDefinition resources separately
-```sh
-kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
-```
 
 Create the namespace for cert-manager
 ```sh
@@ -195,78 +194,23 @@ helm repo update
 
 Install the cert-manager Helm chart to enable support for lets-encrypt.
 ```sh
-helm install cert-manager --namespace cert-manager --version v0.13.1 jetstack/cert-manager
+helm install cert-manager --namespace cert-manager --version v0.15.1 jetstack/cert-manager --set installCRDs=true
 ```
 
 ## Monitoring
-To use Azure insights we need an analytics workspace to send data into. 
-```sh
-az resource create --resource-type Microsoft.OperationalInsights/workspaces \
- --name coverServiceDDBWorkspace \
- --resource-group ${res} \
- --location ${region} \
- --properties '{}' -o table
-```
- 
-First get the resource id of the workspace you created, by running
-```sh
-workspaceresoid=$(az resource show --resource-type Microsoft.OperationalInsights/workspaces --resource-group ${res} --name coverServiceDDBWorkspace --query "id" -o tsv)
-```
 
-Next enable the monitoring add-on by running the command below.
-```sh
-az aks enable-addons --resource-group ${res} \
-    --name ${ksname} \
-    --addons monitoring \
-    --workspace-resource-id ${workspaceresoid}
-```
-
-Send pod container logs to insights and enabled live view.
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-    name: containerHealth-log-reader
-rules:
-    - apiGroups: ["", "metrics.k8s.io", "extensions", "apps"]
-      resources:
-         - "pods/log"
-         - "events"
-         - "nodes"
-         - "pods"
-         - "deployments"
-         - "replicasets"
-      verbs: ["get", "list"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-    name: containerHealth-read-logs-global
-roleRef:
-    kind: ClusterRole
-    name: containerHealth-log-reader
-    apiGroup: rbac.authorization.k8s.io
-subjects:
-- kind: User
-  name: clusterUser
-  apiGroup: rbac.authorization.k8s.io
-```
-
-```sh
-kubectl apply -f logreader-rbac.yaml
-```
-
-See this [repository](https://github.com/itk-dev/k8s_azure_monitoring.git) for information about setting up prometheus inside the cluster.
+Is handled in prometheus. 
 
 ## Install ElasticSearch operator
 
+See https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html for more information about ECK.1
+
 ```sh
-kubectl apply -f https://download.elastic.co/downloads/eck/1.0.0-beta1/all-in-one.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
 ```
 
 ## Horizontal pod autoscaler (HPA)
 The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
-
 
 # Application install
 To install the application into the kubernetes cluster helm chars are included with the source code.

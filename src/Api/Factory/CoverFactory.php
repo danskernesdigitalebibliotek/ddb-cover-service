@@ -53,6 +53,17 @@ class CoverFactory
     }
 
     /**
+     * Get valid named image sizes.
+     *
+     * @return array
+     *   List of valid image sizes
+     */
+    public function getValidImageSizes(): array
+    {
+        return array_keys($this->transformer->getFormats());
+    }
+
+    /**
      * Set cover data.
      *
      * @param Cover $cover

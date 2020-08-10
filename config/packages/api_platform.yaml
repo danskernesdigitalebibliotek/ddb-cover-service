@@ -7,16 +7,10 @@ api_platform:
 
         ### Authentication notes
 
-        Authentication is done via OAuth2 against auth.dbc.dk. To obtain a valid token follow instructions in
-        [1.2. Password Grant](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md#12-password-grant).
-        To use the "Authorize" option in this tool use your 'client_id' and 'client_secret' and fill in '@' for
-        both username and password.
-
-        ### Implementation notes
-
-        Currently the API is not fully implemented. The following features are missing:
-
-        * Generic Covers: parameter is currently ignored. Service doesn't yet provide generic covers.
+        Authentication is done via OAuth2 against auth.dbc.dk. To obtain a valid token follow the instructions
+        here: [Open Platform](https://openplatform.dbc.dk/v3/).
+        To use the "Authorize" option in this tool use your 'client_id' and 'client_secret' and fill in '@agency'
+        (e.g. '@123456') for both username and password.
 
     version: '2.0'
 
@@ -71,3 +65,4 @@ api_platform:
         App\Api\Exception\IdentifierCountExceededException: 'HTTP_BAD_REQUEST'
         App\Api\Exception\RequiredParameterMissingException: 'HTTP_BAD_REQUEST'
         App\Api\Exception\UnknownIdentifierTypeException: 'HTTP_BAD_REQUEST'
+        App\Api\Exception\UnknownImageSizeException: 'HTTP_BAD_REQUEST'

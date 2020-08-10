@@ -25,15 +25,19 @@ final class NoHitService
     /**
      * NoHitService constructor.
      *
+     * @param bool $bindEnableNoHits
+     *   Is no hits processing enabled
      * @param EventDispatcherInterface $dispatcher
+     *   Event dispatcher for search no hit events
      * @param MetricsService $metricsService
-     * @param bool $noHitsProcessingEnabled
+     *   Metrics service for performance logging
      */
-    public function __construct(EventDispatcherInterface $dispatcher, MetricsService $metricsService, bool $noHitsProcessingEnabled)
+    public function __construct(bool $bindEnableNoHits, EventDispatcherInterface $dispatcher, MetricsService $metricsService)
     {
+        $this->noHitsProcessingEnabled = $bindEnableNoHits;
+
         $this->dispatcher = $dispatcher;
         $this->metricsService = $metricsService;
-        $this->noHitsProcessingEnabled = $noHitsProcessingEnabled;
     }
 
     /**

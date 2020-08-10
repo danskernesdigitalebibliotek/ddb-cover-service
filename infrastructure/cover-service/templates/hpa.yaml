@@ -4,7 +4,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: cover-service-hpa
+  name: {{ .Release.Name }}-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -16,9 +16,9 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.hpa.targetAverageUtilization }}
+        targetAverageUtilization: {{ .Values.hpa.cpuTargetAverageUtilization }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.hpa.targetAverageUtilization }}
+        targetAverageUtilization: {{ .Values.hpa.memoryTargetAverageUtilization }}
 {{- end }}

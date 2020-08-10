@@ -68,7 +68,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                              "items" : {
  *                                  "type" : "string",
  *                                  "example" : {
- *                                      "870970-basis:29862885",
+ *                                      "870970-basis:48218725",
  *                                      "870970-basis:27992625"
  *                                  },
  *                              },
