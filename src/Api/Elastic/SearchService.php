@@ -118,7 +118,6 @@ class SearchService implements SearchServiceInterface
         $range = new Query\Range();
         $range->addField('height', [
             'gte' => $this->minImageSize,
-            'lt' => 'infinity',
         ]);
         $outerBoolQuery->addFilter($range);
 
