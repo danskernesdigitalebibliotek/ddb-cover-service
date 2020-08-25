@@ -17,7 +17,8 @@ Feature:
       | 75126216                | faust | https://res.cloudinary.com/dandigbib/image/upload/v1589166346/bogportalen.dk/75126216.jpg      | jpeg         | 1000  | 2000   |
       | 870970-basis:52182794   | pid   | https://res.cloudinary.com/dandigbib/image/upload/v1589166346/bogportalen.dk/55126216.jpg      | jpeg         | 1000  | 2000   |
       | 870970-katalog:52182794 | pid   | https://res.cloudinary.com/dandigbib/image/upload/v1589166346/bogportalen.dk/55126216.jpg      | jpeg         | 1000  | 2000   |
-      | 870970-basis:52182796   | pid   | https://res.cloudinary.com/dandigbib/image/upload/v1589166346/bogportalen.dk/55126216.jpg      | jpeg         | 1000  | 2000   |
+      # Set height to 1200 to test ES index field types
+      | 870970-basis:52182796   | pid   | https://res.cloudinary.com/dandigbib/image/upload/v1589166346/bogportalen.dk/55126216.jpg      | jpeg         | 1000  | 1200   |
     And I send a "GET" request to "/api/v2/covers" with parameters:
       | key         | value         |
       | identifiers | 9788711829100 |
