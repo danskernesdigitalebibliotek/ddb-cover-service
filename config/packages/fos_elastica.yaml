@@ -12,5 +12,5 @@ fos_elastica:
                         isType: {type:  keyword}
                         imageUrl: ~
                         imageFormat: {type:  keyword}
-                        width: ~
-                        height: ~
+                        width: {type: integer}
+                        height: {type: integer}
