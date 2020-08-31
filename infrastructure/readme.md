@@ -122,8 +122,8 @@ brew install kubectx
 
 Add stable official and bitnami helm charts repositories.
 ```sh
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 ```
 
@@ -144,6 +144,11 @@ az network public-ip create \
 --query publicIp.ipAddress -o tsv
 ```
 
+Copy the ip outputted and set it into an variable
+```sh
+EXTERNAL_IP=XX.XX.XX.XX
+```
+
 
 Create namespace and change into the namespace.
 ```sh
@@ -154,12 +159,11 @@ Install nginx ingress using helm chart.
 ```sh
 helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
 --set controller.metrics.enabled=true \
---set controller.stats.enabled=true \
 --set controller.podAnnotations."prometheus\.io/scrape"=true \
 --set controller.podAnnotations."prometheus\.io/port"=10254 \
 --set controller.service.externalTrafficPolicy=Local \
 --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
---set controller.service.loadBalancerIP=IP
+--set controller.service.loadBalancerIP=$EXTERNAL_IP
 ```
 
 ### External Traffic Policy
@@ -194,28 +198,10 @@ helm repo update
 
 Install the cert-manager Helm chart to enable support for lets-encrypt.
 ```sh
-helm install cert-manager --namespace cert-manager --version v0.15.1 jetstack/cert-manager --set installCRDs=true
+helm install cert-manager --namespace cert-manager --version v0.16.1 jetstack/cert-manager --set installCRDs=true
 ```
 
-## Monitoring
-
-Is handled in prometheus. 
-
-## Install ElasticSearch operator
-
-See https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html for more information about ECK.1
-
-```sh
-kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
-```
-
-## Horizontal pod autoscaler (HPA)
-The application deployment uses HPA, which can be enabled when installing the helm chart with `--set hpa.enabled=true`.
-
-# Application install
-To install the application into the kubernetes cluster helm chars are included with the source code.
-
-### Prepare (shard configuration)
+# Prepare cluster (shard configuration)
 The first step is to prepare the cluster with services that are used across the different services that makes up the complete CoverService application (frontend, upload service, faktor export, importers etc.).
 
 ```sh
@@ -223,6 +209,50 @@ kubectl create namespace cover-service
 helm upgrade --install shared-config infrastructure/shared-config --namespace cover-service
 ```
 
+# Install ElasticSearch
+
+We use https://github.com/bitnami/charts/tree/master/bitnami/elasticsearch to install elaseticsearch into the cluster
+
+```sh
+helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
+--set image.tag=6.8.12-debian-10-r11 \
+--set metrics.enabled=true \
+--set master.persistence.enabled=true \
+--set master.persistence.storageClass=azurefile-premium-retain \
+--set master.persistence.accessModes[0]=ReadWriteMany \
+--set master.persistence.size=200Gi \
+--set data.persistence.enabled=true \
+--set data.persistence.storageClass=azurefile-premium-retain \
+--set data.persistence.accessModes[0]=ReadWriteMany \
+--set data.persistence.size=200Gi \
+--set volumePermissions.enabled=true \
+--set coordinating.replicas=1 \
+--set master.replicas=1 \
+--set data.replicas=1
+```
+
+@TODO: setup curator to clean-up stats.
+
+Elasticsearch can be accessed within the cluster on port `9200` at `cs-elasticsearch-coordinating-only.cover-service.svc.cluster.local`
+
+# Install redis
+
+The application requires redis as cache and queue broker. We use https://github.com/bitnami/charts/tree/master/bitnami/redis chart to install redis.
+
+```sh
+helm upgrade --install redis bitnami/redis --namespace cover-service \
+--set image.tag=4.0 \
+--set global.storageClass=azurefile-premium-retain \
+--set usePassword=false \
+--set metrics.enabled=true \
+--set cluster.enabled=false \
+--set master.persistence.accessModes[0]=ReadWriteMany \
+--set master.persistence.size=100Gi \
+--set volumePermissions.enabled=true
+```
+
+# Application install
+To install the application into the kubernetes cluster helm chars are included with the source code.
 
 ### CoverService
 
