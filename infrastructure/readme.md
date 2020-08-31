@@ -69,14 +69,14 @@ az aks create \
     --node-count 3 \
     --node-vm-size Standard_DS3_v2 \
     --kubernetes-version ${version} \
-    --network-plugin azure \
+    --network-plugin kubenet \
     --service-cidr 10.0.0.0/16 \
     --dns-service-ip 10.0.0.10 \
     --docker-bridge-address 172.17.0.1/16 \
     --vnet-subnet-id $SUBNET_ID \
     --service-principal $SP_ID \
     --client-secret $SP_PASSWORD \
-    --network-policy azure
+    --network-policy calico
 ```
 
 Configure kubectl to connect to the new cluster
@@ -157,10 +157,8 @@ kubectl create namespace ingress
 
 Install nginx ingress using helm chart.
 ```sh
-helm upgrade --install ingress stable/nginx-ingress --namespace ingress \
+helm upgrade --install ingress ingress-nginx/ingress-nginx --namespace ingress \
 --set controller.metrics.enabled=true \
---set controller.podAnnotations."prometheus\.io/scrape"=true \
---set controller.podAnnotations."prometheus\.io/port"=10254 \
 --set controller.service.externalTrafficPolicy=Local \
 --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
 --set controller.service.loadBalancerIP=$EXTERNAL_IP
