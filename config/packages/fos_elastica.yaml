@@ -1,7 +1,8 @@
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/Resources/doc/setup.md
 fos_elastica:
     clients:
-        default: { url: '%env(ELASTIC_URL)%' }
+        # Ruflin\Elastica\Client requires trailing slash
+        default: { url: '%env(ELASTIC_URL)%/' }
     indexes:
         app:
             index_name: app_%kernel.environment%
