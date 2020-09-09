@@ -25,9 +25,9 @@ app:
   enbled_no_hits: "false"
   cors_allow_origin: "*"
   trusted_proxies: "127.0.0.1,10.240.0.0/16"
-  elastic_url: "http://elasticsearch-es-http:9200"
+  elastic_url: "http://es-elasticsearch-coordinating-only.cover-service.svc.cluster.local:9200"
   redis:
-    server: "redis"
+    server: "redis-master.cover-service.svc.cluster.local"
     prefix: "DDBCoverV2"
     port: "6379"
     cache_db: "10"
@@ -37,7 +37,6 @@ app:
     min_spare_servers: "15"
     max_spare_servers: "30"
     slowlog_timeout: "1"
-
 
 nginx:
   exporter:

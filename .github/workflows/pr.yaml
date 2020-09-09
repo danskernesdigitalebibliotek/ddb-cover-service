@@ -15,7 +15,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php}}
-                extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                 coverage: none
 
             - name: Get composer cache directory
@@ -49,7 +49,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php}}
-                  extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
             - name: Get composer cache directory
@@ -94,7 +94,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
             - name: Get composer cache directory
@@ -128,7 +128,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
             - name: Install Reviewdog
@@ -165,7 +165,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extension: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+                  extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
             - name: Get composer cache directory
