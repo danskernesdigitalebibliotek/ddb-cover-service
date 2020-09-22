@@ -237,6 +237,16 @@ Elasticsearch can be accessed within the cluster on port `9200` at `cs-elasticse
 
 The application requires redis as cache and queue broker. We use https://github.com/bitnami/charts/tree/master/bitnami/redis chart to install redis.
 
+We need to make some minor configurations changes to Redis this can be done by adding a `values.yaml` that extends the helm install below with the following content.
+
+```yaml
+---
+configmap: |-
+  maxmemory 250mb
+  maxmemory-policy volatile-lfu
+```
+
+Install Redis into the cluster.
 ```sh
 helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set image.tag=4.0 \
@@ -246,7 +256,8 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set cluster.enabled=false \
 --set master.persistence.accessModes[0]=ReadWriteMany \
 --set master.persistence.size=100Gi \
---set volumePermissions.enabled=true
+--set volumePermissions.enabled=true \
+-f values.yaml
 ```
 
 # Application install
