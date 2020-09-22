@@ -161,6 +161,8 @@ helm upgrade --install ingress ingress-nginx/ingress-nginx --namespace ingress \
 --set controller.metrics.enabled=true \
 --set controller.service.externalTrafficPolicy=Local \
 --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
+--set controller.podAnnotations."prometheus\.io/scrape"="true" \
+--set controller.podAnnotations."prometheus\.io/port"="10254" \
 --set controller.service.loadBalancerIP=$EXTERNAL_IP
 ```
 
