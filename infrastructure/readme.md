@@ -267,6 +267,7 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set master.persistence.accessModes[0]=ReadWriteMany \
 --set master.persistence.size=100Gi \
 --set volumePermissions.enabled=true \
+--set master.disableCommands="" \
 -f values.yaml
 ```
 
