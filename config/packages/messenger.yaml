@@ -1,0 +1,16 @@
+framework:
+    messenger:
+        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+        # failure_transport: failed
+
+        transports:
+            background-queue:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: background
+
+            #failed: 'doctrine://default?queue_name=failed'
+
+        routing:
+            'App\Message\SearchNoHitsMessage': background-queue

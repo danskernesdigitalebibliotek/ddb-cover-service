@@ -66,6 +66,16 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-secret
                   key: APP_OPENPLATFORM_SECRET
+            - name: APP_AMQP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: APP_AMQP_USERNAME
+            - name: APP_AMQP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: APP_AMQP_PASSWORD
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-configmap

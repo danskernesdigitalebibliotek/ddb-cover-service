@@ -31,6 +31,9 @@ app:
     prefix: "DDBCoverV2"
     port: "6379"
     cache_db: "10"
+  amqp:
+    server: "rabbit.cover-service.svc.cluster.local"
+    port: "5672"
   php:
     max_children: "80"
     start_servers: "15"
