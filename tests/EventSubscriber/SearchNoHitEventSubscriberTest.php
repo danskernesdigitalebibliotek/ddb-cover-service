@@ -9,11 +9,13 @@ namespace App\Tests\EventSubscriber;
 
 use App\Event\SearchNoHitEvent;
 use App\EventSubscriber\SearchNoHitEventSubscriber;
+use App\Message\SearchNoHitsMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
@@ -94,14 +96,24 @@ class SearchNoHitEventSubscriberTest extends TestCase
         $this->noHitsCache->expects($this->once())->method('commit');
 
         // Producer expects
-        $json2 = '{"operation":null,"identifierType":"pid","identifier":"870970-basis:23452345","vendorId":null,"imageId":null}';
-        $json3 = '{"operation":null,"identifierType":"pid","identifier":"870970-basis:34563456","vendorId":null,"imageId":null}';
+        $message1 = new SearchNoHitsMessage();
+        $message1->setOperation(null)
+            ->setIdentifierType('pid')
+            ->setIdentifier('870970-basis:23452345')
+            ->setVendorId(null)
+            ->setImageId(null);
+        $message2 = new SearchNoHitsMessage();
+        $message2->setOperation(null)
+            ->setIdentifierType('pid')
+            ->setIdentifier('870970-basis:34563456')
+            ->setVendorId(null)
+            ->setImageId(null);
         $this->bus->expects($this->exactly(2))->method('dispatch')
             ->withConsecutive(
-                [$this->equalTo('SearchNoHitsTopic'), $this->equalTo($json2)],
-                [$this->equalTo('SearchNoHitsTopic'), $this->equalTo($json3)]
-            );
-
+                [$this->equalTo($message1)],
+                [$this->equalTo($message2)]
+            )
+            ->willReturn(new Envelope($message1));
         $noNitSubscriber->onSearchNoHitEvent($event);
     }
 
