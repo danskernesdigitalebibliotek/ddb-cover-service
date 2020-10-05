@@ -35,7 +35,7 @@ az network vnet create \
 
 Create a service principal and read in the application ID
 ```sh
-SP=$(az ad sp create-for-rbac --output json)
+SP=$(az ad sp create-for-rbac --name ${res} --output json)
 SP_ID=$(echo $SP | jq -r .appId)
 SP_PASSWORD=$(echo $SP | jq -r .password)
 ```
@@ -89,7 +89,7 @@ Verify that you are connected to the cluster now.
 kubectl get nodes
 ```
 
-### Storage account
+### Storage account (Only if you are using azure-files)
 
 ```sh
 AKS_PERS_STORAGE_ACCOUNT_NAME=coverservice
