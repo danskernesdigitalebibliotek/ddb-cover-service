@@ -218,6 +218,7 @@ helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
 --set image.tag=6.8.12-debian-10-r11 \
 --set metrics.enabled=true \
 --set master.persistence.enabled=true \
+<<<<<<< Updated upstream
 --set master.persistence.storageClass=azuredisk-premium-retain \
 --set master.persistence.accessModes[0]=ReadWriteOnce \
 --set master.persistence.size=256Gi \
@@ -233,6 +234,15 @@ helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
 --set data.heapSize=2048m \
 --set coordinating.livenessProbe.enabled=true \
 --set coordinating.readinessProbe.enabled=true \
+=======
+--set master.persistence.storageClass=azurefile-premium-retain \
+--set master.persistence.accessModes[0]=ReadWriteMany \
+--set master.persistence.size=256Gi \
+--set data.persistence.enabled=true \
+--set data.persistence.storageClass=azurefile-premium-retain \
+--set data.persistence.accessModes[0]=ReadWriteMany \
+--set data.persistence.size=256Gi \
+>>>>>>> Stashed changes
 --set volumePermissions.enabled=true \
 --set coordinating.replicas=1 \
 --set master.replicas=1 \
@@ -270,6 +280,27 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set master.disableCommands="" \
 -f values.yaml
 ```
+
+# Install RabbitMQ
+
+
+```sh
+helm upgrade --install mq bitnami/rabbitmq --namespace cover-service \
+--set image.tag=3.8.9-debian-10-r0 \
+--set auth.username=user \
+--set auth.password=passwd \
+--set replicaCount=2 \
+--set resources.limits.memory="512Mi" \
+--set persistence.enabled=true \
+--set persistence.storageClass=azurefile-premium-retain \
+--set persistence.accessModes[0]=ReadWriteMany \
+--set persistence.size=128Gi \
+--set metrics.enabled=true
+```
+
+memoryHighWatermark.enabled="true"
+memoryHighWatermark.type="absolute"
+memoryHighWatermark.value="512MB"
 
 # Application install
 To install the application into the kubernetes cluster helm chars are included with the source code.
