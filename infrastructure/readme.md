@@ -218,7 +218,6 @@ helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
 --set image.tag=6.8.12-debian-10-r11 \
 --set metrics.enabled=true \
 --set master.persistence.enabled=true \
-<<<<<<< Updated upstream
 --set master.persistence.storageClass=azuredisk-premium-retain \
 --set master.persistence.accessModes[0]=ReadWriteOnce \
 --set master.persistence.size=256Gi \
@@ -234,15 +233,6 @@ helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
 --set data.heapSize=2048m \
 --set coordinating.livenessProbe.enabled=true \
 --set coordinating.readinessProbe.enabled=true \
-=======
---set master.persistence.storageClass=azurefile-premium-retain \
---set master.persistence.accessModes[0]=ReadWriteMany \
---set master.persistence.size=256Gi \
---set data.persistence.enabled=true \
---set data.persistence.storageClass=azurefile-premium-retain \
---set data.persistence.accessModes[0]=ReadWriteMany \
---set data.persistence.size=256Gi \
->>>>>>> Stashed changes
 --set volumePermissions.enabled=true \
 --set coordinating.replicas=1 \
 --set master.replicas=1 \
@@ -295,7 +285,10 @@ helm upgrade --install mq bitnami/rabbitmq --namespace cover-service \
 --set persistence.storageClass=azurefile-premium-retain \
 --set persistence.accessModes[0]=ReadWriteMany \
 --set persistence.size=128Gi \
---set metrics.enabled=true
+--set metrics.enabled=true \
+--set memoryHighWatermark.enabled="true" \
+--set memoryHighWatermark.type="absolute" \
+--set memoryHighWatermark.value="512MB"
 ```
 
 memoryHighWatermark.enabled="true"
