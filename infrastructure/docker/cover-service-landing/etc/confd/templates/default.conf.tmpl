@@ -5,6 +5,7 @@ server {
     root /var/www/html/;
 
     location / {
+        add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
         index index.htm index.html;
     }
 
