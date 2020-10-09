@@ -35,7 +35,7 @@ az network vnet create \
 
 Create a service principal and read in the application ID
 ```sh
-SP=$(az ad sp create-for-rbac --output json)
+SP=$(az ad sp create-for-rbac --name ${res} --output json)
 SP_ID=$(echo $SP | jq -r .appId)
 SP_PASSWORD=$(echo $SP | jq -r .password)
 ```
@@ -89,7 +89,7 @@ Verify that you are connected to the cluster now.
 kubectl get nodes
 ```
 
-### Storage account
+### Storage account (Only if you are using azure-files)
 
 ```sh
 AKS_PERS_STORAGE_ACCOUNT_NAME=coverservice
@@ -161,6 +161,8 @@ helm upgrade --install ingress ingress-nginx/ingress-nginx --namespace ingress \
 --set controller.metrics.enabled=true \
 --set controller.service.externalTrafficPolicy=Local \
 --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
+--set controller.podAnnotations."prometheus\.io/scrape"="true" \
+--set controller.podAnnotations."prometheus\.io/port"="10254" \
 --set controller.service.loadBalancerIP=$EXTERNAL_IP
 ```
 
@@ -216,13 +218,21 @@ helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
 --set image.tag=6.8.12-debian-10-r11 \
 --set metrics.enabled=true \
 --set master.persistence.enabled=true \
---set master.persistence.storageClass=azurefile-premium-retain \
---set master.persistence.accessModes[0]=ReadWriteMany \
---set master.persistence.size=200Gi \
+--set master.persistence.storageClass=azuredisk-premium-retain \
+--set master.persistence.accessModes[0]=ReadWriteOnce \
+--set master.persistence.size=256Gi \
+--set master.livenessProbe.enabled=true \
+--set master.readinessProbe.enabled=true \
+--set master.heapSize=256m \
 --set data.persistence.enabled=true \
---set data.persistence.storageClass=azurefile-premium-retain \
---set data.persistence.accessModes[0]=ReadWriteMany \
---set data.persistence.size=200Gi \
+--set data.persistence.storageClass=azuredisk-premium-retain \
+--set data.persistence.accessModes[0]=ReadWriteOnce \
+--set data.persistence.size=256Gi \
+--set data.livenessProbe.enabled=true \
+--set data.readinessProbe.enabled=true \
+--set data.heapSize=2048m \
+--set coordinating.livenessProbe.enabled=true \
+--set coordinating.readinessProbe.enabled=true \
 --set volumePermissions.enabled=true \
 --set coordinating.replicas=1 \
 --set master.replicas=1 \
@@ -237,6 +247,16 @@ Elasticsearch can be accessed within the cluster on port `9200` at `cs-elasticse
 
 The application requires redis as cache and queue broker. We use https://github.com/bitnami/charts/tree/master/bitnami/redis chart to install redis.
 
+We need to make some minor configurations changes to Redis this can be done by adding a `values.yaml` that extends the helm install below with the following content.
+
+```yaml
+---
+configmap: |-
+  maxmemory 250mb
+  maxmemory-policy volatile-lfu
+```
+
+Install Redis into the cluster.
 ```sh
 helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set image.tag=4.0 \
@@ -246,7 +266,9 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set cluster.enabled=false \
 --set master.persistence.accessModes[0]=ReadWriteMany \
 --set master.persistence.size=100Gi \
---set volumePermissions.enabled=true
+--set volumePermissions.enabled=true \
+--set master.disableCommands="" \
+-f values.yaml
 ```
 
 # Application install

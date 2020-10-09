@@ -8,8 +8,16 @@ server {
         # Rewrite path based on application path prefix
         rewrite ^{{ getenv "APP_PATH_PREFIX" "" }}(/.*)$ $1 last;
 
+        add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
+
         # try to serve file directly, fallback to index.php
         try_files $uri /index.php$is_args$args;
+    }
+
+    location = /robots.txt {
+       add_header Content-Type text/plain;
+       add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
+       return 200 "User-agent: *\nDisallow: /\n";
     }
 
     location ~ ^/index\.php(/|$) {
