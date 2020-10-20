@@ -52,7 +52,7 @@ services:
     ports:
       - '6379'
 
-  rabit:
+  rabbit:
     image: rabbitmq:3-management
     networks:
       - app

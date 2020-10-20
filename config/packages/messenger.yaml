@@ -4,25 +4,17 @@ framework:
         # failure_transport: failed
 
         transports:
-            async_priority_high:
+            async_no_hit:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
                     exchange:
-                        name: high
-
-            async_priority_normal:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    exchange:
-                        name: normal
-
-            async_priority_low:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    exchange:
-                        name: low
+                        name: no-hit
+                    queues:
+                        cs_no_hit:
+                            arguments:
+                                x-message-ttl: '%env(int:APP_NO_HITS_TTL)%'
 
             #failed: 'doctrine://default?queue_name=failed'
 
         routing:
-            'App\Message\SearchNoHitsMessage': async_priority_normal
+            'App\Message\SearchNoHitsMessage': async_no_hit
