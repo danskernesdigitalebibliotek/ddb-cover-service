@@ -17,7 +17,8 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-app
-        networking/allow-internet-access: "true"
+        networking/allow-ingress-access: "true"
+        networking/allow-internet-access: "{{ .Release.Name }}"
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'
