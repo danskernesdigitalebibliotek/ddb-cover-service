@@ -12,7 +12,7 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-landing
-        tier: frontend
+        networking/allow-internet-access: "true"
     spec:
       containers:
         - name: frontend
@@ -37,3 +37,4 @@ spec:
             periodSeconds: 10
           ports:
             - containerPort: 80
+              name: pod-http-port
