@@ -13,6 +13,7 @@ spec:
       labels:
         app: {{ .Release.Name }}-landing
         networking/allow-ingress-access: "true"
+        networking/allow-monitoring-access: "true"
         networking/allow-internet-access: "{{ .Release.Name }}"
     spec:
       containers:
