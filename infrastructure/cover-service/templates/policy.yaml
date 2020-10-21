@@ -24,3 +24,22 @@ spec:
       - namespaceSelector:
           matchLabels:
             networking/namespace: ingress
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      networking/allow-internet-access: "true"
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+      ports:
+        # Need to communicate with open-platform and adgangsplatformen.
+        - protocol: TCP
+          port: 443
