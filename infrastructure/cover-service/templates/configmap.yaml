@@ -20,11 +20,8 @@ data:
   APP_NO_HITS_TTL: {{ mul .Values.app.no_hits_ttl 1000 | quote }}
   APP_AMQP_SERVER: {{ .Values.app.amqp.server | quote }}
   APP_AMQP_PORT: {{ .Values.app.amqp.port | quote }}
+  PHP_PM_TYPE: {{ .Values.app.php.type | quote }}
   PHP_PM_MAX_CHILDREN: {{ .Values.app.php.max_children | quote }}
-  PHP_PM_START_SERVERS: {{ .Values.app.php.start_servers | quote }}
-  PHP_PM_MIN_SPARE_SERVERS: {{ .Values.app.php.min_spare_servers | quote }}
-  PHP_PM_MAX_SPARE_SERVERS: {{ .Values.app.php.max_spare_servers | quote }}
-  PHP_REQUEST_SLOWLOG_TIMEOUT: {{ .Values.app.php.slowlog_timeout | quote }}
 
 ---
 apiVersion: v1
