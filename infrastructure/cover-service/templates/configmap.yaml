@@ -17,11 +17,8 @@ data:
   APP_ELASTIC_URL: {{ .Values.app.elastic_url | quote }}
   APP_ENABLE_NO_HITS: {{ .Values.app.no_hits.enbled | quote }}
   APP_NO_HITS_CACHE_TTL: {{ .Values.app.no_hits.cache_ttl | quote }}
+  PHP_PM_TYPE: {{ .Values.app.php.type | quote }}
   PHP_PM_MAX_CHILDREN: {{ .Values.app.php.max_children | quote }}
-  PHP_PM_START_SERVERS: {{ .Values.app.php.start_servers | quote }}
-  PHP_PM_MIN_SPARE_SERVERS: {{ .Values.app.php.min_spare_servers | quote }}
-  PHP_PM_MAX_SPARE_SERVERS: {{ .Values.app.php.max_spare_servers | quote }}
-  PHP_REQUEST_SLOWLOG_TIMEOUT: {{ .Values.app.php.slowlog_timeout | quote }}
 
 ---
 apiVersion: v1
