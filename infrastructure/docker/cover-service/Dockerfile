@@ -36,7 +36,7 @@ RUN chown -R www-data:www-data ${APP_PATH}/var \
     && chown -R www-data:www-data ${APP_PATH}/public
 
 # Download prometheus php-fpm export.
-COPY --from=hipages/php-fpm_exporter /php-fpm_exporter /usr/local/bin/php-fpm_exporter
+COPY --from=hipages/php-fpm_exporter:1.1.1 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
 
 # Copy configuration.
 COPY etc/ /etc/
