@@ -15,6 +15,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php}}
+                tools: composer:v1
                 extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                 coverage: none
 
@@ -49,6 +50,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php}}
+                  tools: composer:v1
                   extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
@@ -94,6 +96,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
+                  tools: composer:v1
                   extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
@@ -128,6 +131,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
+                  tools: composer:v1
                   extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
@@ -165,6 +169,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
+                  tools: composer:v1
                   extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
                   coverage: none
 
