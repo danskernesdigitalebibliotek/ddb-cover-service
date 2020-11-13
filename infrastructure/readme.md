@@ -276,47 +276,12 @@ To install the application into the kubernetes cluster helm chars are included w
 
 ### CoverService
 
-```yaml
-{{- if eq .Values.env "prod" }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Name }}-secret
-type: Opaque
-stringData:
-  APP_SECRET: "yyyyy"
-{{- end }}
-
-{{- if eq .Values.env "stg" }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Name }}-secret
-type: Opaque
-stringData:
-  APP_SECRET: "xxxxx"
-
-{{- if .Values.ingress.enableAuth }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Name }}-basic-auth
-type: Opaque
-data:
-  auth: BASE64-ENCODED-STRING
-{{- end }}
-{{- end }}
-```
+Before using the helm chat copy the file `infrastructure/cover-service/templates/secret.example.yaml` into `secret.yaml`
+in the same folder and edit the file filling in the missing configuration secrets.
 
 Get the main application up and running.
 ```sh
-helm upgrade --install cover-service infrastructure/cover-service --namespace cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.mail='MAIL@itkdev.dk' --set ingress.domain=cover.dandigbib.org
+helm upgrade --install cover-service infrastructure/cover-service --namespace cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.domain=cover.dandigbib.org
 ```
 
 Jump into the new namespace.
