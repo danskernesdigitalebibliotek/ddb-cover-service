@@ -7,7 +7,7 @@ env: "prod"
 ingress:
   enabled: true
   enableAuth: false
-  enableTLS: false
+  enableTLS: true
   cert: "letsencrypt"
   path: "/api"
 
