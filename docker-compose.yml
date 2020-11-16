@@ -52,6 +52,17 @@ services:
     ports:
       - '6379'
 
+  rabbit:
+    image: rabbitmq:3-management
+    networks:
+      - app
+    ports:
+      - 15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_ERLANG_COOKIE='d53f319cd7376f8f840aaf9889f315ab'
+
   elasticsearch:
     image: 'elasticsearch:6.8.4'
     networks:

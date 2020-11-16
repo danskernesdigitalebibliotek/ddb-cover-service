@@ -7,14 +7,13 @@
 namespace App\EventSubscriber;
 
 use App\Event\SearchNoHitEvent;
-use App\Utils\Message\ProcessMessage;
+use App\Message\SearchNoHitsMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
-use Enqueue\Client\ProducerInterface;
-use Enqueue\Util\JSON;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Class SearchNoHitEventSubscriber.
@@ -22,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SearchNoHitEventSubscriber implements EventSubscriberInterface
 {
     private $noHitsProcessingEnabled;
-    private $producer;
+    private $bus;
     private $noHitsCache;
 
     /**
@@ -30,16 +29,16 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      *
      * @param bool $bindEnableNoHits
      *   Is no hits processing enabled
-     * @param producerInterface $producer
+     * @param MessageBusInterface $bus
      *   Queue producer to send messages (jobs)
      * @param CacheItemPoolInterface $noHitsCache
      *   Cache pool for storing no hits
      */
-    public function __construct(bool $bindEnableNoHits, ProducerInterface $producer, CacheItemPoolInterface $noHitsCache)
+    public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache)
     {
         $this->noHitsProcessingEnabled = $bindEnableNoHits;
 
-        $this->producer = $producer;
+        $this->bus = $bus;
         $this->noHitsCache = $noHitsCache;
     }
 
@@ -95,13 +94,13 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
         foreach ($nonCommittedCacheItems as $cacheItem) {
             /** @var NoHitItem $noHitItem */
             $noHitItem = $cacheItem->get();
-            $message = new ProcessMessage();
+            $message = new SearchNoHitsMessage();
             $message->setIdentifierType($noHitItem->getIsType())
                 ->setIdentifier($noHitItem->getIsIdentifier());
 
             $this->noHitsCache->saveDeferred($cacheItem);
 
-            $this->producer->sendEvent('SearchNoHitsTopic', JSON::encode($message));
+            $this->bus->dispatch($message);
         }
 
         $this->noHitsCache->commit();

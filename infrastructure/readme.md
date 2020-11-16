@@ -247,7 +247,8 @@ Elasticsearch can be accessed within the cluster on port `9200` at `cs-elasticse
 
 The application requires redis as cache and queue broker. We use https://github.com/bitnami/charts/tree/master/bitnami/redis chart to install redis.
 
-We need to make some minor configurations changes to Redis this can be done by adding a `values.yaml` that extends the helm install below with the following content.
+We need to make some minor configurations changes to Redis this can be done by adding a `values.yaml` that extends the
+helm install below with the following content.
 
 ```yaml
 ---
@@ -270,6 +271,28 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set master.disableCommands="" \
 -f values.yaml
 ```
+
+# RabbitMQ
+This project uses [RabbitMQ](https://www.rabbitmq.com/) as message broker for queues with symfony messenger.
+
+```sh
+helm upgrade --install mq bitnami/rabbitmq --namespace cover-service \
+--set image.tag=3.8.9-debian-10-r0 \
+--set auth.username=<USERNAME> \
+--set auth.password=<PASSWORD> \
+--set replicaCount=2 \
+--set resources.limits.memory="512Mi" \
+--set persistence.enabled=true \
+--set persistence.storageClass=azurefile-premium-retain \
+--set persistence.accessModes[0]=ReadWriteMany \
+--set persistence.size=128Gi \
+--set metrics.enabled=true \
+--set memoryHighWatermark.enabled="true" \
+--set memoryHighWatermark.type="absolute" \
+--set memoryHighWatermark.value="512MB"
+```
+
+__Note__: That you have to set the username and password in the helm command above.
 
 # Application install
 To install the application into the kubernetes cluster helm chars are included with the source code.
