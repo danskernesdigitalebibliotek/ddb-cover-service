@@ -17,6 +17,7 @@ abstract class AbstractBaseMessage
     private $vendorId;
     private $imageId;
     private $useSearchCache = true;
+    private $requestId;
 
     /**
      * @return mixed
@@ -143,4 +144,31 @@ abstract class AbstractBaseMessage
 
         return $this;
     }
+
+    /**
+     * Get request id (which is unique for the whole request).
+     *
+     * @return string
+     *   The request id.
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * Set request id (which is unique for the whole request)
+     *
+     * @param string $requestId
+     *   The request id (normally found in HTTP_X_REQUEST_ID).
+     *
+     * @return AbstractBaseMessage
+     */
+    public function setRequestId(string $requestId): self
+    {
+        $this->requestId = $requestId;
+
+        return $this;
+    }
+
 }

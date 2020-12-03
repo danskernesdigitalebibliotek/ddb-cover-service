@@ -8,14 +8,21 @@ services:
       $config: { url: '%env(ELASTIC_URL)%/' }
 
 monolog:
-  #
-  # Set new logger to log statistics information to ES.
-  #
-  channels: ["statistics"]
+  channels: ["statistics", "information"]
   handlers:
+    #
+    # Set new logger to log statistics information to ES.
+    #
     statistics:
       type: elasticsearch
       elasticsearch:
         id: monolog.elastica.client
       index: '%env(ELASTIC_STATS_INDEX)%'
       channels: ["statistics"]
+
+    information:
+      type: stream
+      path: "php://stdout"
+      formatter: monolog.formatter.json
+      channels: ["information", "request"]
+

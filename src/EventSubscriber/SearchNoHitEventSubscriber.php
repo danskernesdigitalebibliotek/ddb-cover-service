@@ -23,20 +23,24 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     private $noHitsProcessingEnabled;
     private $bus;
     private $noHitsCache;
+    private $requestId;
 
     /**
      * SearchNoHitEventSubscriber constructor.
      *
      * @param bool $bindEnableNoHits
      *   Is no hits processing enabled
+     * @param string $bindRequestId
+     *   The current requests unique ID.
      * @param MessageBusInterface $bus
      *   Queue producer to send messages (jobs)
      * @param CacheItemPoolInterface $noHitsCache
      *   Cache pool for storing no hits
      */
-    public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache)
+    public function __construct(bool $bindEnableNoHits, string $bindRequestId, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache)
     {
         $this->noHitsProcessingEnabled = $bindEnableNoHits;
+        $this->requestId = $bindRequestId;
 
         $this->bus = $bus;
         $this->noHitsCache = $noHitsCache;
@@ -79,7 +83,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
             }
 
             $nonCommittedCacheItems = $this->getNonCachedNoHits($keyedNoHits);
-            $this->sendSearchNoHitEvents($nonCommittedCacheItems);
+            $this->sendSearchNoHitMessage($nonCommittedCacheItems);
         }
     }
 
@@ -89,14 +93,15 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      * @param array $nonCommittedCacheItems
      *   Array of cache items
      */
-    private function sendSearchNoHitEvents(array $nonCommittedCacheItems): void
+    private function sendSearchNoHitMessage(array $nonCommittedCacheItems): void
     {
         foreach ($nonCommittedCacheItems as $cacheItem) {
             /** @var NoHitItem $noHitItem */
             $noHitItem = $cacheItem->get();
             $message = new SearchNoHitsMessage();
             $message->setIdentifierType($noHitItem->getIsType())
-                ->setIdentifier($noHitItem->getIsIdentifier());
+                ->setIdentifier($noHitItem->getIsIdentifier())
+                ->setRequestId($this->requestId);
 
             $this->noHitsCache->saveDeferred($cacheItem);
 

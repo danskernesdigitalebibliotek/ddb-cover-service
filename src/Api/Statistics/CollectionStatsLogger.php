@@ -44,8 +44,11 @@ class CollectionStatsLogger
      * Log metrics and statistics for the request.
      *
      * @param string $type
+     *   The identifier type (e.g. 'pid', 'isbn', etc).
      * @param array $identifiers
+     *   Array of identifiers of {type}
      * @param array $results
+     *   An array of result from an Elastica search
      */
     public function logRequest(string $type, array $identifiers, array $results): void
     {

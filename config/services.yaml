@@ -6,6 +6,7 @@
 parameters:
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
+    request_if_fallback: 'unknown'
 
 services:
 
@@ -27,11 +28,11 @@ services:
             $bindElasticType: '%env(ELASTIC_TYPE)%'
             $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+            $bindRequestId: '%env(default:request_if_fallback:HTTP_X_REQUEST_ID)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
             $bindStatsLogger: '@monolog.logger.statistics'
-
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -47,6 +48,13 @@ services:
 
 
     #### App ####
+
+    monolog.formatter.json:
+        class: Monolog\Formatter\JsonFormatter
+
+    App\Logger\RequestIdProcessor:
+        tags:
+            - { name: monolog.processor }
 
     # Manually wire the MetricsService:
     # APC storage requires APCU which is not available when testing through behat

@@ -3,6 +3,8 @@
 /**
  * @file
  * Contains the statistics logger.
+ *
+ * The logger is wrapped in this class as the logging is delayed until the kernel terminate event fires.
  */
 
 namespace App\Service;
@@ -49,27 +51,37 @@ class StatsLoggingService implements LoggerInterface
                     case LogLevel::EMERGENCY:
                         $logger->emergency($message, $context);
                         break;
+
                     case LogLevel::ALERT:
                         $logger->alert($message, $context);
                         break;
+
                     case LogLevel::CRITICAL:
                         $logger->critical($message, $context);
                         break;
+
                     case LogLevel::ERROR:
                         $logger->error($message, $context);
                         break;
+
                     case LogLevel::WARNING:
                         $logger->warning($message, $context);
                         break;
+
                     case LogLevel::NOTICE:
                         $logger->notice($message, $context);
                         break;
+
                     case LogLevel::INFO:
                         $logger->info($message, $context);
                         break;
+
                     case LogLevel::DEBUG:
                         $logger->debug($message, $context);
                         break;
+
+                    default:
+                        $logger->info($message, $context);
                 }
             }
         );
