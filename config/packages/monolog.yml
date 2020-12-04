@@ -25,4 +25,3 @@ monolog:
       path: "php://stdout"
       formatter: monolog.formatter.json
       channels: ["information", "request"]
-

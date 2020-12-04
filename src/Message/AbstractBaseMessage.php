@@ -149,7 +149,7 @@ abstract class AbstractBaseMessage
      * Get request id (which is unique for the whole request).
      *
      * @return string
-     *   The request id.
+     *   The request id
      */
     public function getRequestId()
     {
@@ -157,10 +157,10 @@ abstract class AbstractBaseMessage
     }
 
     /**
-     * Set request id (which is unique for the whole request)
+     * Set request id (which is unique for the whole request).
      *
      * @param string $requestId
-     *   The request id (normally found in HTTP_X_REQUEST_ID).
+     *   The request id (normally found in HTTP_X_REQUEST_ID)
      *
      * @return AbstractBaseMessage
      */
@@ -170,5 +170,4 @@ abstract class AbstractBaseMessage
 
         return $this;
     }
-
 }

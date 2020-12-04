@@ -31,7 +31,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      * @param bool $bindEnableNoHits
      *   Is no hits processing enabled
      * @param string $bindRequestId
-     *   The current requests unique ID.
+     *   The current requests unique ID
      * @param MessageBusInterface $bus
      *   Queue producer to send messages (jobs)
      * @param CacheItemPoolInterface $noHitsCache
