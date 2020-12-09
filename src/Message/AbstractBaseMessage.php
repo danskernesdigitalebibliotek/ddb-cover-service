@@ -17,7 +17,7 @@ abstract class AbstractBaseMessage
     private $vendorId;
     private $imageId;
     private $useSearchCache = true;
-    private $requestId;
+    private $traceId;
 
     /**
      * @return mixed
@@ -151,22 +151,22 @@ abstract class AbstractBaseMessage
      * @return string
      *   The request id
      */
-    public function getRequestId()
+    public function getTraceId(): string
     {
-        return $this->requestId;
+        return $this->traceId;
     }
 
     /**
-     * Set request id (which is unique for the whole request).
+     * Set trace id (which is unique for the whole request).
      *
-     * @param string $requestId
-     *   The request id (normally found in HTTP_X_REQUEST_ID)
+     * @param string $traceId
+     *   The trace id used to trace this message between services.
      *
      * @return AbstractBaseMessage
      */
-    public function setRequestId(string $requestId): self
+    public function setTraceId(string $traceId): self
     {
-        $this->requestId = $requestId;
+        $this->traceId = $traceId;
 
         return $this;
     }

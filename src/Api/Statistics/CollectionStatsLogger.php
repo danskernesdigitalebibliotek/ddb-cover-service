@@ -6,9 +6,10 @@
 
 namespace App\Api\Statistics;
 
+use App\Message\FaktorMessage;
 use App\Service\MetricsService;
-use App\Service\StatsLoggingService;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -20,24 +21,24 @@ class CollectionStatsLogger
     private $metricsService;
     private $requestStack;
     private $security;
-
-    private const SERVICE = 'CoverCollectionDataProvider';
-    private const MESSAGE = 'Cover request/response';
+    private $bus;
+    private $traceId;
 
     /**
      * CollectionStatsLogger constructor.
      *
-     * @param StatsLoggingService $statsLoggingService
      * @param MetricsService $metricsService
      * @param RequestStack $requestStack
      * @param Security $security
+     * @param MessageBusInterface $bus
      */
-    public function __construct(StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, Security $security)
+    public function __construct(string $bindTraceId, MetricsService $metricsService, RequestStack $requestStack, Security $security, MessageBusInterface $bus)
     {
-        $this->statsLoggingService = $statsLoggingService;
+        $this->traceId = $bindTraceId;
         $this->metricsService = $metricsService;
         $this->requestStack = $requestStack;
         $this->security = $security;
+        $this->bus = $bus;
     }
 
     /**
@@ -52,12 +53,12 @@ class CollectionStatsLogger
      */
     public function logRequest(string $type, array $identifiers, array $results): void
     {
-        $this->logStatistics($type, $identifiers, $results);
+        $this->sendStatistics($type, $identifiers, $results);
         $this->logMetrics();
     }
 
     /**
-     * Log request statistics.
+     * Send statistics message to faktor.
      *
      * @param string $type
      *   The identifier type (e.g. 'pid', 'isbn', etc).
@@ -66,20 +67,21 @@ class CollectionStatsLogger
      * @param array $results
      *   An array of result from an Elastica search
      */
-    private function logStatistics(string $type, array $identifiers, array $results): void
+    private function sendStatistics(string $type, array $identifiers, array $results): void
     {
         $imageUrls = $this->getImageUrls($results);
         $clientIp = $this->requestStack->getCurrentRequest()->getClientIp();
 
-        $this->statsLoggingService->info(self::MESSAGE, [
-            'service' => self::SERVICE,
-            'clientID' => $this->security->getUser()->getAgency(),
-            'remoteIP' => $clientIp,
-            'isType' => $type,
-            'isIdentifiers' => $identifiers,
-            'fileNames' => array_values($imageUrls),
-            'matches' => $this->getMatches($imageUrls, $identifiers, $type),
-        ]);
+        $message = new FaktorMessage();
+        $message->setClientID($this->security->getUser()->getAgency())
+            ->setRemoteIP($clientIp)
+            ->setIsType($type)
+            ->setIsIdentifiers($identifiers)
+            ->setFileNames(array_values($imageUrls))
+            ->setMatches($this->getMatches($imageUrls, $identifiers, $type))
+            ->setTraceId($this->traceId);
+
+        $this->bus->dispatch($message);
     }
 
     /**

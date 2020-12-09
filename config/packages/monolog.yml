@@ -1,25 +1,8 @@
 services:
-  monolog.elastica.client:
-    # @TODO use official client instead of Ruflin\Elastica\Client
-    # (Symfony 5 supports Monolog 2 which supports the official client)
-    class: Elastica\Client
-    arguments:
-      # Ruflin\Elastica\Client used by monolog requires trailing slash
-      $config: { url: '%env(ELASTIC_URL)%/' }
 
 monolog:
-  channels: ["statistics", "information"]
+  channels: ["information"]
   handlers:
-    #
-    # Set new logger to log statistics information to ES.
-    #
-    statistics:
-      type: elasticsearch
-      elasticsearch:
-        id: monolog.elastica.client
-      index: '%env(ELASTIC_STATS_INDEX)%'
-      channels: ["statistics"]
-
     information:
       type: stream
       path: "php://stdout"

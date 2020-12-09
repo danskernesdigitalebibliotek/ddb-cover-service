@@ -23,24 +23,24 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     private $noHitsProcessingEnabled;
     private $bus;
     private $noHitsCache;
-    private $requestId;
+    private $traceId;
 
     /**
      * SearchNoHitEventSubscriber constructor.
      *
      * @param bool $bindEnableNoHits
      *   Is no hits processing enabled
-     * @param string $bindRequestId
+     * @param string $bindTraceId
      *   The current requests unique ID
      * @param MessageBusInterface $bus
      *   Queue producer to send messages (jobs)
      * @param CacheItemPoolInterface $noHitsCache
      *   Cache pool for storing no hits
      */
-    public function __construct(bool $bindEnableNoHits, string $bindRequestId, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache)
+    public function __construct(bool $bindEnableNoHits, string $bindTraceId, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache)
     {
         $this->noHitsProcessingEnabled = $bindEnableNoHits;
-        $this->requestId = $bindRequestId;
+        $this->traceId = $bindTraceId;
 
         $this->bus = $bus;
         $this->noHitsCache = $noHitsCache;
@@ -101,7 +101,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
             $message = new SearchNoHitsMessage();
             $message->setIdentifierType($noHitItem->getIsType())
                 ->setIdentifier($noHitItem->getIsIdentifier())
-                ->setRequestId($this->requestId);
+                ->setTraceId($this->traceId);
 
             $this->noHitsCache->saveDeferred($cacheItem);
 

@@ -2,26 +2,26 @@
 
 /**
  * @file
- * Logger processor adding
+ * Logger processor adding trace id to log requests
  */
 
 namespace App\Logger;
 
 /**
- * Class RequestIdProcessor.
+ * Class TraceIdProcessor.
  */
-class RequestIdProcessor
+class TraceIdProcessor
 {
-    private $requestId;
+    private $traceId;
 
     /**
-     * RequestIdProcessor constructor.
+     * TraceIdProcessor constructor.
      *
-     * @param string $bindRequestId
+     * @param string $bindTraceId
      */
-    public function __construct(string $bindRequestId)
+    public function __construct(string $bindTraceId)
     {
-        $this->requestId = $bindRequestId;
+        $this->traceId = $bindTraceId;
     }
 
     /**
@@ -35,7 +35,7 @@ class RequestIdProcessor
      */
     public function __invoke(array $record)
     {
-        $record['extra']['requestId'] = $this->requestId;
+        $record['extra']['traceId'] = $this->traceId;
 
         return $record;
     }

@@ -102,14 +102,14 @@ class SearchNoHitEventSubscriberTest extends TestCase
             ->setIdentifier('870970-basis:23452345')
             ->setVendorId(null)
             ->setImageId(null)
-            ->setRequestId('request123456');
+            ->setTraceId('request123456');
         $message2 = new SearchNoHitsMessage();
         $message2->setOperation(null)
             ->setIdentifierType('pid')
             ->setIdentifier('870970-basis:34563456')
             ->setVendorId(null)
             ->setImageId(null)
-            ->setRequestId('request123456');
+            ->setTraceId('request123456');
         $this->bus->expects($this->exactly(2))->method('dispatch')
             ->withConsecutive(
                 [$this->equalTo($message1)],
