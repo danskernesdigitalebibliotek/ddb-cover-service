@@ -14,7 +14,16 @@ framework:
                             arguments:
                                 x-message-ttl: '%env(int:APP_NO_HITS_TTL)%'
 
+            async_faktor:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: fakor
+                    queues:
+                        cs_faktor:
+
             #failed: 'doctrine://default?queue_name=failed'
 
         routing:
             'App\Message\SearchNoHitsMessage': async_no_hit
+            'App\Message\FaktorMessage': async_faktor

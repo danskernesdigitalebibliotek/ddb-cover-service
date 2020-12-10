@@ -101,13 +101,15 @@ class SearchNoHitEventSubscriberTest extends TestCase
             ->setIdentifierType('pid')
             ->setIdentifier('870970-basis:23452345')
             ->setVendorId(null)
-            ->setImageId(null);
+            ->setImageId(null)
+            ->setTraceId('request123456');
         $message2 = new SearchNoHitsMessage();
         $message2->setOperation(null)
             ->setIdentifierType('pid')
             ->setIdentifier('870970-basis:34563456')
             ->setVendorId(null)
-            ->setImageId(null);
+            ->setImageId(null)
+            ->setTraceId('request123456');
         $this->bus->expects($this->exactly(2))->method('dispatch')
             ->withConsecutive(
                 [$this->equalTo($message1)],
@@ -144,6 +146,6 @@ class SearchNoHitEventSubscriberTest extends TestCase
      */
     private function getSearchNoHitEventSubscriber(bool $noHitsProcessingEnabled): SearchNoHitEventSubscriber
     {
-        return new SearchNoHitEventSubscriber($noHitsProcessingEnabled, $this->bus, $this->noHitsCache);
+        return new SearchNoHitEventSubscriber($noHitsProcessingEnabled, 'request123456', $this->bus, $this->noHitsCache);
     }
 }

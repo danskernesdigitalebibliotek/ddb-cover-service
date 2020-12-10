@@ -17,6 +17,7 @@ abstract class AbstractBaseMessage
     private $vendorId;
     private $imageId;
     private $useSearchCache = true;
+    private $traceId;
 
     /**
      * @return mixed
@@ -140,6 +141,32 @@ abstract class AbstractBaseMessage
     public function setUseSearchCache(bool $useIt): self
     {
         $this->useSearchCache = $useIt;
+
+        return $this;
+    }
+
+    /**
+     * Get trace id (which is unique for the whole request).
+     *
+     * @return string
+     *   The trace id
+     */
+    public function getTraceId(): string
+    {
+        return $this->traceId;
+    }
+
+    /**
+     * Set trace id (which is unique for the whole request).
+     *
+     * @param string $traceId
+     *   The trace id used to trace this message between services.
+     *
+     * @return AbstractBaseMessage
+     */
+    public function setTraceId(string $traceId): self
+    {
+        $this->traceId = $traceId;
 
         return $this;
     }

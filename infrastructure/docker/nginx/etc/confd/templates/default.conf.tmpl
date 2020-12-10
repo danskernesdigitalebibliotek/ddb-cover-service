@@ -27,6 +27,7 @@ server {
 
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTP_X_REQUEST_ID $request_id;
 
         internal;
     }
@@ -37,8 +38,7 @@ server {
         return 404;
     }
 
-    error_log /var/log/nginx/error.log;
-    access_log /var/log/nginx/access.log;
+    error_log /dev/stdout;
 }
 
 server {
