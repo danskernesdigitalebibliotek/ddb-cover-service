@@ -6,7 +6,6 @@
 parameters:
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
-    trace_id_fallback: 'unknown'
 
 services:
 
@@ -28,7 +27,7 @@ services:
             $bindElasticType: '%env(ELASTIC_TYPE)%'
             $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
-            $bindTraceId: '%env(default:trace_id_fallback:HTTP_X_REQUEST_ID)%'
+            $bindTraceId: '%env(traceId:HTTP_X_REQUEST_ID)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'

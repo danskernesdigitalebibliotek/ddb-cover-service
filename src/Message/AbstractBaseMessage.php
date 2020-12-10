@@ -146,10 +146,10 @@ abstract class AbstractBaseMessage
     }
 
     /**
-     * Get request id (which is unique for the whole request).
+     * Get trace id (which is unique for the whole request).
      *
      * @return string
-     *   The request id
+     *   The trace id
      */
     public function getTraceId(): string
     {
