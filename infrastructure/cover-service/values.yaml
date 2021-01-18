@@ -22,7 +22,9 @@ app:
   image:
     version: "latest"
     imagePullPolicy: "IfNotPresent"
-  enbled_no_hits: "false"
+  no_hits:
+    enbled: "false"
+    cache_ttl: "172800"
   cors_allow_origin: "*"
   trusted_proxies: "127.0.0.1,10.240.0.0/16"
   elastic_url: "http://es-elasticsearch-coordinating-only.cover-service.svc.cluster.local:9200"
