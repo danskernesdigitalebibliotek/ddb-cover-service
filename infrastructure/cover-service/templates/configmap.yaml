@@ -15,7 +15,8 @@ data:
   APP_REDIS_CACHE_DB: {{ .Values.app.redis.cache_db | quote }}
   APP_REDIS_CACHE_PREFIX: {{ .Values.app.redis.prefix | quote }}
   APP_ELASTIC_URL: {{ .Values.app.elastic_url | quote }}
-  APP_ENABLE_NO_HITS: {{ .Values.app.enbled_no_hits | quote }}
+  APP_ENABLE_NO_HITS: {{ .Values.app.no_hits.enbled | quote }}
+  APP_NO_HITS_CACHE_TTL: {{ .Values.app.no_hits.cache_ttl | quote }}
   APP_NO_HITS_TTL: {{ mul .Values.app.no_hits_ttl 1000 | quote }}
   APP_AMQP_SERVER: {{ .Values.app.amqp.server | quote }}
   APP_AMQP_PORT: {{ .Values.app.amqp.port | quote }}
