@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 class AppendDateStampEnvVarProcessor implements EnvVarProcessorInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getEnv($prefix, $name, \Closure $getEnv)
     {
@@ -25,7 +25,7 @@ class AppendDateStampEnvVarProcessor implements EnvVarProcessorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getProvidedTypes()
     {
