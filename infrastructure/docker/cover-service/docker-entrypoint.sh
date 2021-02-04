@@ -6,7 +6,7 @@ set -eux
 /usr/local/bin/confd --onetime --backend env --confdir /etc/confd
 
 ## Start prometheus export
-/usr/local/bin/php-fpm_exporter server &
+/usr/local/bin/php-fpm_exporter server --phpfpm.fix-process-count &
 
 ## Warm-up symfony cache (with the current configuration).
 /var/www/html/bin/console --env=prod cache:warmup

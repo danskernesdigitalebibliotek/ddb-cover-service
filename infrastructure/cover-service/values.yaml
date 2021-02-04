@@ -34,11 +34,8 @@ app:
     port: "6379"
     cache_db: "10"
   php:
-    max_children: "80"
-    start_servers: "15"
-    min_spare_servers: "15"
-    max_spare_servers: "30"
-    slowlog_timeout: "1"
+    type: "static"
+    max_children: "14"
 
 nginx:
   exporter:
