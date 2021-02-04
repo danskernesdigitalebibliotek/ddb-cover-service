@@ -6,7 +6,7 @@ networks:
   app:
     driver: bridge
     internal: false
-    
+
 services:
   phpfpm:
     image: itkdev/php7.3-fpm
