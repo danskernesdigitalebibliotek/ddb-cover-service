@@ -6,7 +6,7 @@ set -eux
 /usr/local/bin/confd --onetime --backend env --confdir /etc/confd
 
 ## Bump env.local into php for better performance.
-composer --env=prod dump-env prod
+composer dump-env prod
 
 ## Start prometheus export
 /usr/local/bin/php-fpm_exporter server --phpfpm.fix-process-count &
