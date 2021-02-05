@@ -10,7 +10,7 @@ RUN tar -zxf /tmp/app.tar --strip-components=1 -C ${APP_PATH} \
     && rm /tmp/app.tar
 
 # Add composer in from the official composer image (also alpine).
-COPY --from=composer:1.9.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
 WORKDIR ${APP_PATH}
 
@@ -27,6 +27,9 @@ FROM danskernesdigitalebibliotek/php7.3-fpm-base
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html
+
+# Add composer needed to run last minut optimizations after config is loaded.
+COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
 # Install the application.
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
