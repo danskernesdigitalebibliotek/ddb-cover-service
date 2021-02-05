@@ -112,7 +112,7 @@ class CoverFactory
         }
 
         $extension = $formats[$imageSize]['extension'] ?? null;
-        $format = $formats[$imageSize]['extension'] ? $this->getFormatFromExt($extension) : $originalFormat;
+        $format = isset($formats[$imageSize]['extension']) ? $this->getFormatFromExt($extension) : $originalFormat;
 
         return $this->getFormatFromExt($format);
     }
