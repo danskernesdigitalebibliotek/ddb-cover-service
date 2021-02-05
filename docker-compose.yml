@@ -14,7 +14,6 @@ services:
       - app
     environment:
       - XDEBUG_MODE=${XDEBUG_MODE:-off}
-      - XDEBUG_CONFIG=${XDEBUG_CONFIG:-''}
       - XDEBUG_SESSION=${XDEBUG_SESSION:-0}
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=256M
