@@ -1,4 +1,4 @@
-FROM danskernesdigitalebibliotek/php7.3-fpm-base AS APP_BUILDER
+FROM danskernesdigitalebibliotek/php7.4-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
@@ -23,7 +23,7 @@ RUN APP_ENV=github_actions composer install --no-dev -o --no-scripts --classmap-
 ####
 ## Build main application image.
 ####
-FROM danskernesdigitalebibliotek/php7.3-fpm-base
+FROM danskernesdigitalebibliotek/php7.4-fpm-base
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html
