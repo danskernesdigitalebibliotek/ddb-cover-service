@@ -6,6 +6,7 @@
 parameters:
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
+    container.dumper.inline_factories: true
 
 services:
 
