@@ -24,7 +24,7 @@ data:
   PHP_PM_MAX_CHILDREN: {{ .Values.app.php.max_children | quote }}
   PHP_OPCACHE_MEMORY_CONSUMPTION: {{ .Values.app.php.opcache_memory_consumption | quote }}
   PHP_OPCACHE_MAX_ACCELERATED_FILES: {{ .Values.app.php.opcache_max_accelerated_files | quote }}
-  PHP_OPCACHE_VALIDATE_TIMESTAMPS: {{ .Values.app.php.opcache_validate_timestamps }}
+  PHP_OPCACHE_VALIDATE_TIMESTAMPS: {{ .Values.app.php.opcache_validate_timestamps | quote }}
   PHP_OPCACHE_PRELOAD_PATH: {{ .Values.app.php.opcache_preload_path | quote }}
 
 ---
