@@ -39,7 +39,7 @@ app:
     opcache_memory_consumption: "32"
     opcache_max_accelerated_files: "20000"
     opcache_validate_timestamps: "0"
-    opcache_preload_path: "/app/src/preload.php"
+    opcache_preload_path: "/var/www/html/config/preload.php"
 
 nginx:
   exporter:
