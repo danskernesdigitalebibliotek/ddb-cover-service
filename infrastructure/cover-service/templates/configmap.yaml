@@ -19,6 +19,10 @@ data:
   APP_NO_HITS_CACHE_TTL: {{ .Values.app.no_hits.cache_ttl | quote }}
   PHP_PM_TYPE: {{ .Values.app.php.type | quote }}
   PHP_PM_MAX_CHILDREN: {{ .Values.app.php.max_children | quote }}
+  PHP_OPCACHE_MEMORY_CONSUMPTION: {{ .Values.app.php.opcache_memory_consumption | quote }}
+  PHP_OPCACHE_MAX_ACCELERATED_FILES: {{ .Values.app.php.opcache_max_accelerated_files | quote }}
+  PHP_OPCACHE_VALIDATE_TIMESTAMPS: {{ .Values.app.php.opcache_validate_timestamps }}
+  PHP_OPCACHE_PRELOAD_PATH: {{ .Values.app.php.opcache_preload_path | quote }}
 
 ---
 apiVersion: v1
