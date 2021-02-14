@@ -149,10 +149,11 @@ Copy the ip outputted and set it into an variable
 EXTERNAL_IP=XX.XX.XX.XX
 ```
 
-
 Create namespace and change into the namespace.
 ```sh
 kubectl create namespace ingress
+kubectl label namespaces/ingress networking/namespace=ingress
+kubens ingress
 ```
 
 Install nginx ingress using helm chart.
@@ -161,8 +162,6 @@ helm upgrade --install ingress ingress-nginx/ingress-nginx --namespace ingress \
 --set controller.metrics.enabled=true \
 --set controller.service.externalTrafficPolicy=Local \
 --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
---set controller.podAnnotations."prometheus\.io/scrape"="true" \
---set controller.podAnnotations."prometheus\.io/port"="10254" \
 --set controller.service.loadBalancerIP=$EXTERNAL_IP
 ```
 
@@ -201,17 +200,18 @@ Install the cert-manager Helm chart to enable support for lets-encrypt.
 helm install cert-manager --namespace cert-manager --version v0.16.1 jetstack/cert-manager --set installCRDs=true
 ```
 
-# Prepare cluster (shard configuration)
+# Prepare the cluster (shard configuration)
 The first step is to prepare the cluster with services that are used across the different services that makes up the complete CoverService application (frontend, upload service, faktor export, importers etc.).
 
 ```sh
 kubectl create namespace cover-service
+kubectl label namespaces/cover-service networking/namespace=cover-service
 helm upgrade --install shared-config infrastructure/shared-config --namespace cover-service
 ```
 
 # Install ElasticSearch
 
-We use https://github.com/bitnami/charts/tree/master/bitnami/elasticsearch to install elaseticsearch into the cluster
+We use https://github.com/bitnami/charts/tree/master/bitnami/elasticsearch to install elastic search into the cluster
 
 ```sh
 helm upgrade --install es bitnami/elasticsearch --namespace cover-service \

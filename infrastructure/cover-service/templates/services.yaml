@@ -4,12 +4,9 @@ kind: Service
 metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ .Release.Name }}-service
-  labels:
-    tier: frontend
 spec:
   selector:
     app: {{ .Release.Name }}-app
-    tier: frontend
   ports:
     - protocol: TCP
       port: 80
