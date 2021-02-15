@@ -83,7 +83,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                      {
  *                          "name" = "sizes",
  *                          "in" = "query",
- *                          "description" = "A list of image sizes (Cloudinary transformations) for the cover(s) you want to receive.",
+ *                          "description" = "A list of image sizes for the cover(s) you want to receive. Please note:
+  - If the cover is not available for the requested size 'null' will be returned for that size.
+  - If the 'sizes' parameter is omitted the 'default' size will be returned,
+  - If you request the 'original' size a cover will always be returned.
+
+ The different sizes in pixels (height).
+  - default: 1000px
+  - original: [variable]
+  - small: 160px
+  - medium: 270px
+  - large: 540px",
  *                          "required" = false,
  *                          "schema" : {
  *                              "type": "array",
