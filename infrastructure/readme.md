@@ -1,61 +1,123 @@
-# Azure kubernetes service
+# Cover Service on Azure kubernetes service
 This document explains how to configure AKS to run Cover Service in Kubernetes with virtual node scaling and monitoring.
 
+## Requirements
+This guide assumes you have the following tools installed in your shell  
+`az` - azure cli  
+`jq` - tool for processing JSON input  
+`kubectl` - controls the Kubernetes cluster manager  
+`helm` - the package manager for Kubernetes (https://helm.sh/docs/)  
+`kubectx` - a utility to manage and switch between kubectl contexts
+
+All can be installed using `brew install [name]` or similar.
+
+## Naming Conventions
+
+### Shell
+[Google's Shell Style Guide](https://google.github.io/styleguide/shellguide.html#s7-naming-conventions):  
+**Variable Names:** Lower-case, with underscores to separate words. Ex: `my_variable_name`  
+**Constants and Environment Variable Names:** All caps, separated with underscores, declared
+at the top of the file. Ex: `MY_CONSTANT`
+
+### Kubernetes
+[Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/)  
+Most resource types require a name that can be used as a DNS subdomain name as defined in RFC 1123. This means the name 
+must:
+* contain no more than 253 characters
+* contain only lowercase alphanumeric characters, '-' or '.'
+* start with an alphanumeric character
+* end with an alphanumeric character
+
+### Helm
+[Values](https://helm.sh/docs/chart_best_practices/values/)  
+Variable names should begin with a lowercase letter, and words should be separated with camelcase
+
+## Authentication
 Log in through CLI and list available regions. You should use a region in the EU to ensure data safety.
 ```sh
 az login
 az account list-locations -o table
 ```
 
-Set basic configuration variables used in this guide more than once. They are only set in the current terminal window 
-used and only as long as it is not closed.
+If you have access to multiple accounts ensure you are on the right account/subscription by doing
 ```sh
-ksname=ddb-cover-service
-res=CoverService 
-region=westeurope
-version=$(az aks get-versions -l ${region} --query 'orchestrators[-1].orchestratorVersion' -o tsv)
+az account list
+```
+Look for 
+```json
+"isDefault": true,
+```
+To switch default subscription
+```sh
+az account set --subscription "[account_name]"
+```
+
+## Basic Configuration
+Set basic configuration options as shell variables. They are only set in the current terminal window and 
+are cleared when the window is closed.
+```sh
+# The Azure name of the managed cluster
+az_cluster_name=ddb-cover-service
+# The Azure resource group to attach the cluster to
+az_resource_group=CoverService 
+# The Azure geographical region where the cluster should be located 
+az_region=westeurope
+# The kubernetes version to use. Set by getting the latest version available in the geographical region
+az_kubernetes_version=$(az aks get-versions -l ${az_region} --query 'orchestrators[-1].orchestratorVersion' -o tsv)
+```
+
+## Create the resource group
+Check if the resource group already exists:
+```sh
+az group exists --name ${az_resource_group}
+```
+If it does exist, consider if this is the correct group to use.  
+
+To create the resource group if it doesn't exist:
+```sh
+az group create --location ${az_region} --name ${az_resource_group}
 ```
 
 ## Networking
-To enable network policies inside the cluster we need to create custom network.
+To enable network policies inside the cluster we need to create a custom network.
 
 ```sh
-vnetname=CoverServiceVnet
-vnetsubname=CoverServiceSubnet
+# The Azure virtual network name 
+az_virtual_network_name=${az_cluster_name}-vnet
+# The Azure virtual subnet name
+az_virtual_subnet_name=${az_cluster_name}-subnet
 ```
 
 ```sh
 az network vnet create \
-    --resource-group $res \
-    --name $vnetname \
+    --resource-group $az_resource_group \
+    --name $az_virtual_network_name \
     --address-prefixes 10.0.0.0/8 \
-    --subnet-name $vnetsubname \
+    --subnet-name $az_virtual_subnet_name \
     --subnet-prefix 10.240.0.0/16
 ```
 
 Create a service principal and read in the application ID
 ```sh
-SP=$(az ad sp create-for-rbac --name ${res} --output json)
-SP_ID=$(echo $SP | jq -r .appId)
-SP_PASSWORD=$(echo $SP | jq -r .password)
+az_service_principal_json_object=$(az ad sp create-for-rbac --name ${az_resource_group} --output json)
+az_service_principal_id=$(echo $az_service_principal_json_object | jq -r .appId)
+az_service_principal_password=$(echo $az_service_principal_json_object | jq -r .password)
 ```
 
 Get the virtual network resource ID
 ```sh
-VNET_ID=$(az network vnet show --resource-group $res --name $vnetname --query id -o tsv)
+az_virtual_network_id=$(az network vnet show --resource-group $az_resource_group --name $az_virtual_network_name --query id -o tsv)
 ```
 
 Assign the service principal Contributor permissions to the virtual network resource
 ```sh
-az role assignment create --assignee $SP_ID --scope $VNET_ID --role Contributor
+az role assignment create --assignee $az_service_principal_id --scope $az_virtual_network_id --role Contributor
 ```
 
 Get the virtual network subnet resource ID
 ```sh
-SUBNET_ID=$(az network vnet subnet show --resource-group $res --vnet-name $vnetname --name $vnetsubname --query id -o tsv)
+az_virtual_subnet_id=$(az network vnet subnet show --resource-group $az_resource_group --vnet-name $az_virtual_network_name --name $az_virtual_subnet_name --query id -o tsv)
 ```
-
-
 
 ## Create services, and the cluster
 
@@ -64,24 +126,24 @@ and get yourself a cup of coffee).
 
 ```sh
 az aks create \
-    --resource-group ${res} \
-    --name ${ksname} \
+    --resource-group ${az_resource_group} \
+    --name ${az_cluster_name} \
     --node-count 3 \
     --node-vm-size Standard_DS3_v2 \
-    --kubernetes-version ${version} \
+    --kubernetes-version ${az_kubernetes_version} \
     --network-plugin kubenet \
     --service-cidr 10.0.0.0/16 \
     --dns-service-ip 10.0.0.10 \
     --docker-bridge-address 172.17.0.1/16 \
-    --vnet-subnet-id $SUBNET_ID \
-    --service-principal $SP_ID \
-    --client-secret $SP_PASSWORD \
+    --vnet-subnet-id $az_virtual_subnet_id \
+    --service-principal $az_service_principal_id \
+    --client-secret $az_service_principal_password \
     --network-policy calico
 ```
 
 Configure kubectl to connect to the new cluster
 ```sh
-az aks get-credentials --resource-group ${res} --name ${ksname}
+az aks get-credentials --resource-group ${az_resource_group} --name ${az_cluster_name}
 ```
 
 Verify that you are connected to the cluster now.
@@ -92,52 +154,48 @@ kubectl get nodes
 ### Storage account (Only if you are using azure-files)
 
 ```sh
-AKS_PERS_STORAGE_ACCOUNT_NAME=coverservice
-AKS_PERS_RESOURCE_GROUP=CoverService
-AKS_PERS_LOCATION=westeurope
-AKS_PERS_SHARE_NAME=coverservice
+az_pers_storage_account_name=coverservice
+az_pers_resource_group=CoverService
+az_pers_location=westeurope
+az_pers_share_name=coverservice
 ```
 
 Create a storage account
 ```sh
-az storage account create -n $AKS_PERS_STORAGE_ACCOUNT_NAME -g $AKS_PERS_RESOURCE_GROUP -l $AKS_PERS_LOCATION --sku Premium_LRS --kind FileStorage
+az storage account create -n $az_pers_storage_account_name -g $az_pers_resource_group -l $az_pers_location --sku Premium_LRS --kind FileStorage
 ```
 
 Get storage account key
 ```sh
-STORAGE_KEY=$(az storage account keys list --resource-group $AKS_PERS_RESOURCE_GROUP --account-name $AKS_PERS_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
+az_storage_key=$(az storage account keys list --resource-group $az_pers_resource_group --account-name $az_pers_storage_account_name --query "[0].value" -o tsv)
 ```
 
 Create cluster secret to access storage account.
 ```sh
-kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$az_pers_storage_account_name --from-literal=azurestorageaccountkey=$az_storage_key
 ```
 
-## Helm
-We are going to use https://helm.sh/ to install ingress and cert-manager into the cluster setup. Note that we here are using helm version 3. We also install the kubectx helper tool as it makes switching cluster and namespaces easier.
-```sh
-brew install helm
-brew install kubectx
-```
+## Setup Helm
+We use helm to install ingress and the cert-manager into the cluster setup. Note that we here are using helm version 3.
 
-Add stable official and bitnami helm charts repositories.
+Add stable official and bitnami helm charts repositories:
 ```sh
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 ```
 
-## Ingress
+## Ingress install & setup
 
 Get the resource group create to hold cluster related resources for your cluster
 ```sh
-mcres=$(az aks show --resource-group $res --name $ksname --query nodeResourceGroup -o tsv)
+az_node_resource_group=$(az aks show --resource-group $az_resource_group --name $az_cluster_name --query nodeResourceGroup -o tsv)
 ```
 
 Create static public IP.
 ```
 az network public-ip create \
---resource-group $mcres \
+--resource-group $az_node_resource_group \
 --name CoverServicePublicIP \
 --sku Standard \
 --allocation-method static \
@@ -146,7 +204,7 @@ az network public-ip create \
 
 Copy the ip outputted and set it into an variable
 ```sh
-EXTERNAL_IP=XX.XX.XX.XX
+az_external_ip=XX.XX.XX.XX
 ```
 
 
@@ -160,18 +218,18 @@ Install nginx ingress using helm chart.
 helm upgrade --install ingress ingress-nginx/ingress-nginx --namespace ingress \
 --set controller.metrics.enabled=true \
 --set controller.service.externalTrafficPolicy=Local \
---set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$ksname \
+--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$az_cluster_name \
 --set controller.podAnnotations."prometheus\.io/scrape"="true" \
 --set controller.podAnnotations."prometheus\.io/port"="10254" \
---set controller.service.loadBalancerIP=$EXTERNAL_IP
+--set controller.service.loadBalancerIP=$az_external_ip
 ```
 
 ### External Traffic Policy
-This is only need if you do not set it to local in the install step above. 
+This is only needed if you do not set it to local in the installation step above. 
 
-To ensure that client ip's are correctly set in headers and forwarded to the nginx backend pod's you need to ensure that
-`External Traffic Policy` is changed from `Cluster` to `Local`. Edit the service configuration and change the value for 
-`externalTrafficPolicy` to local.   
+To ensure that client ip's are set correctly in http headers and forwarded to the nginx backend pod's you need to ensure 
+that `External Traffic Policy` is changed from `Cluster` to `Local`. Edit the service configuration and change the value 
+for `externalTrafficPolicy` to local.   
 
 ```
 kubectl edit service/ingress-nginx-ingress-controller
@@ -201,8 +259,9 @@ Install the cert-manager Helm chart to enable support for lets-encrypt.
 helm install cert-manager --namespace cert-manager --version v0.16.1 jetstack/cert-manager --set installCRDs=true
 ```
 
-# Prepare cluster (shard configuration)
-The first step is to prepare the cluster with services that are used across the different services that makes up the complete CoverService application (frontend, upload service, faktor export, importers etc.).
+# Prepare the cluster (shard configuration)
+The first step is to prepare the cluster with services that are used across the different services that makes up the 
+complete CoverService application (frontend, upload service, faktor export, importers etc.).
 
 ```sh
 kubectl create namespace cover-service
@@ -245,9 +304,10 @@ Elasticsearch can be accessed within the cluster on port `9200` at `cs-elasticse
 
 # Install redis
 
-The application requires redis as cache and queue broker. We use https://github.com/bitnami/charts/tree/master/bitnami/redis chart to install redis.
+The application requires redis as cache and queue broker. We use https://github.com/bitnami/charts/tree/master/bitnami/redis 
+chart to install redis.
 
-We need to make some minor configurations changes to Redis this can be done by adding a `values.yaml` that extends the
+We need to make some minor configurations changes to Redis. This can be done by adding a `values.yaml` that extends the
 helm install below with the following content.
 
 ```yaml
@@ -304,7 +364,12 @@ in the same folder and edit the file filling in the missing configuration secret
 
 Get the main application up and running.
 ```sh
-helm upgrade --install cover-service infrastructure/cover-service --namespace cover-service --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.domain=cover.dandigbib.org
+helm upgrade \
+--install cover-service infrastructure/cover-service \
+--namespace cover-service \
+--set hpa.enabled=true \
+--set ingress.enableTLS=true \
+--set ingress.domain=cover.dandigbib.org
 ```
 
 Jump into the new namespace.
