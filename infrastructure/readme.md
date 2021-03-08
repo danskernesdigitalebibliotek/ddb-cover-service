@@ -198,7 +198,7 @@ helm repo update
 
 Install the cert-manager Helm chart to enable support for lets-encrypt.
 ```sh
-helm install cert-manager --namespace cert-manager --version v0.16.1 jetstack/cert-manager --set installCRDs=true
+helm install cert-manager --namespace cert-manager --version v1.1.0 jetstack/cert-manager --set installCRDs=true
 ```
 
 # Prepare cluster (shard configuration)
