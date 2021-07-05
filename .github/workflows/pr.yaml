@@ -6,7 +6,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: ['7.4', '7.3']
+                php: ['7.4']
         name: Validate composer (${{ matrix.php}})
         steps:
             - uses: actions/checkout@master
@@ -41,7 +41,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: ['7.4', '7.3']
+                php: ['7.4']
         name: Unit tests (${{ matrix.php}})
         steps:
             - uses: actions/checkout@master
@@ -74,7 +74,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: ['7.4', '7.3']
+                php: ['7.4']
         name: Behaviour tests (${{ matrix.php}})
         services:
             elasticsearch:
@@ -122,7 +122,7 @@ jobs:
         strategy:
           fail-fast: false
           matrix:
-            php: ['7.4', '7.3']
+            php: ['7.4']
         name: Coding style (${{ matrix.php }})
         steps:
             - uses: actions/checkout@master
@@ -160,7 +160,7 @@ jobs:
         strategy:
           fail-fast: false
           matrix:
-            php: ['7.4', '7.3']
+            php: ['7.4']
         name: Coding style fixer (${{ matrix.php }})
         steps:
             - uses: actions/checkout@master
@@ -204,22 +204,3 @@ jobs:
 
             - name: Lint helm (Shared config)
               run: helm lint infrastructure/shared-config
-
-#   @TODO: Add in future release.
-#    phan:
-#        name: PHAN
-#        runs-on: ubuntu-latest
-#        steps:
-#            - uses: actions/checkout@master
-#            - name: Setup PHP, with composer and extensions
-#              uses: shivammathur/setup-php@master
-#              with:
-#                  php-version: 7.3
-#                  extension-csv: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
-#                  coverage: none
-#            - name: Install Dependencies
-#              run: |
-#                  composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
-#            - name: PHAN
-#              run: |
-#                  composer actions/phan
