@@ -12,11 +12,11 @@ namespace App\Message;
 abstract class AbstractBaseMessage
 {
     private $operation;
-    private string $identifierType;
-    private string $identifier;
-    private int $vendorId;
-    private int $imageId;
-    private bool $useSearchCache = true;
+    private $identifierType;
+    private $identifier;
+    private $vendorId;
+    private $imageId;
+    private $useSearchCache = true;
 
     /**
      * @return mixed
