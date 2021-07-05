@@ -78,21 +78,9 @@
     <PossiblyInvalidArrayOffset occurrences="1">
       <code>$clientConfig['connections']</code>
     </PossiblyInvalidArrayOffset>
-    <UndefinedDocblockClass occurrences="2">
-      <code>ElasticIndexException</code>
-      <code>ElasticIndexException</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/EventSubscriber/SearchNoHitEventSubscriber.php">
     <InvalidCatch occurrences="1"/>
-  </file>
-  <file src="src/Service/CoverStore/CloudinaryTransformationService.php">
-    <NullableReturnStatement occurrences="1">
-      <code>$this-&gt;transformations[$format]</code>
-    </NullableReturnStatement>
-    <PossiblyUndefinedArrayOffset occurrences="1">
-      <code>$this-&gt;transformations[$format]</code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/Service/NoHitService.php">
     <TooManyArguments occurrences="1">

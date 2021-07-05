@@ -13,6 +13,8 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 
 /**
  * Class ImageUrl.
+ *
+ * @psalm-suppress MissingConstructor
  */
 final class ImageUrl
 {
@@ -28,7 +30,7 @@ final class ImageUrl
      *     }
      * )
      */
-    private $url;
+    private ?string $url;
 
     /**
      * @ApiProperty(
@@ -40,7 +42,7 @@ final class ImageUrl
      *     }
      * )
      */
-    private $format;
+    private string $format;
 
     /**
      * @ApiProperty(
@@ -53,7 +55,7 @@ final class ImageUrl
      *     }
      * )
      */
-    private $size;
+    private string $size;
 
     /**
      * Get url.

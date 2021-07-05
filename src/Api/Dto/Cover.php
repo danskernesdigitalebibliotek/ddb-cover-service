@@ -127,6 +127,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *          }
  *     }
  * )
+ *
+ * @psalm-suppress MissingConstructor
  */
 class Cover
 {
@@ -141,7 +143,7 @@ class Cover
      *     }
      * )
      */
-    private $id;
+    private string $id;
 
     /**
      * @ApiProperty(
@@ -154,7 +156,7 @@ class Cover
      *     }
      * )
      */
-    private $type;
+    private string $type;
 
     /**
      * @ApiProperty(
@@ -204,7 +206,7 @@ class Cover
      *     }
      * )
      */
-    private $imageUrls;
+    private array $imageUrls;
 
     /**
      * Get the isIdentifier.

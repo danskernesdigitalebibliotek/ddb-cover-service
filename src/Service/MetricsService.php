@@ -16,8 +16,8 @@ use Prometheus\Storage\Adapter;
  */
 class MetricsService
 {
-    private $registry;
-    private $namespace = 'CoverService';
+    private CollectorRegistry $registry;
+    private string $namespace = 'CoverService';
 
     /**
      * MetricsService constructor.
