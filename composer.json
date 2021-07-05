@@ -36,13 +36,13 @@
     "require-dev": {
         "behatch/contexts": "^3.3",
         "escapestudios/symfony2-coding-standard": "^3.10",
+        "fakerphp/faker": "^1.14",
         "friends-of-behat/mink": "^1.8",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "friends-of-behat/mink-extension": "^2.4",
         "friends-of-behat/symfony-extension": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "friendsoftwig/twigcs": "^3.2",
-        "fzaninotto/faker": "^1.9",
         "matthiasnoback/behat-local-code-coverage-extension": "^0.4.0",
         "phan/phan": "^3.0",
         "phpunit/phpcov": "^5.0",
@@ -88,35 +88,18 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "check": [
-            "@check-coding-standards"
-        ],
         "check-coding-standards/php-cs-fixer": [
             "php-cs-fixer --config=.php_cs.dist fix --dry-run --format=checkstyle"
-        ],
-        "check-coding-standards/phpcs": [
-            "phpcs --standard=phpcs.xml.dist"
         ],
         "check-coding-standards/twigcs": [
             "twigcs lint templates"
         ],
         "check-coding-standards": [
             "@check-coding-standards/php-cs-fixer",
-            "@check-coding-standards/phpcs",
             "@check-coding-standards/twigcs"
         ],
-        "apply-coding-standards/php-cs-fixer": [
-            "php-cs-fixer --config=.php_cs.dist fix"
-        ],
-        "apply-coding-standards/phpcs": [
-            "phpcbf --standard=phpcs.xml.dist"
-        ],
         "apply-coding-standards": [
-            "@apply-coding-standards/php-cs-fixer",
-            "@apply-coding-standards/phpcs"
-        ],
-        "phan": [
-            "./vendor/bin/phan --allow-polyfill-parser"
+            "php-cs-fixer --config=.php_cs.dist fix"
         ],
         "phpunit": [
             "./vendor/bin/phpunit"
@@ -127,15 +110,6 @@
         "test-suite": [
             "@phpunit",
             "@behat"
-        ],
-        "actions/phpcs": [
-            "phpcs --standard=phpcs.xml.dist --report=checkstyle"
-        ],
-        "actions/phpcsfixer": [
-            "php-cs-fixer --config=.php_cs.dist fix --dry-run --diff --diff-format=udiff"
-        ],
-        "actions/phan": [
-            "./vendor/bin/phan --no-progress-bar --allow-polyfill-parser"
         ]
     },
     "conflict": {
