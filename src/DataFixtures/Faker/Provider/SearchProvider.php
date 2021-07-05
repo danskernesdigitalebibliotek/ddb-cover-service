@@ -34,12 +34,11 @@ final class SearchProvider extends BaseProvider
     /**
      * Get a random faust number.
      *
-     * @return string
-     *   A random but pseudo realistic faust identifier
+     * @return string A random but pseudo realistic faust identifier
      */
     public function faust(): string
     {
-        return self::randomNumber(8);
+        return (string) self::randomNumber(8);
     }
 
     /**

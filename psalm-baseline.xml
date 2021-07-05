@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.8.1@f73f2299dbc59a3e6c4d66cff4605176e728ee69">
+  <file src="src/Api/DataProvider/CoverCollectionDataProvider.php">
+    <RedundantCondition occurrences="2">
+      <code>\is_array($isIdentifiers)</code>
+      <code>\is_array($sizes)</code>
+    </RedundantCondition>
+    <TypeDoesNotContainType occurrences="3">
+      <code>[$isIdentifiers]</code>
+      <code>[$sizes]</code>
+      <code>empty($sizes)</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Api/Factory/CoverFactory.php">
+    <InvalidArrayOffset occurrences="2">
+      <code>$formats[$imageSize]['extension']</code>
+      <code>$formats[$imageSize]['extension']</code>
+    </InvalidArrayOffset>
+    <PossiblyNullArgument occurrences="1">
+      <code>$extension</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Api/OpenApi/OpenApiDecorator.php">
+    <PossiblyInvalidArrayAccess occurrences="3">
+      <code>$docs['components']</code>
+      <code>$docs['paths']</code>
+      <code>$docs['paths']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayAssignment occurrences="3">
+      <code>$docs['components']</code>
+      <code>$docs['paths']</code>
+      <code>$docs['paths']</code>
+    </PossiblyInvalidArrayAssignment>
+    <PossiblyNullArgument occurrences="1">
+      <code>$docs['paths']['/api/v2/covers']['get']['parameters'][1]['description']</code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess occurrences="3">
+      <code>$docs['components']</code>
+      <code>$docs['paths']</code>
+      <code>$docs['paths']</code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullArrayAssignment occurrences="3">
+      <code>$docs['components']</code>
+      <code>$docs['paths']</code>
+      <code>$docs['paths']</code>
+    </PossiblyNullArrayAssignment>
+    <PossiblyNullReference occurrences="6">
+      <code>$docs</code>
+      <code>$docs</code>
+      <code>$docs</code>
+      <code>$docs</code>
+      <code>$docs</code>
+      <code>$docs</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Api/Statistics/CollectionStatsLogger.php">
+    <PossiblyNullReference occurrences="2">
+      <code>getAgency</code>
+      <code>getClientIp</code>
+    </PossiblyNullReference>
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>getAgency</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/DataFixtures/AppFixtures.php">
+    <UndefinedMagicMethod occurrences="1">
+      <code>isIdentifier</code>
+    </UndefinedMagicMethod>
+    <UndefinedMagicPropertyFetch occurrences="5">
+      <code>$faker-&gt;height</code>
+      <code>$faker-&gt;imageFormat</code>
+      <code>$faker-&gt;imageUrl</code>
+      <code>$faker-&gt;isType</code>
+      <code>$faker-&gt;width</code>
+    </UndefinedMagicPropertyFetch>
+  </file>
+  <file src="src/DataFixtures/Elastic/ElasticService.php">
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$clientConfig['connections']</code>
+    </PossiblyInvalidArrayOffset>
+    <UndefinedDocblockClass occurrences="2">
+      <code>ElasticIndexException</code>
+      <code>ElasticIndexException</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/EventSubscriber/SearchNoHitEventSubscriber.php">
+    <InvalidCatch occurrences="1"/>
+  </file>
+  <file src="src/Service/CoverStore/CloudinaryTransformationService.php">
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;transformations[$format]</code>
+    </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$this-&gt;transformations[$format]</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="src/Service/NoHitService.php">
+    <TooManyArguments occurrences="1">
+      <code>dispatch</code>
+    </TooManyArguments>
+  </file>
+</files>
