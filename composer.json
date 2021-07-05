@@ -48,7 +48,8 @@
         "phpunit/phpcov": "^5.0",
         "phpunit/phpunit": "^7.0",
         "symfony/debug-pack": "^1.0",
-        "symfony/maker-bundle": "^1.17"
+        "symfony/maker-bundle": "^1.17",
+        "vimeo/psalm": "^4.8"
     },
     "config": {
         "preferred-install": {
