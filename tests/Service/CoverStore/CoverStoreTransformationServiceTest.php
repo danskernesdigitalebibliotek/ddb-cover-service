@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  */
 class CoverStoreTransformationServiceTest extends TestCase
 {
-    private $url = 'https://res.cloudinary.com/dandigbib/image/upload/v1544766159/publizon/9788711672051.png';
+    private string $url = 'https://res.cloudinary.com/dandigbib/image/upload/v1544766159/publizon/9788711672051.png';
 
     /**
      * Test that "default" transformation.

@@ -43,12 +43,14 @@
         "friends-of-behat/symfony-extension": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "friendsoftwig/twigcs": "^3.2",
-        "matthiasnoback/behat-local-code-coverage-extension": "^0.4.0",
-        "phan/phan": "^3.0",
-        "phpunit/phpcov": "^5.0",
-        "phpunit/phpunit": "^7.0",
+        "matthiasnoback/behat-local-code-coverage-extension": "^0.5.0",
+        "matthiasnoback/live-code-coverage": "^1.6",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "^4.4",
+        "symfony/css-selector": "^4.4",
         "symfony/debug-pack": "^1.0",
         "symfony/maker-bundle": "^1.17",
+        "symfony/phpunit-bridge": "^5.3",
         "vimeo/psalm": "^4.8"
     },
     "config": {
