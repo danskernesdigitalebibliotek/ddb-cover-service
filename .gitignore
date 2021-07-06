@@ -28,3 +28,4 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 .env.local.php
+node_modules

@@ -1,0 +1,14 @@
+{
+  "license": "UNLICENSED",
+  "private": true,
+  "description": "Tooling setup for linting",
+  "devDependencies": {
+    "markdownlint-cli": "^0.27.1"
+  },
+  "scripts": {
+    "check-coding-standards/markdownlint": "markdownlint README.md docs/**/*.md",
+    "check-coding-standards": "yarn check-coding-standards/markdownlint",
+    "apply-coding-standards/markdownlint": "markdownlint --fix README.md docs/**/*.md",
+    "apply-coding-standards": "yarn apply-coding-standards/markdownlint"
+  }
+}
