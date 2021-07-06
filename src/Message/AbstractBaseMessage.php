@@ -132,14 +132,14 @@ abstract class AbstractBaseMessage
     /**
      * Should the search cache be used when processing the message.
      *
-     * @param bool $useIt
+     * @param bool $useSearchCache
      *   True to use or false to by-pass search cache
      *
      * @return AbstractBaseMessage
      */
-    public function setUseSearchCache(bool $useIt): self
+    public function setUseSearchCache(bool $useSearchCache): self
     {
-        $this->useSearchCache = $useIt;
+        $this->useSearchCache = $useSearchCache;
 
         return $this;
     }

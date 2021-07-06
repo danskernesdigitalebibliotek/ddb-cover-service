@@ -21,7 +21,7 @@ class AppFixtures
     private const BATCH_SIZE = 100;
     private const FAKER_SEED = 123456789;
 
-    private $elasticService;
+    private ElasticService $elasticService;
 
     /**
      * AppFixtures constructor.

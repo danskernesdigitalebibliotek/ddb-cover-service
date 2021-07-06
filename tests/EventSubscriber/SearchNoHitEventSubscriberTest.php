@@ -29,7 +29,7 @@ class SearchNoHitEventSubscriberTest extends TestCase
     /**
      * Set up test.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

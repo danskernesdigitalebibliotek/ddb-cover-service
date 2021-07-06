@@ -2,11 +2,12 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.'/{src,tests}')
+    // To get the correct OpenAPi docs output we have to break the rules in Api/Dto/Cover.php L87-96,
+    ->notPath('Api/Dto/Cover.php')
 ;
 
 return PhpCsFixer\Config::create()
     ->setRules([
-        '@PSR2' => true,
         '@Symfony' => true,
         '@Symfony:risky' => false,
         'phpdoc_align' => false,
