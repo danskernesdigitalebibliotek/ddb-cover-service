@@ -71,8 +71,8 @@ header #logo img {
 
 .information-container.wrapper .info .title {
   font-size: 36px;
-  color: rgb(40, 143, 136);
-  border-bottom: 1px solid rgb(40, 143, 136);
+  color: rgb(0, 100, 230);
+  border-bottom: 1px solid rgb(0, 100, 230);
   margin-bottom: 0.3em;
   margin-top: 0;
 }
@@ -81,7 +81,7 @@ header #logo img {
   font-size: 14px;
   transition: all .4s;
   font-family: sans-serif;
-  color: #4990e2;
+  color: rgb(0, 100, 230);
 }
 
 .information-container.wrapper .info hgroup.main {
@@ -112,7 +112,7 @@ header #logo img {
 
 .api-container.wrapper .title {
   font-size: 18px;
-  color: rgb(40, 143, 136);
+  color: rgb(0, 100, 230);
   margin-bottom: 0.3em;
   margin-top: 0;
 }
@@ -121,5 +121,5 @@ header #logo img {
   font-size: 14px;
   transition: all .4s;
   font-family: sans-serif;
-  color: #4990e2;
+  color: rgb(0, 100, 230);
 }
