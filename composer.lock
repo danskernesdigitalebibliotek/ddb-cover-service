@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60a043324140d46e78a57b97846bef03",
+    "content-hash": "1dead37ee7d510e914a9b4ef4150d73a",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -277,22 +277,23 @@
         },
         {
             "name": "danskernesdigitalebibliotek/agency-auth-bundle",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danskernesdigitalebibliotek/agency-auth-bundle.git",
-                "reference": "7c84f4b1cef63e2c81a28111855bab4429002667"
+                "reference": "dccfbfb39e6f84db32a10694e681f1b87175f234"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danskernesdigitalebibliotek/agency-auth-bundle/zipball/7c84f4b1cef63e2c81a28111855bab4429002667",
-                "reference": "7c84f4b1cef63e2c81a28111855bab4429002667",
+                "url": "https://api.github.com/repos/danskernesdigitalebibliotek/agency-auth-bundle/zipball/dccfbfb39e6f84db32a10694e681f1b87175f234",
+                "reference": "dccfbfb39e6f84db32a10694e681f1b87175f234",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
-                "php": "^7.3",
+                "php": "^7.4 | ^8.0",
+                "symfony/cache": "^4.4",
                 "symfony/config": "^4.4",
                 "symfony/dependency-injection": "^4.4",
                 "symfony/http-client": "^4.4",
@@ -304,9 +305,8 @@
                 "drenso/phan-extensions": "^3.1",
                 "escapestudios/symfony2-coding-standard": "^3.10",
                 "friendsofphp/php-cs-fixer": "^2.13",
-                "phan/phan": "^3.0",
-                "symfony/cache": "^4.4",
-                "symfony/phpunit-bridge": "^4.4"
+                "symfony/phpunit-bridge": "^4.4",
+                "vimeo/psalm": "^4.8"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -321,9 +321,9 @@
             "description": "Agency authentication against the Open Platform",
             "support": {
                 "issues": "https://github.com/danskernesdigitalebibliotek/agency-auth-bundle/issues",
-                "source": "https://github.com/danskernesdigitalebibliotek/agency-auth-bundle/tree/master"
+                "source": "https://github.com/danskernesdigitalebibliotek/agency-auth-bundle/tree/2.0.0"
             },
-            "time": "2020-09-09T09:07:47+00:00"
+            "time": "2021-07-06T08:37:26+00:00"
         },
         {
             "name": "doctrine/annotations",
