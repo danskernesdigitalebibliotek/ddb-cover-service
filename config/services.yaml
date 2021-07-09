@@ -63,11 +63,11 @@ services:
         class: Prometheus\Storage\APC
 
     # OpenApi/Swagger decoration
-    App\Api\OpenApi\OpenApiDecorator:
-        decorates: 'api_platform.swagger.normalizer.api_gateway'
-        arguments:
-            $decorated: '@App\Api\OpenApi\OpenApiDecorator.inner'
+    App\Api\OpenApi\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\Api\OpenApi\OpenApiFactory.inner' ]
         autoconfigure: false
+        autowire: false
 
     # Fixtures Service
     # Used in 'dev' and 'test' env only
