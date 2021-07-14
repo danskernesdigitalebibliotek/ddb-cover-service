@@ -1,6 +1,6 @@
 {{- if .Values.ingress.enabled }}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: {{ .Release.Namespace }}
@@ -33,8 +33,11 @@ spec:
     - host: {{ required "A valid .Values.ingress.domain entry required!" .Values.ingress.domain | quote }}
       http:
         paths:
-          - backend:
-              serviceName: {{ .Release.Name }}-service
-              servicePort: 80
-            path: {{ .Values.ingress.path | quote }}
+          - path: {{ .Values.ingress.path | quote }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-service
+                port:
+                  number: 80
 {{- end }}

@@ -9,29 +9,31 @@ namespace App\Tests\EventSubscriber;
 
 use App\Event\SearchNoHitEvent;
 use App\EventSubscriber\SearchNoHitEventSubscriber;
+use App\Message\SearchNoHitsMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
-use Enqueue\Client\ProducerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Class SearchNoHitEventSubscriberTest.
  */
 class SearchNoHitEventSubscriberTest extends TestCase
 {
-    private $producer;
+    private $bus;
     private $noHitsCache;
 
     /**
      * Set up test.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->producer = $this->createMock(ProducerInterface::class);
+        $this->bus = $this->createMock(MessageBusInterface::class);
         $this->noHitsCache = $this->createMock(CacheItemPoolInterface::class);
     }
 
@@ -45,7 +47,7 @@ class SearchNoHitEventSubscriberTest extends TestCase
 
         $this->noHitsCache->expects($this->never())->method('getItems');
         $this->noHitsCache->expects($this->never())->method('commit');
-        $this->producer->expects($this->never())->method('sendEvent');
+        $this->bus->expects($this->never())->method('dispatch');
 
         $noNitSubscriber->onSearchNoHitEvent($event);
     }
@@ -94,14 +96,24 @@ class SearchNoHitEventSubscriberTest extends TestCase
         $this->noHitsCache->expects($this->once())->method('commit');
 
         // Producer expects
-        $json2 = '{"operation":null,"identifierType":"pid","identifier":"870970-basis:23452345","vendorId":null,"imageId":null}';
-        $json3 = '{"operation":null,"identifierType":"pid","identifier":"870970-basis:34563456","vendorId":null,"imageId":null}';
-        $this->producer->expects($this->exactly(2))->method('sendEvent')
+        $message1 = new SearchNoHitsMessage();
+        $message1->setOperation(null)
+            ->setIdentifierType('pid')
+            ->setIdentifier('870970-basis:23452345')
+            ->setVendorId(null)
+            ->setImageId(null);
+        $message2 = new SearchNoHitsMessage();
+        $message2->setOperation(null)
+            ->setIdentifierType('pid')
+            ->setIdentifier('870970-basis:34563456')
+            ->setVendorId(null)
+            ->setImageId(null);
+        $this->bus->expects($this->exactly(2))->method('dispatch')
             ->withConsecutive(
-                [$this->equalTo('SearchNoHitsTopic'), $this->equalTo($json2)],
-                [$this->equalTo('SearchNoHitsTopic'), $this->equalTo($json3)]
-            );
-
+                [$this->equalTo($message1)],
+                [$this->equalTo($message2)]
+            )
+            ->willReturn(new Envelope($message1));
         $noNitSubscriber->onSearchNoHitEvent($event);
     }
 
@@ -132,6 +144,6 @@ class SearchNoHitEventSubscriberTest extends TestCase
      */
     private function getSearchNoHitEventSubscriber(bool $noHitsProcessingEnabled): SearchNoHitEventSubscriber
     {
-        return new SearchNoHitEventSubscriber($noHitsProcessingEnabled, $this->producer, $this->noHitsCache);
+        return new SearchNoHitEventSubscriber($noHitsProcessingEnabled, $this->bus, $this->noHitsCache);
     }
 }

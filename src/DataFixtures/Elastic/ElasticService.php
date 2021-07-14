@@ -16,8 +16,8 @@ use FOS\ElasticaBundle\Elastica\Client;
  */
 class ElasticService
 {
-    private $elasticHost;
-    private $fosElasticaConfigManager;
+    private string $elasticHost;
+    private ConfigManager $fosElasticaConfigManager;
 
     /**
      * ElasticService constructor.
@@ -45,8 +45,6 @@ class ElasticService
      *
      * @param Search ...$searches
      *   Iterable of Search objects to index
-     *
-     * @throws ElasticIndexException
      */
     public function index(Search ...$searches): void
     {
@@ -82,8 +80,6 @@ class ElasticService
      *
      * @return string
      *   The name of the index configured
-     *
-     * @throws ElasticIndexException
      */
     private function getIndexName(): string
     {

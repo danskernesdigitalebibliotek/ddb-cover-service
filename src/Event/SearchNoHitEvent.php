@@ -17,7 +17,7 @@ class SearchNoHitEvent extends Event
 {
     public const NAME = 'app.search.nohit';
 
-    private $noHits;
+    private array $noHits;
 
     /**
      * SearchNoHitEvent constructor.

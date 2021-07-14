@@ -54,7 +54,7 @@ final class NoHitService
     {
         $notFoundIdentifiers = array_diff($requestIdentifiers, $foundIdentifiers);
 
-        $this->metricsService->counter('no_hit_event_duration_seconds', 'Total number of no-hits', count($notFoundIdentifiers), ['type' => 'rest']);
+        $this->metricsService->counter('no_event_hits_total', 'Total number of no-hits', count($notFoundIdentifiers), ['type' => 'rest']);
         $this->dispatchNoHits($type, $notFoundIdentifiers);
     }
 

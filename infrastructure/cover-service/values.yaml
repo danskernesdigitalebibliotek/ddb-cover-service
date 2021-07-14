@@ -7,7 +7,7 @@ env: "prod"
 ingress:
   enabled: true
   enableAuth: false
-  enableTLS: false
+  enableTLS: true
   cert: "letsencrypt"
   path: "/api"
 
@@ -25,6 +25,7 @@ app:
   no_hits:
     enbled: "false"
     cache_ttl: "172800"
+  no_hits_ttl: 3600
   cors_allow_origin: "*"
   trusted_proxies: "127.0.0.1,10.240.0.0/16"
   elastic_url: "http://es-elasticsearch-coordinating-only.cover-service.svc.cluster.local:9200"
@@ -33,6 +34,9 @@ app:
     prefix: "DDBCoverV2"
     port: "6379"
     cache_db: "10"
+  amqp:
+    server: "mq-rabbitmq.cover-service.svc.cluster.local"
+    port: "5672"
   php:
     type: "static"
     max_children: "14"

@@ -21,8 +21,8 @@ header #logo img {
 
 #swagger-ui.api-platform .info .title {
   /*color:#fff;*/
-  color: rgb(40, 143, 136);
-  border-bottom: 1px solid rgb(40, 143, 136);
+  color: rgb(0, 100, 230);
+  border-bottom: 1px solid rgb(0, 100, 230);
   margin-bottom: 0.3em;
 }
 
@@ -49,6 +49,22 @@ header #logo img {
   transform: scale(1.01);
 }
 
+.swagger-ui .btn.authorize {
+  line-height: 1;
+  display: inline;
+  color: rgb(0, 100, 230);
+  border-color: rgb(0, 100, 230);
+  background-color: transparent;
+}
+
+#swagger-ui.api-platform .btn.authorize:hover {
+  background-color: rgba(0, 100, 230, .1);
+}
+
+.swagger-ui .btn.authorize svg {
+  fill: rgb(0, 100, 230);
+}
+
 #swagger-ui.api-platform .opblock.opblock-get .opblock-summary-method {
-  background-color:rgb(40, 143, 136);
+  background-color: #0064e6;
 }

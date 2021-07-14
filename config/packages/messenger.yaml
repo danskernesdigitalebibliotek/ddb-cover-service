@@ -1,0 +1,20 @@
+framework:
+    messenger:
+        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+        # failure_transport: failed
+
+        transports:
+            async_no_hit:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: no-hit
+                    queues:
+                        cs_no_hit:
+                            arguments:
+                                x-message-ttl: '%env(int:APP_NO_HITS_TTL)%'
+
+            #failed: 'doctrine://default?queue_name=failed'
+
+        routing:
+            'App\Message\SearchNoHitsMessage': async_no_hit

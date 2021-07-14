@@ -17,6 +17,9 @@ data:
   APP_ELASTIC_URL: {{ .Values.app.elastic_url | quote }}
   APP_ENABLE_NO_HITS: {{ .Values.app.no_hits.enbled | quote }}
   APP_NO_HITS_CACHE_TTL: {{ .Values.app.no_hits.cache_ttl | quote }}
+  APP_NO_HITS_TTL: {{ mul .Values.app.no_hits_ttl 1000 | quote }}
+  APP_AMQP_SERVER: {{ .Values.app.amqp.server | quote }}
+  APP_AMQP_PORT: {{ .Values.app.amqp.port | quote }}
   PHP_PM_TYPE: {{ .Values.app.php.type | quote }}
   PHP_PM_MAX_CHILDREN: {{ .Values.app.php.max_children | quote }}
   PHP_OPCACHE_MEMORY_CONSUMPTION: {{ .Values.app.php.opcache_memory_consumption | quote }}

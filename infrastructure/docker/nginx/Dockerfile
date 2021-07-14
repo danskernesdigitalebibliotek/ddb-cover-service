@@ -1,7 +1,7 @@
 ARG VERSION="latest"
 FROM danskernesdigitalebibliotek/cover-service:${VERSION} as APPLICATION
 
-FROM nginx:1.17-alpine
+FROM 1.20.1-alpine
 ARG APP_VERSION
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
