@@ -40,8 +40,10 @@ class MetricsController extends AbstractController
      * Get opcache statistics.
      *
      * @param MetricsService $metricsService
+     *
+     * @return void
      */
-    private function opcacheMetrics(MetricsService $metricsService)
+    private function opcacheMetrics(MetricsService $metricsService): void
     {
         $status = opcache_get_status();
 
@@ -77,8 +79,10 @@ class MetricsController extends AbstractController
      * Get APCu statistics.
      *
      * @param MetricsService $metricsService
+     *
+     * @return void
      */
-    private function apcuMetrics(MetricsService $metricsService)
+    private function apcuMetrics(MetricsService $metricsService): void
     {
         $status = apcu_cache_info();
 

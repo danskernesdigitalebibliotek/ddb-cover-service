@@ -7,7 +7,7 @@ env: "prod"
 ingress:
   enabled: true
   enableAuth: false
-  enableTLS: false
+  enableTLS: true
   cert: "letsencrypt"
   path: "/api"
 
@@ -22,7 +22,10 @@ app:
   image:
     version: "latest"
     imagePullPolicy: "IfNotPresent"
-  enbled_no_hits: "false"
+  no_hits:
+    enbled: "false"
+    cache_ttl: "172800"
+  no_hits_ttl: 3600
   cors_allow_origin: "*"
   trusted_proxies: "127.0.0.1,10.240.0.0/16"
   elastic_url: "http://es-elasticsearch-coordinating-only.cover-service.svc.cluster.local:9200"
@@ -31,12 +34,16 @@ app:
     prefix: "DDBCoverV2"
     port: "6379"
     cache_db: "10"
+  amqp:
+    server: "mq-rabbitmq.cover-service.svc.cluster.local"
+    port: "5672"
   php:
-    max_children: "80"
-    start_servers: "15"
-    min_spare_servers: "15"
-    max_spare_servers: "30"
-    slowlog_timeout: "1"
+    type: "static"
+    max_children: "14"
+    opcache_memory_consumption: "32"
+    opcache_max_accelerated_files: "20000"
+    opcache_validate_timestamps: "0"
+    opcache_preload_path: "/var/www/html/config/preload.php"
 
 nginx:
   exporter:

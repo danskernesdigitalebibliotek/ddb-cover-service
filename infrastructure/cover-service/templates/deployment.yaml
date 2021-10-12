@@ -27,16 +27,16 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
-        - name: frontend
+        - name: symfony-phpfpm
           image: danskernesdigitalebibliotek/cover-service:{{ .Values.app.image.version }}
           imagePullPolicy: {{ .Values.app.image.imagePullPolicy }}
           resources:
             requests:
-              memory: '256Mi'
-              cpu: '300m'
+              memory: '512Mi'
+              cpu: '100m'
             limits:
-              memory: '384Mi'
-              cpu: '500m'
+              memory: '638Mi'
+              cpu: '300m'
           readinessProbe:
             exec:
               command:
@@ -47,7 +47,7 @@ spec:
             exec:
               command:
                 - php-fpm-healthcheck
-                - --accepted-conn=500000
+                - --accepted-conn=50000
             initialDelaySeconds: 0
             periodSeconds: 10
           env:
@@ -66,6 +66,16 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-secret
                   key: APP_OPENPLATFORM_SECRET
+            - name: APP_AMQP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: APP_AMQP_USERNAME
+            - name: APP_AMQP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: APP_AMQP_PASSWORD
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-configmap
@@ -78,10 +88,10 @@ spec:
           resources:
             requests:
               memory: '64Mi'
-              cpu: '100m'
+              cpu: '50m'
             limits:
               memory: '96Mi'
-              cpu: '300m'
+              cpu: '200m'
           readinessProbe:
             tcpSocket:
               port: 80
@@ -103,7 +113,7 @@ spec:
           resources:
             requests:
               memory: '64Mi'
-              cpu: '100m'
+              cpu: '50m'
             limits:
               memory: '96Mi'
               cpu: '100m'

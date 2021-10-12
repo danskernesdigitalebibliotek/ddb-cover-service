@@ -1,0 +1,7 @@
+framework:
+    messenger:
+        transports:
+            background-queue: 'in-memory://'
+
+        routing:
+            'App\Message\SearchNoHitsMessage': background-queue

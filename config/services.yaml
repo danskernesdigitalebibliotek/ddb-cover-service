@@ -6,6 +6,7 @@
 parameters:
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
+    container.dumper.inline_factories: true
 
 services:
 
@@ -27,6 +28,9 @@ services:
             $bindElasticType: '%env(ELASTIC_TYPE)%'
             $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+
+            $bindElasticSearchUrl: '%env(ELASTIC_URL)%'
+            $bindElasticStatsIndexPrefix: '%env(ELASTIC_STATS_INDEX_PREFIX)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
@@ -62,11 +66,11 @@ services:
         class: Prometheus\Storage\APC
 
     # OpenApi/Swagger decoration
-    App\Api\OpenApi\OpenApiDecorator:
-        decorates: 'api_platform.swagger.normalizer.api_gateway'
-        arguments:
-            $decorated: '@App\Api\OpenApi\OpenApiDecorator.inner'
+    App\Api\OpenApi\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\Api\OpenApi\OpenApiFactory.inner' ]
         autoconfigure: false
+        autowire: false
 
     # Fixtures Service
     # Used in 'dev' and 'test' env only

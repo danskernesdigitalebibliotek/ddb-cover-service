@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% if title %}{{ title }} - {% endif %}API Platform</title>
+    <title>{% if title %}{{ title }}{% endif %}</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
     <link rel="stylesheet" href="{{ asset('bundles/apiplatform/swagger-ui/swagger-ui.css') }}">
@@ -48,7 +48,7 @@
     </defs>
 </svg>
 <header>
-    <a id="logo" href="https://www.danskernesdigitalebibliotek.dk/"><img src="{{ asset('images/ddb-logo.png') }}" alt="danskernesdigitalebibliotek.dk"></a>
+    <a id="logo" href="https://www.danskernesdigitalebibliotek.dk/"><img src="/images/ddf_logo_rgb_blue_web.png" alt="detdigitalefolkebibliotek.dk"></a>
 </header>
 
 <div id="swagger-ui" class="api-platform"></div>

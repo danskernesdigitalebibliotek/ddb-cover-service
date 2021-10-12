@@ -1,4 +1,4 @@
-FROM danskernesdigitalebibliotek/php7.3-fpm-base AS APP_BUILDER
+FROM danskernesdigitalebibliotek/php7.4-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
@@ -10,7 +10,7 @@ RUN tar -zxf /tmp/app.tar --strip-components=1 -C ${APP_PATH} \
     && rm /tmp/app.tar
 
 # Add composer in from the official composer image (also alpine).
-COPY --from=composer:1.9.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR ${APP_PATH}
 
@@ -23,10 +23,13 @@ RUN APP_ENV=github_actions composer install --no-dev -o --no-scripts --classmap-
 ####
 ## Build main application image.
 ####
-FROM danskernesdigitalebibliotek/php7.3-fpm-base
+FROM danskernesdigitalebibliotek/php7.4-fpm-base
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html
+
+# Add composer needed to run last minut optimizations after config is loaded.
+COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
 # Install the application.
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
@@ -36,7 +39,7 @@ RUN chown -R www-data:www-data ${APP_PATH}/var \
     && chown -R www-data:www-data ${APP_PATH}/public
 
 # Download prometheus php-fpm export.
-COPY --from=hipages/php-fpm_exporter /php-fpm_exporter /usr/local/bin/php-fpm_exporter
+COPY --from=hipages/php-fpm_exporter:1.1.1 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
 
 # Copy configuration.
 COPY etc/ /etc/

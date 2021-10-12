@@ -6,23 +6,6 @@ for cover images for library materials. Search input must be a known identifier
 type such as 'isbn', 'pid', 'faust', etc. and one or more actual ids. Response
 is a list of cover image URLs by id, format and size.
 
-# License
-
-Copyright (C) 2018  Danskernes Digitale Bibliotek (DDB)
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see [https://www.gnu.org/licenses/](https://www.gnu.org/licenses/).
-
 ## Tech Stack
 
 This is a Symfony 4 (flex) project based on the [Api-platform
@@ -95,11 +78,11 @@ defined API, relevant data transfer objects (DTO) are defined for each of the id
 types we support. We use a different 'list' format than api-platform for
 submitting multiple values for the same parameter. To enable this and to support
 searching directly in ElasticSearch and bypass the database custom [data
-providers](https://api-platform.com/docs/core/data-providers/) 
+providers](https://api-platform.com/docs/core/data-providers/)
 (`/src/Api/DataProvider/*`) and
-[filters](https://api-platform.com/docs/core/filters/) (`/src/Api/Filter/*`) 
-are defined. All other custom functionality related to the REST API is also 
-defined under `/src/Api`. 
+[filters](https://api-platform.com/docs/core/filters/) (`/src/Api/Filter/*`)
+are defined. All other custom functionality related to the REST API is also
+defined under `/src/Api`.
 
 A test suite for the REST API is defined as Behat features under `/features`.
 
@@ -135,30 +118,13 @@ contain the import logic for the vendors specific access setup
 ## Development Setup
 
 ### Docker compose
-The project comes with a docker-compose setup base on development only images, that comes with all required extensions 
+
+The project comes with a docker-compose setup base on development only images, that comes with all required extensions
 to PHP (including xdebug) and all services required to run the application.
 
-For easy usage it's recommended to use træfik (proxy) and the wrapper script for docker-compose used at ITKDev 
-(https://github.com/aakb/itkdev-docker/tree/develop/scripts). It's not an requirement and the setup examples below is 
-without the script. The script just makes working with docker simpler and faster. 
-
-#### Running docker setup
-
-Start the stack.
-```
-docker-compose up --detach
-```
-
-Access the site using the command blow to get the port number and append it to this URL `http://0.0.0.0:<PORT>` in your
-browser.
-```
-docker-compose port nginx 80 | cut -d: -f2
-```
-
-All the symfony commands below to install the application can be executed using this pattern.
-```
-docker-compose exec phpfpm bin/console <CMD>
-```
+For easy usage it's recommended to use træfik (proxy) and the wrapper script for docker-compose used at ITKDev
+(<https://github.com/aakb/itkdev-docker/tree/develop/scripts>). It's not an requirement and the setup examples below is
+without the script. The script just makes working with docker simpler and faster.
 
 ### Install
 
@@ -179,27 +145,8 @@ API is now exposed at `http://<servername>/api`
 ### Fixtures
 
 To add test data to the database and elastic index you can run the database
-fixtures command.  Run `bin/console doctrine:fixtures:load` to populate the 
+fixtures command.  Run `bin/console doctrine:fixtures:load` to populate the
 database with random data.
-
-## Development
-
-### Code style
-
-The project follows the [PSR2](https://www.php-fig.org/psr/psr-2/) and
-[Symfony](https://symfony.com/doc/current/contributing/code/standards.html) code
-styles. The PHP CS Fixer tool is installed automatically. To check if your code
-matches the expected code syntax you can run `composer php-cs-check`, to fix
-code style errors you can run `composer php-cs-fix`
-
-### Tests
-
-The application has a test suite consisting of unit tests and Behat features.
-
-* To run the unit tests located in `/tests` you can run `vendor/bin/phpunit`
-* To run the Behat features in `/feature` you can run `vendor/bin/behat`
-
-Both bugfixes and added features should be supported by matching tests.
 
 ### Doctrine Migrations
 
@@ -214,3 +161,90 @@ necessary `sql` statements. Review the migration before executing it with
 After changes to the entity model and migrations always run `bin/console
 doctrine:schema:validate` to ensure that mapping is correct and database schema
 is in sync with the current mapping file(s).
+
+### Testing
+
+The application has a test suite consisting of unit tests and Behat features.
+
+To run the unit tests located in `/tests` you can run:
+
+```shell
+docker compose exec phpfpm composer install
+docker compose exec phpfpm ./vendor/bin/phpunit
+```
+
+To run the Behat features in `/feature` you can run:
+
+```shell
+docker compose exec phpfpm composer install
+docker compose exec phpfpm ./vendor/bin/behat
+```
+
+Both bugfixes and added features should be supported by matching tests.
+
+### Psalm static analysis
+
+We are using [Psalm](https://psalm.dev/) for static analysis. To run
+psalm do
+
+```shell
+docker compose exec phpfpm composer install
+docker compose exec phpfpm ./vendor/bin/psalm
+```
+
+### Check Coding Standard
+
+The following command let you test that the code follows
+the coding standard for the project.
+
+* PHP files (PHP-CS-Fixer)
+
+    ```shell
+    docker compose exec phpfpm composer check-coding-standards
+    ```
+
+* Markdown files (markdownlint standard rules)
+
+    ```shell
+    docker run -v ${PWD}:/app itkdev/yarn:14 install
+    docker run -v ${PWD}:/app itkdev/yarn:14 check-coding-standards
+    ```
+
+### Apply Coding Standards
+
+To attempt to automatically fix coding style
+
+* PHP files (PHP-CS-Fixer)
+
+    ```sh
+    docker compose exec phpfpm composer apply-coding-standards
+    ```
+
+* Markdown files (markdownlint standard rules)
+
+    ```shell
+    docker run -v ${PWD}:/app itkdev/yarn:14 install
+    docker run -v ${PWD}:/app itkdev/yarn:14 apply-coding-standards
+    ```
+
+## CI
+
+Github Actions are used to run the test suite and code style checks on all PR's.
+
+If you wish to test against the jobs locally you can install [act](https://github.com/nektos/act).
+Then do:
+
+```sh
+act -P ubuntu-latest=shivammathur/node:latest pull_request
+```
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning.
+For the versions available, see the
+[tags on this repository](https://github.com/itk-dev/openid-connect/tags).
+
+## License
+
+This project is licensed under the AGPL-3.0 License - see the
+[LICENSE.md](LICENSE.md) file for details

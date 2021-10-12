@@ -15,12 +15,17 @@ data:
   APP_REDIS_CACHE_DB: {{ .Values.app.redis.cache_db | quote }}
   APP_REDIS_CACHE_PREFIX: {{ .Values.app.redis.prefix | quote }}
   APP_ELASTIC_URL: {{ .Values.app.elastic_url | quote }}
-  APP_ENABLE_NO_HITS: {{ .Values.app.enbled_no_hits | quote }}
+  APP_ENABLE_NO_HITS: {{ .Values.app.no_hits.enbled | quote }}
+  APP_NO_HITS_CACHE_TTL: {{ .Values.app.no_hits.cache_ttl | quote }}
+  APP_NO_HITS_TTL: {{ mul .Values.app.no_hits_ttl 1000 | quote }}
+  APP_AMQP_SERVER: {{ .Values.app.amqp.server | quote }}
+  APP_AMQP_PORT: {{ .Values.app.amqp.port | quote }}
+  PHP_PM_TYPE: {{ .Values.app.php.type | quote }}
   PHP_PM_MAX_CHILDREN: {{ .Values.app.php.max_children | quote }}
-  PHP_PM_START_SERVERS: {{ .Values.app.php.start_servers | quote }}
-  PHP_PM_MIN_SPARE_SERVERS: {{ .Values.app.php.min_spare_servers | quote }}
-  PHP_PM_MAX_SPARE_SERVERS: {{ .Values.app.php.max_spare_servers | quote }}
-  PHP_REQUEST_SLOWLOG_TIMEOUT: {{ .Values.app.php.slowlog_timeout | quote }}
+  PHP_OPCACHE_MEMORY_CONSUMPTION: {{ .Values.app.php.opcache_memory_consumption | quote }}
+  PHP_OPCACHE_MAX_ACCELERATED_FILES: {{ .Values.app.php.opcache_max_accelerated_files | quote }}
+  PHP_OPCACHE_VALIDATE_TIMESTAMPS: {{ .Values.app.php.opcache_validate_timestamps | quote }}
+  PHP_OPCACHE_PRELOAD_PATH: {{ .Values.app.php.opcache_preload_path | quote }}
 
 ---
 apiVersion: v1

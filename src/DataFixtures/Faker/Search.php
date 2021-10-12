@@ -8,23 +8,25 @@ namespace App\DataFixtures\Faker;
 
 /**
  * Class Search.
+ *
+ * @psalm-suppress MissingConstructor
  */
 class Search
 {
-    private $id;
-    private $isIdentifier;
-    private $isType;
-    private $imageUrl;
-    private $imageFormat;
-    private $width;
-    private $height;
+    private ?int $id;
+    private ?string $isIdentifier;
+    private ?string $isType;
+    private ?string $imageUrl;
+    private ?string $imageFormat;
+    private ?int $width;
+    private ?int $height;
 
     /**
      * Get the id.
      *
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -144,7 +146,7 @@ class Search
      *
      * @return int
      */
-    public function getWidth(): int
+    public function getWidth(): ?int
     {
         return $this->width;
     }

@@ -1,9 +1,10 @@
 api_platform:
     # Documentation
-    title: 'DDB Cover Service'
+    title: 'DDF Cover Service'
     description: >-
         This service provides covers for library materials indexed by isbn, issn, faust, pid.
-        The service is provided by [Danskernes Digitale Bibliotek](https://www.danskernesdigitalebibliotek.dk/)
+
+        The service is provided by [Det Digitale Folkebibliotek](https://detdigitalefolkebibliotek.dk/section/i-brug-paa-biblioteket/cover-service)
 
         ### Authentication notes
 

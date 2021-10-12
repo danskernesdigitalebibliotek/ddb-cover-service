@@ -11,4 +11,4 @@ monolog:
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
         statistics:
-            index: '%env(ELASTIC_STATS_INDEX)%_test'
+            index: '%env(append_date:ELASTIC_STATS_INDEX_PREFIX)%_test'
