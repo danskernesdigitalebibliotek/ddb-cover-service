@@ -29,6 +29,9 @@ services:
             $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
 
+            $bindElasticSearchUrl: '%env(ELASTIC_URL)%'
+            $bindElasticStatsIndexPrefix: '%env(ELASTIC_STATS_INDEX_PREFIX)%'
+
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
             $bindStatsLogger: '@monolog.logger.statistics'
