@@ -239,3 +239,43 @@ jobs:
 
       - name: Lint helm (Shared config)
         run: helm lint infrastructure/shared-config
+
+  apispec:
+    runs-on: ubuntu-20.04
+    name: API Specification validation
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php}}
+          extensions: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ matrix.dependency-version }}-
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.dependency-version }}-
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Export specifications
+        run: bin/console api:openapi:export --yaml --output=public/spec.yaml --no-interaction
+
+      - name: Check for changes in specifications
+        run: git diff --diff-filter=ACMRT --exit-code public/spec.yaml
