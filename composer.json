@@ -97,11 +97,11 @@
         "check-coding-standards/twigcs": [
             "twigcs lint templates"
         ],
-        "check-coding-standards": [
+        "coding-standards-check": [
             "@check-coding-standards/php-cs-fixer",
             "@check-coding-standards/twigcs"
         ],
-        "apply-coding-standards": [
+        "coding-standards-apply": [
             "php-cs-fixer --config=.php_cs.dist fix"
         ],
         "phpunit": [

@@ -20,9 +20,9 @@ use Symfony\Component\Messenger\MessageBusInterface;
  */
 class SearchNoHitEventSubscriber implements EventSubscriberInterface
 {
-    private $noHitsProcessingEnabled;
-    private $bus;
-    private $noHitsCache;
+    private bool $noHitsProcessingEnabled;
+    private MessageBusInterface $bus;
+    private CacheItemPoolInterface $noHitsCache;
 
     /**
      * SearchNoHitEventSubscriber constructor.
@@ -45,7 +45,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      *
-     * Defines the events that we subscribes to.
+     * Defines the events that we subscribe to.
      */
     public static function getSubscribedEvents(): array
     {
@@ -57,12 +57,10 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     /**
      * Handle 'SearchNoHit' event.
      *
-     * If a request for an unknown identifier is received we need to
-     * perform additional indexing for that identifier to ensure we
-     * don't have a cover for it. Given the expensive nature of the
-     * indexing operations we cache weather a 'NoHit' has been generated
-     * for this identifier within a specific time frame. This is
-     * controlled by the lifetime config of the configured cache pool.
+     * If a request for an unknown identifier is received we need to perform additional indexing for that identifier to
+     * ensure we don't have a cover for it. Given the expensive nature of the indexing operations we cache weather a
+     * 'NoHit' has been generated for this identifier within a specific time frame. This is controlled by the lifetime
+     * config of the configured cache pool.
      *
      * @param SearchNoHitEvent $event
      *   Search no hit event

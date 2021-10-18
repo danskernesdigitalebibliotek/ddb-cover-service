@@ -16,10 +16,10 @@ use Symfony\Component\Security\Core\Security;
  */
 class CollectionStatsLogger
 {
-    private $statsLoggingService;
-    private $metricsService;
-    private $requestStack;
-    private $security;
+    private StatsLoggingService $statsLoggingService;
+    private MetricsService $metricsService;
+    private RequestStack $requestStack;
+    private Security $security;
 
     private const SERVICE = 'CoverCollectionDataProvider';
     private const MESSAGE = 'Cover request/response';

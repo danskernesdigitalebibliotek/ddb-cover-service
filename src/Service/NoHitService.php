@@ -18,9 +18,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 final class NoHitService
 {
-    private $dispatcher;
-    private $metricsService;
-    private $noHitsProcessingEnabled;
+    private bool $noHitsProcessingEnabled;
+    private EventDispatcherInterface $dispatcher;
+    private MetricsService $metricsService;
 
     /**
      * NoHitService constructor.

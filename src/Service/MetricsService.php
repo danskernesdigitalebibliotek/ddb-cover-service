@@ -45,7 +45,7 @@ class MetricsService
      * @param array $labels
      *   Labels to filter by in prometheus. Default empty array.
      */
-    public function counter(string $name, string $help, $value = 1, array $labels = []): void
+    public function counter(string $name, string $help, int $value = 1, array $labels = []): void
     {
         try {
             $counter = $this->registry->getOrRegisterCounter($this->namespace, $name, $help, array_keys($labels));

@@ -11,8 +11,8 @@ namespace App\Utils\Types;
  */
 class NoHitItem
 {
-    private $isType;
-    private $isIdentifier;
+    private string $isType;
+    private string $isIdentifier;
 
     /**
      * NoHitItem constructor.

@@ -60,7 +60,7 @@ interface CoverStoreTransformationInterface
      *   Array with metadata about the format
      *
      * @throws CoverStoreTransformationException
-     *   If format does not exists
+     *   If format does not exist
      */
     public function getFormatMetadata(string $format): array;
 

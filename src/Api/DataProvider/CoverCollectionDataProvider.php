@@ -26,11 +26,11 @@ use App\Utils\Types\IdentifierType;
  */
 final class CoverCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private $searchService;
-    private $coverFactory;
-    private $noHitService;
-    private $collectionStatsLogger;
-    private $maxIdentifierCount;
+    private SearchServiceInterface $searchService;
+    private CoverFactory $coverFactory;
+    private NoHitService $noHitService;
+    private CollectionStatsLogger $collectionStatsLogger;
+    private int $maxIdentifierCount;
 
     /**
      * CoverCollectionDataProvider constructor.

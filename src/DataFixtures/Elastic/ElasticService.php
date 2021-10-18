@@ -72,7 +72,7 @@ class ElasticService
             ];
         }
 
-        $result = $client->bulk($params);
+        $client->bulk($params);
     }
 
     /**

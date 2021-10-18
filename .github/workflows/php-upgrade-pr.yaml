@@ -1,12 +1,12 @@
 on: pull_request
-name: Review
+name: Review (upgrade)
 jobs:
   test-composer-install:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.0', '8.1' ]
     name: Validate composer (${{ matrix.php}})
     steps:
       - uses: actions/checkout@master
@@ -34,7 +34,7 @@ jobs:
       - name: Composer install with exported .env variables
         run: |
           set -a && source .env && set +a
-          APP_ENV=prod composer install --no-dev -o
+          APP_ENV=prod composer install --no-dev -o --ignore-platform-reqs
 
   unit-tests:
     name: Unit tests (${{ matrix.php }})
@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.0', '8.1' ]
     steps:
       - uses: actions/checkout@master
 
@@ -64,7 +64,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.dependency-version }}-
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: Unit tests
         run: ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
@@ -83,7 +83,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.0', '8.1' ]
     name: Behaviour tests (${{ matrix.php}})
     services:
       elasticsearch:
@@ -120,7 +120,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.dependency-version }}-
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: Behaviour tests
         run: |
@@ -132,7 +132,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.0', '8.1' ]
     name: Coding style (${{ matrix.php }})
     steps:
       - uses: actions/checkout@master
@@ -156,7 +156,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.dependency-version }}-
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: PHP CS Fixer
         run: composer check-coding-standards/php-cs-fixer
@@ -169,7 +169,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.0', '8.1' ]
     name: Psalm static analysis (${{ matrix.php}})
     steps:
       - uses: actions/checkout@master
@@ -193,7 +193,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.dependency-version }}-
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: Psalm
         run: ./vendor/bin/psalm
@@ -246,7 +246,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.0', '8.1' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -272,7 +272,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.dependency-version }}-
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: Export specifications
         run: bin/console api:openapi:export --yaml --output=public/spec.yaml --no-interaction
