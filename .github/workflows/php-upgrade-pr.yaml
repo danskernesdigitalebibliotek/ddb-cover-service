@@ -159,7 +159,7 @@ jobs:
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: PHP CS Fixer
-        run: composer check-coding-standards/php-cs-fixer
+        run: PHP_CS_FIXER_IGNORE_ENV=true composer check-coding-standards/php-cs-fixer
 
       - name: Twig CS
         run: composer check-coding-standards/twigcs

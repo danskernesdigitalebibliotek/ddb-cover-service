@@ -23,8 +23,8 @@ use Symfony\Component\Messenger\MessageBusInterface;
  */
 class SearchNoHitEventSubscriberTest extends TestCase
 {
-    private $bus;
-    private $noHitsCache;
+    private MessageBusInterface $bus;
+    private CacheItemPoolInterface $noHitsCache;
 
     /**
      * Set up test.
@@ -97,17 +97,11 @@ class SearchNoHitEventSubscriberTest extends TestCase
 
         // Producer expects
         $message1 = new SearchNoHitsMessage();
-        $message1->setOperation(null)
-            ->setIdentifierType('pid')
-            ->setIdentifier('870970-basis:23452345')
-            ->setVendorId(null)
-            ->setImageId(null);
+        $message1->setIdentifierType('pid')
+            ->setIdentifier('870970-basis:23452345');
         $message2 = new SearchNoHitsMessage();
-        $message2->setOperation(null)
-            ->setIdentifierType('pid')
-            ->setIdentifier('870970-basis:34563456')
-            ->setVendorId(null)
-            ->setImageId(null);
+        $message2->setIdentifierType('pid')
+            ->setIdentifier('870970-basis:34563456');
         $this->bus->expects($this->exactly(2))->method('dispatch')
             ->withConsecutive(
                 [$this->equalTo($message1)],
