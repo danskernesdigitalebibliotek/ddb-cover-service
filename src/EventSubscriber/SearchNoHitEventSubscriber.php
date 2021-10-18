@@ -8,10 +8,12 @@ namespace App\EventSubscriber;
 
 use App\Event\SearchNoHitEvent;
 use App\Message\SearchNoHitsMessage;
+use App\Service\MetricsService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -23,6 +25,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     private bool $noHitsProcessingEnabled;
     private MessageBusInterface $bus;
     private CacheItemPoolInterface $noHitsCache;
+    private MetricsService $metricsService;
 
     /**
      * SearchNoHitEventSubscriber constructor.
@@ -34,12 +37,13 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      * @param CacheItemPoolInterface $noHitsCache
      *   Cache pool for storing no hits
      */
-    public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache)
+    public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache, MetricsService $metricsService)
     {
         $this->noHitsProcessingEnabled = $bindEnableNoHits;
 
         $this->bus = $bus;
         $this->noHitsCache = $noHitsCache;
+        $this->metricsService = $metricsService;
     }
 
     /**
@@ -120,12 +124,16 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
             $cacheKeys = array_keys($keyedNoHits);
             $cacheItems = $this->noHitsCache->getItems($cacheKeys);
             foreach ($cacheItems as $cacheItem) {
+                /** @var CacheItem $cacheItem */
                 if (!$cacheItem->isHit()) {
+                    $this->metricsService->counter('no_hits_cache_miss', 'No hit not in cache', 1, ['type' => 'rest']);
+
                     /** @var NoHitItem $noHitItem */
-                    $cacheKey = $cacheItem->getKey();
-                    $noHitItem = $keyedNoHits[$cacheKey];
+                    $noHitItem = $keyedNoHits[$cacheItem->getKey()];
                     $cacheItem->set($noHitItem);
                     $nonCommittedCacheItems[] = $cacheItem;
+                } else {
+                    $this->metricsService->counter('no_hits_cache_hit', 'No hit found in cache', 1, ['type' => 'rest']);
                 }
             }
         } catch (InvalidArgumentException $e) {

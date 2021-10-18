@@ -53,8 +53,6 @@ final class NoHitService
     public function handleSearchNoHits(string $type, array $requestIdentifiers, array $foundIdentifiers): void
     {
         $notFoundIdentifiers = array_diff($requestIdentifiers, $foundIdentifiers);
-
-        $this->metricsService->counter('no_event_hits_total', 'Total number of no-hits', count($notFoundIdentifiers), ['type' => 'rest']);
         $this->dispatchNoHits($type, $notFoundIdentifiers);
     }
 
@@ -71,6 +69,9 @@ final class NoHitService
         if ($this->noHitsProcessingEnabled && !empty($identifiers)) {
             $noHits = [];
 
+            $this->metricsService->counter('no_hits_up', 'Total no-hits process enabled', 1, ['type' => 'rest']);
+            $this->metricsService->counter('no_hits_total', 'Total number of no-hits', count($identifiers), ['type' => 'rest']);
+
             foreach ($identifiers as $identifier) {
                 $noHits[] = new NoHitItem($type, $identifier);
             }
@@ -82,6 +83,8 @@ final class NoHitService
                     $this->dispatcher->dispatch($noHitEvent, SearchNoHitEvent::NAME);
                 }
             );
+        } else {
+            $this->metricsService->counter('no_hits_up', 'Total no-hits process enabled', 0, ['type' => 'rest']);
         }
     }
 }
