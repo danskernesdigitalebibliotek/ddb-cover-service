@@ -275,7 +275,7 @@ We use https://github.com/bitnami/charts/tree/master/bitnami/elasticsearch to in
 
 ```sh
 helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
---set image.tag=6.8.12-debian-10-r11 \
+--set image.tag=6.8.20-debian-10-r3 \
 --set metrics.enabled=true \
 --set master.persistence.enabled=true \
 --set master.persistence.storageClass=azuredisk-premium-retain \
