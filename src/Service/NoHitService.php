@@ -69,7 +69,7 @@ final class NoHitService
         if ($this->noHitsProcessingEnabled && !empty($identifiers)) {
             $noHits = [];
 
-            $this->metricsService->counter('no_hits_up', 'Total no-hits process enabled', 1, ['type' => 'rest']);
+            $this->metricsService->gauge('no_hits_enabled', 'Total no-hits process enabled', 1, ['type' => 'rest']);
             $this->metricsService->counter('no_hits_total', 'Total number of no-hits', count($identifiers), ['type' => 'rest']);
 
             foreach ($identifiers as $identifier) {
@@ -84,7 +84,7 @@ final class NoHitService
                 }
             );
         } else {
-            $this->metricsService->counter('no_hits_up', 'Total no-hits process enabled', 0, ['type' => 'rest']);
+            $this->metricsService->gauge('no_hits_enabled', 'Total no-hits process enabled', 0, ['type' => 'rest']);
         }
     }
 }
