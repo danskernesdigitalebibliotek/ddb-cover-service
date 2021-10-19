@@ -5,6 +5,7 @@
     "license": "proprietary",
     "require": {
         "php": "^7.4",
+        "ext-amqp": "*",
         "ext-apcu": "*",
         "ext-ctype": "*",
         "ext-curl": "*",

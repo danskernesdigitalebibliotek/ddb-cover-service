@@ -10,6 +10,7 @@ namespace App\Tests\EventSubscriber;
 use App\Event\SearchNoHitEvent;
 use App\EventSubscriber\SearchNoHitEventSubscriber;
 use App\Message\SearchNoHitsMessage;
+use App\Service\MetricsService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,7 @@ class SearchNoHitEventSubscriberTest extends TestCase
 {
     private MessageBusInterface $bus;
     private CacheItemPoolInterface $noHitsCache;
+    private MetricsService $metricsService;
 
     /**
      * Set up test.
@@ -35,6 +37,7 @@ class SearchNoHitEventSubscriberTest extends TestCase
 
         $this->bus = $this->createMock(MessageBusInterface::class);
         $this->noHitsCache = $this->createMock(CacheItemPoolInterface::class);
+        $this->metricsService = $this->createMock(MetricsService::class);
     }
 
     /**
@@ -138,6 +141,6 @@ class SearchNoHitEventSubscriberTest extends TestCase
      */
     private function getSearchNoHitEventSubscriber(bool $noHitsProcessingEnabled): SearchNoHitEventSubscriber
     {
-        return new SearchNoHitEventSubscriber($noHitsProcessingEnabled, $this->bus, $this->noHitsCache);
+        return new SearchNoHitEventSubscriber($noHitsProcessingEnabled, $this->bus, $this->noHitsCache, $this->metricsService);
     }
 }

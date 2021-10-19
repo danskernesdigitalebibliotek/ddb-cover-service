@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a958b90348e4821c9c97513664c1facf",
+    "content-hash": "45c08a709ea5e000eff17039efd5a31e",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -10946,6 +10946,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -12019,6 +12020,7 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.4",
+        "ext-amqp": "*",
         "ext-apcu": "*",
         "ext-ctype": "*",
         "ext-curl": "*",
