@@ -330,6 +330,8 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set master.persistence.size=100Gi \
 --set volumePermissions.enabled=true \
 --set master.disableCommands="" \
+--set replica.replicaCount=0 \
+--set auth.enabled=false \
 -f values.yaml
 ```
 
