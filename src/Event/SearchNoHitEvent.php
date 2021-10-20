@@ -22,8 +22,7 @@ class SearchNoHitEvent extends Event
     /**
      * SearchNoHitEvent constructor.
      *
-     * @param array $noHits
-     *   Array containing 'NoHitItem' objects
+     * @param array $noHits Array containing 'NoHitItem' objects
      */
     public function __construct(array $noHits)
     {
@@ -33,8 +32,7 @@ class SearchNoHitEvent extends Event
     /**
      * Get the no hit type => identifiers.
      *
-     * @return array
-     *   The no hits array
+     * @return array The no hits array
      */
     public function getNoHits(): array
     {

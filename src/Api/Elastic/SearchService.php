@@ -24,12 +24,6 @@ class SearchService implements SearchServiceInterface
 
     /**
      * SearchService constructor.
-     *
-     * @param Client $client
-     * @param string $bindElasticIndex
-     * @param string $bindElasticType
-     * @param int $bindElasticMinImageSize
-     * @param MetricsService $metricsService
      */
     public function __construct(Client $client, string $bindElasticIndex, string $bindElasticType, int $bindElasticMinImageSize, MetricsService $metricsService)
     {
@@ -66,11 +60,9 @@ class SearchService implements SearchServiceInterface
     /**
      * Filter raw search result from ES request.
      *
-     * @param array $results
-     *   Raw search result array
+     * @param array $results Raw search result array
      *
-     * @return array
-     *   The filtered results
+     * @return array The filtered results
      */
     private function filterResults(array $results): array
     {
@@ -90,13 +82,10 @@ class SearchService implements SearchServiceInterface
      *
      * Create query in the form (id or id or ...) and (size > x) using bool and range filter query.
      *
-     * @param string $type
-     *   The type ('pid', 'isbn', etc) of identifiers given
-     * @param array $identifiers
-     *   Array of identifiers of {type}
+     * @param string $type        The type ('pid', 'isbn', etc) of identifiers given
+     * @param array  $identifiers Array of identifiers of {type}
      *
-     * @return Query
-     *   A new Elastica Query with terms and sort
+     * @return Query A new Elastica Query with terms and sort
      */
     private function buildElasticQuery(string $type, array $identifiers): Query
     {

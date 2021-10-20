@@ -10,8 +10,8 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => false,
-        'phpdoc_align' => false,
-        'no_superfluous_phpdoc_tags' => false,
+        'phpdoc_align' => true  ,
+        'no_superfluous_phpdoc_tags' => true,
         'array_syntax' => ['syntax' => 'short'],
     ])
     ->setFinder($finder);

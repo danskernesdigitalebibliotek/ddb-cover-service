@@ -25,10 +25,8 @@ class CreateDynamicStatsTemplateCommand extends Command
     /**
      * CreateDynamicStatsTemplateCommand constructor.
      *
-     * @param string $bindElasticSearchUrl
-     *   The ElasticSearch endpoint url
-     * @param string $bindElasticStatsIndexPrefix
-     *   The prefix for statistics indices
+     * @param string $bindElasticSearchUrl        The ElasticSearch endpoint url
+     * @param string $bindElasticStatsIndexPrefix The prefix for statistics indices
      */
     public function __construct(string $bindElasticSearchUrl, string $bindElasticStatsIndexPrefix)
     {
@@ -76,8 +74,7 @@ class CreateDynamicStatsTemplateCommand extends Command
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/indices-templates.html
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/dynamic-templates.html
      *
-     * @return bool
-     *    Return true on success, false on failure
+     * @return bool Return true on success, false on failure
      */
     private function createStatsTemplate(): bool
     {

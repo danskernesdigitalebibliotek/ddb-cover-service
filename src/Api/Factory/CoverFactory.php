@@ -23,8 +23,7 @@ class CoverFactory
     /**
      * IdentifierFactory constructor.
      *
-     * @param CoverStoreTransformationInterface $transformer
-     *   The cover store transformation service to get urls for transformed covers
+     * @param CoverStoreTransformationInterface $transformer The cover store transformation service to get urls for transformed covers
      */
     public function __construct(CoverStoreTransformationInterface $transformer)
     {
@@ -34,15 +33,11 @@ class CoverFactory
     /**
      * Create Identifier Dto from identifier type.
      *
-     * @param string $type
-     *   The identifier type (e.g. 'pid', 'isbn', etc)
-     * @param array $imageSizes
-     *   The image sizes requested
-     * @param array $data
-     *   An array of key => values to set on the relevant properties
+     * @param string $type       The identifier type (e.g. 'pid', 'isbn', etc)
+     * @param array  $imageSizes The image sizes requested
+     * @param array  $data       An array of key => values to set on the relevant properties
      *
-     * @return Cover
-     *   A new {type} identifier data transfer object (DTO) with values set from {data}
+     * @return Cover A new {type} identifier data transfer object (DTO) with values set from {data}
      */
     public function createCoverDto(string $type, array $imageSizes, array $data): Cover
     {
@@ -55,8 +50,7 @@ class CoverFactory
     /**
      * Get valid named image sizes.
      *
-     * @return array
-     *   List of valid image sizes
+     * @return array List of valid image sizes
      */
     public function getValidImageSizes(): array
     {
@@ -66,12 +60,9 @@ class CoverFactory
     /**
      * Set cover data.
      *
-     * @param Cover $cover
-     *   The identifier type (e.g. 'pid', 'isbn', etc).
-     * @param array $imageSizes
-     *   The image sizes requested
-     * @param array $data
-     *   An array of key => values to set on the relevant properties
+     * @param Cover $cover      The identifier type (e.g. 'pid', 'isbn', etc).
+     * @param array $imageSizes The image sizes requested
+     * @param array $data       An array of key => values to set on the relevant properties
      */
     private function setData(Cover $cover, array $imageSizes, array $data): void
     {
@@ -96,12 +87,8 @@ class CoverFactory
     /**
      * Get the image format for a given image size.
      *
-     * @param string $imageSize
-     *   The image sizes requested
-     * @param string $originalFormat
-     *   The format of the original image, e.g 'jpeg', 'png'
-     *
-     * @return string
+     * @param string $imageSize      The image sizes requested
+     * @param string $originalFormat The format of the original image, e.g 'jpeg', 'png'
      */
     private function getFormat(string $imageSize, string $originalFormat): string
     {
@@ -120,11 +107,9 @@ class CoverFactory
     /**
      * Get the image format from a file extension.
      *
-     * @param string $extension
-     *   The file extension of the image file
+     * @param string $extension The file extension of the image file
      *
-     * @return string
-     *   The format of the image, e.g 'jpeg', 'png'
+     * @return string The format of the image, e.g 'jpeg', 'png'
      */
     private function getFormatFromExt(string $extension): string
     {

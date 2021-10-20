@@ -26,10 +26,8 @@ class ElasticService
      * their configuration. The aim is to replace Fos\Elastica completely
      * but until this is done this is the 'master' configuration we use.
      *
-     * @param ConfigManager $fosElasticaConfigManager
-     *   Fos\Elastica indexManager
-     * @param Client $fosElasticaClient
-     *   Fos\Elastica client
+     * @param ConfigManager $fosElasticaConfigManager Fos\Elastica indexManager
+     * @param Client        $fosElasticaClient        Fos\Elastica client
      */
     public function __construct(ConfigManager $fosElasticaConfigManager, Client $fosElasticaClient)
     {
@@ -43,8 +41,7 @@ class ElasticService
     /**
      * Index the Search objects in elasticsearch.
      *
-     * @param Search ...$searches
-     *   Iterable of Search objects to index
+     * @param Search ...$searches Iterable of Search objects to index
      */
     public function index(Search ...$searches): void
     {
@@ -78,8 +75,7 @@ class ElasticService
     /**
      * Get the index name configured for Fos\Elastica.
      *
-     * @return string
-     *   The name of the index configured
+     * @return string The name of the index configured
      */
     private function getIndexName(): string
     {

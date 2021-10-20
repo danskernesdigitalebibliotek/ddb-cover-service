@@ -36,13 +36,6 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
 
     /**
      * CoverCollectionDataProvider constructor.
-     *
-     * @param SearchServiceInterface $searchService
-     * @param CoverFactory $coverFactory
-     * @param NoHitService $noHitService
-     * @param CollectionStatsLogger $collectionStatsLogger
-     * @param MetricsService $metricsService
-     * @param int $bindApiMaxIdentifiers
      */
     public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, MetricsService $metricsService, int $bindApiMaxIdentifiers)
     {
@@ -92,11 +85,9 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     /**
      * Get the identifier type from the request context.
      *
-     * @param array $context
-     *   The Api-platform request context
+     * @param array $context The Api-platform request context
      *
-     * @return string
-     *   The identifier type (e.g. 'pid', 'isbn', etc).
+     * @return string The identifier type (e.g. 'pid', 'isbn', etc).
      *
      * @throws RequiredParameterMissingException
      * @throws UnknownIdentifierTypeException
@@ -120,11 +111,9 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     /**
      * Get IS identifiers from request context.
      *
-     * @param array $context
-     *   The Api-platform request context
+     * @param array $context The Api-platform request context
      *
-     * @return array
-     *   Array of identifiers
+     * @return array Array of identifiers
      *
      * @throws RequiredParameterMissingException If the 'id' parameter is not found in the request
      * @throws IdentifierCountExceededException
@@ -156,11 +145,9 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     /**
      * Get sizes from request context.
      *
-     * @param array $context
-     *   The Api-platform request context
+     * @param array $context The Api-platform request context
      *
-     * @return array
-     *   Array with size names
+     * @return array Array with size names
      *
      * @throws UnknownImageSizeException
      */
