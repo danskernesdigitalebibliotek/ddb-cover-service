@@ -70,7 +70,6 @@ jobs:
         run: ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
       - name: Upload coverage to Codecov test
-      - uses: actions/checkout@master
       - uses: codecov/codecov-action@v2
         with:
           files: ./coverage/unit.xml
@@ -126,7 +125,6 @@ jobs:
           ELASTIC_URL=http://localhost:9200 phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
 
       - name: Upload coverage to Codecov test
-      - uses: actions/checkout@master
       - uses: codecov/codecov-action@v2
         with:
           files: ./coverage/default.cov
