@@ -127,7 +127,7 @@ jobs:
       - name: Upload coverage to Codecov test
         uses: codecov/codecov-action@v2
         with:
-          directory: ./coverage/xml/
+          files: ./coverage/clover.xml
           flags: behat_features, ${{ matrix.php }}
 
   phpcsfixer:

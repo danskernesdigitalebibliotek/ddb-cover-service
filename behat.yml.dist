@@ -19,8 +19,8 @@ default:
                     symfony: ~
         DVDoug\Behat\CodeCoverage\Extension:
             reports:
-                xml:
-                    target: '%paths.base%/coverage/xml'
+                clover:
+                    target: '%paths.base%/coverage/clover.xml'
                 html:
                     target: '%paths.base%/coverage/html'
             filter:
