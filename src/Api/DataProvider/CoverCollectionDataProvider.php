@@ -175,7 +175,6 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
             $sizes = explode(',', $sizes);
             $sizes = array_map('trim', $sizes);
             $sizes = array_map('strtolower', $sizes);
-            $sizes = \is_array($sizes) ? $sizes : [$sizes];
 
             $validSizes = $this->coverFactory->getValidImageSizes();
 
