@@ -50,7 +50,7 @@ Feature:
       | 870970-basis:52182794,870970-katalog:52182794,870970-basis:52182796 | pid   | 870970-basis:52182794 | 870970-basis:52182796 | 870970-katalog:52182794 |
 
   @login
-  Scenario Outline: Search for unknown covers should return an ampty list
+  Scenario Outline: Search for unknown covers should return an empty list
     Given I add "Accept" header equal to "application/json"
     And I send a "GET" request to "/api/v2/covers" with parameters:
       | key         | value                |
@@ -70,7 +70,7 @@ Feature:
 
   # APP_API_MAX_IDENTIFIERS is 5 for .env.test
   @login
-  Scenario: I should get a 400 bad request if i send to many identifiers
+  Scenario: I should get a 400 bad request if I send to many identifiers
     Given I add "Accept" header equal to "application/json"
     And I send a "GET" request to "/api/v2/covers" with parameters:
       | key         | value                                                                               |
@@ -82,7 +82,7 @@ Feature:
     And the JSON node "root.detail" should be equal to "Maximum identifiers per request exceeded. 5 allowed. 6 received."
 
   @login
-  Scenario: I should get a 400 bad request if i send an empty sizes parameter
+  Scenario: I should get a 400 bad request if I send an empty sizes parameter
     Given I add "Accept" header equal to "application/json"
     And I send a "GET" request to "/api/v2/covers" with parameters:
       | key         | value                       |
@@ -95,7 +95,7 @@ Feature:
     And the JSON node "root.detail" should be equal to 'The "sizes" parameter cannot be empty. Either omit the parameter or submit a list of valid image sizes.'
 
   @login
-  Scenario: I should get a 400 bad request if i request unknown sizes
+  Scenario: I should get a 400 bad request if I request unknown sizes
     Given I add "Accept" header equal to "application/json"
     And I send a "GET" request to "/api/v2/covers" with parameters:
       | key         | value                       |
@@ -105,3 +105,33 @@ Feature:
     Then the response status code should be 400
     And the JSON node "root.title" should be equal to "An error occurred"
     And the JSON node "root.detail" should be equal to "Unknown images size(s): mega, huge - Valid sizes are original, default, small, medium, large"
+
+  @login
+  Scenario: I should get a 200 ok if I request known size
+    Given I add "Accept" header equal to "application/json"
+    And I send a "GET" request to "/api/v2/covers" with parameters:
+      | key         | value                       |
+      | identifiers | 9780119135640,9799913633580 |
+      | type        | isbn                        |
+      | sizes       | original                    |
+    Then the response status code should be 200
+
+  @login
+  Scenario: I should get a 200 ok if I request known size with wrong case
+    Given I add "Accept" header equal to "application/json"
+    And I send a "GET" request to "/api/v2/covers" with parameters:
+      | key         | value                       |
+      | identifiers | 9780119135640,9799913633580 |
+      | type        | isbn                        |
+      | sizes       | Original                    |
+    Then the response status code should be 200
+
+  @login
+  Scenario: I should get a 200 ok if I request known sizes
+    Given I add "Accept" header equal to "application/json"
+    And I send a "GET" request to "/api/v2/covers" with parameters:
+      | key         | value                       |
+      | identifiers | 9780119135640,9799913633580 |
+      | type        | isbn                        |
+      | sizes       | original, large             |
+    Then the response status code should be 200
