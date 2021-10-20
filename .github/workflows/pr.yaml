@@ -127,6 +127,15 @@ jobs:
           APP_ENV=test ELASTIC_URL=http://localhost:9200 bin/console fos:elastica:create
           ELASTIC_URL=http://localhost:9200 phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
 
+      - name: Upload coverage to Codecov test
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/default.cov
+          flags: behat_features, ${{ matrix.php }}
+          fail_ci_if_error: false
+          verbose: true
+
   phpcsfixer:
     runs-on: ubuntu-latest
     strategy:
