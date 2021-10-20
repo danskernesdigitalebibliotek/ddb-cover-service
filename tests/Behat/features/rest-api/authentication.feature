@@ -3,6 +3,7 @@ Feature:
 
   @logout
   Scenario: View documentation without authenticating
+    Given I add "Accept" header equal to "text/html"
     And I send a "GET" request to "/api/v2"
     Then the response status code should be 200
     And the header "Content-Type" should be equal to "text/html; charset=UTF-8"
