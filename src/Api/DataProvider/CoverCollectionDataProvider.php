@@ -18,6 +18,7 @@ use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Exception\UnknownImageSizeException;
 use App\Api\Factory\CoverFactory;
 use App\Api\Statistics\CollectionStatsLogger;
+use App\Service\MetricsService;
 use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
 
@@ -30,6 +31,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     private CoverFactory $coverFactory;
     private NoHitService $noHitService;
     private CollectionStatsLogger $collectionStatsLogger;
+    private MetricsService $metricsService;
     private int $maxIdentifierCount;
 
     /**
@@ -39,14 +41,16 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param CollectionStatsLogger $collectionStatsLogger
+     * @param MetricsService $metricsService
      * @param int $bindApiMaxIdentifiers
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $bindApiMaxIdentifiers)
+    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, MetricsService $metricsService, int $bindApiMaxIdentifiers)
     {
         $this->searchService = $searchService;
         $this->coverFactory = $coverFactory;
         $this->noHitService = $noHitService;
         $this->collectionStatsLogger = $collectionStatsLogger;
+        $this->metricsService = $metricsService;
         $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 
@@ -109,6 +113,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
             return $type;
         }
 
+        $this->metricsService->counter('unknown_identifier_type', 'An unknown identifier type in call', 1, ['type' => 'rest']);
         throw new UnknownIdentifierTypeException($type.' is an unknown identifier type');
     }
 
@@ -141,6 +146,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
 
         $identifierCount = count($isIdentifiers);
         if ($identifierCount > $this->maxIdentifierCount) {
+            $this->metricsService->counter('max_identifier_exceeded', 'Maximum identifiers per request exceeded', 1, ['type' => 'rest']);
             throw new IdentifierCountExceededException('Maximum identifiers per request exceeded. '.$this->maxIdentifierCount.' allowed. '.$identifierCount.' received.');
         }
 
@@ -172,6 +178,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
 
             $diff = array_diff($sizes, $this->coverFactory->getValidImageSizes());
             if (!empty($diff)) {
+                $this->metricsService->counter('unknown_images_size', 'Unknown images size(s) in request', 1, ['type' => 'rest']);
                 throw new UnknownImageSizeException('Unknown images size(s): '.implode(',', $diff));
             }
         } else {
