@@ -23,9 +23,6 @@ abstract class AbstractBaseMessage
         return $this->operation;
     }
 
-    /**
-     * @return AbstractBaseMessage
-     */
     public function setOperation(string $operation): self
     {
         $this->operation = $operation;
@@ -38,9 +35,6 @@ abstract class AbstractBaseMessage
         return $this->identifierType;
     }
 
-    /**
-     * @return AbstractBaseMessage
-     */
     public function setIdentifierType(string $type): self
     {
         $this->identifierType = $type;
@@ -53,9 +47,6 @@ abstract class AbstractBaseMessage
         return $this->identifier;
     }
 
-    /**
-     * @return AbstractBaseMessage
-     */
     public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
@@ -68,9 +59,6 @@ abstract class AbstractBaseMessage
         return $this->vendorId;
     }
 
-    /**
-     * @return AbstractBaseMessage
-     */
     public function setVendorId(int $vendorId): self
     {
         $this->vendorId = $vendorId;
@@ -83,9 +71,6 @@ abstract class AbstractBaseMessage
         return $this->imageId;
     }
 
-    /**
-     * @return AbstractBaseMessage
-     */
     public function setImageId(int $imageId): self
     {
         $this->imageId = $imageId;
@@ -107,8 +92,6 @@ abstract class AbstractBaseMessage
      * Should the search cache be used when processing the message.
      *
      * @param bool $useSearchCache True to use or false to by-pass search cache
-     *
-     * @return AbstractBaseMessage
      */
     public function setUseSearchCache(bool $useSearchCache): self
     {
