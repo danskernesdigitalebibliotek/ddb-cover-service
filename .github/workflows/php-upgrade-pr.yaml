@@ -1,5 +1,5 @@
 on: pull_request
-name: Review (upgrade)
+name: PHP upgrade
 jobs:
   test-composer-install:
     runs-on: ubuntu-latest
