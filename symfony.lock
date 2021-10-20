@@ -5,9 +5,6 @@
     "amphp/byte-stream": {
         "version": "v1.8.1"
     },
-    "api-platform/api-pack": {
-        "version": "v1.2.2"
-    },
     "api-platform/core": {
         "version": "2.5",
         "recipe": {
@@ -476,9 +473,6 @@
             "config/packages/dev/debug.yaml"
         ]
     },
-    "symfony/debug-pack": {
-        "version": "v1.0.8"
-    },
     "symfony/dependency-injection": {
         "version": "v4.4.7"
     },
@@ -603,9 +597,6 @@
     "symfony/options-resolver": {
         "version": "v4.4.8"
     },
-    "symfony/orm-pack": {
-        "version": "v2.1.0"
-    },
     "symfony/phpunit-bridge": {
         "version": "5.3",
         "recipe": {
@@ -647,9 +638,6 @@
     },
     "symfony/process": {
         "version": "v4.4.7"
-    },
-    "symfony/profiler-pack": {
-        "version": "v1.0.4"
     },
     "symfony/property-access": {
         "version": "v4.4.7"
@@ -694,9 +682,6 @@
     },
     "symfony/serializer": {
         "version": "v4.4.7"
-    },
-    "symfony/serializer-pack": {
-        "version": "v1.0.4"
     },
     "symfony/service-contracts": {
         "version": "v2.0.1"
