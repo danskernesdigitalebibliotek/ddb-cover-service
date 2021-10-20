@@ -15,12 +15,12 @@ use Elasticsearch\Client;
  */
 class SearchService implements SearchServiceInterface
 {
-    private $client;
-    private $index;
-    private $type;
-    private $minImageSize;
+    private Client $client;
+    private string$index;
+    private string $type;
+    private int $minImageSize;
 
-    private $metricsService;
+    private MetricsService $metricsService;
 
     /**
      * SearchService constructor.
