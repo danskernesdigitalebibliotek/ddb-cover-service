@@ -127,11 +127,8 @@ jobs:
       - name: Upload coverage to Codecov test
         uses: codecov/codecov-action@v2
         with:
-          files: ./coverage/xml/index.xml
+          directory: ./coverage/xml/
           flags: behat_features, ${{ matrix.php }}
-
-      - name: List coverage dir
-        run: ls -la ./coverage/xml/
 
   phpcsfixer:
     runs-on: ubuntu-latest
