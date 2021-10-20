@@ -122,7 +122,7 @@ jobs:
       - name: Behaviour tests
         run: |
           APP_ENV=test ELASTIC_URL=http://localhost:9200 bin/console fos:elastica:create
-          ELASTIC_URL=http://localhost:9200 phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
+          ELASTIC_URL=http://localhost:9200 ./vendor/bin/behat
 
       - name: Upload coverage to Codecov test
         uses: codecov/codecov-action@v2
