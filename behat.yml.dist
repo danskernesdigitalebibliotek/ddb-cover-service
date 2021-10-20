@@ -11,7 +11,9 @@ default:
                 - behatch:context:browser
 
     extensions:
-        FriendsOfBehat\SymfonyExtension: null
+        FriendsOfBehat\SymfonyExtension:
+            # https://github.com/FriendsOfBehat/SymfonyExtension/issues/126#issuecomment-704248564
+            bootstrap: tests/bootstrap.php
         Behatch\Extension: ~
         Behat\MinkExtension:
             sessions:
