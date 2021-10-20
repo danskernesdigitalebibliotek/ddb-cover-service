@@ -256,8 +256,8 @@ helm repo update
 
 Install the cert-manager Helm chart to enable support for lets-encrypt.
 ```sh
-kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.crds.yaml
-helm install cert-manager --namespace cert-manager --version v1.2.0 jetstack/cert-manager
+kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.0/cert-manager.crds.yaml
+helm install cert-manager --namespace cert-manager --version v1.5.0 jetstack/cert-manager
 ```
 
 # Prepare the cluster (shard configuration)
@@ -275,7 +275,7 @@ We use https://github.com/bitnami/charts/tree/master/bitnami/elasticsearch to in
 
 ```sh
 helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
---set image.tag=6.8.12-debian-10-r11 \
+--set image.tag=6.8.20-debian-10-r3 \
 --set metrics.enabled=true \
 --set master.persistence.enabled=true \
 --set master.persistence.storageClass=azuredisk-premium-retain \
@@ -330,6 +330,8 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set master.persistence.size=100Gi \
 --set volumePermissions.enabled=true \
 --set master.disableCommands="" \
+--set replica.replicaCount=0 \
+--set auth.enabled=false \
 -f values.yaml
 ```
 
