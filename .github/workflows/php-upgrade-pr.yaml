@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0', '8.1' ]
+        php: [ '8.0' ]
     name: Validate composer (${{ matrix.php}})
     steps:
       - uses: actions/checkout@master
@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0', '8.1' ]
+        php: [ '8.0' ]
     steps:
       - uses: actions/checkout@master
 
@@ -83,7 +83,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0', '8.1' ]
+        php: [ '8.0' ]
     name: Behaviour tests (${{ matrix.php}})
     services:
       elasticsearch:
@@ -132,7 +132,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0', '8.1' ]
+        php: [ '8.0' ]
     name: Coding style (${{ matrix.php }})
     steps:
       - uses: actions/checkout@master
@@ -169,7 +169,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0', '8.1' ]
+        php: [ '8.0' ]
     name: Psalm static analysis (${{ matrix.php}})
     steps:
       - uses: actions/checkout@master
@@ -246,7 +246,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0', '8.1' ]
+        php: [ '8.0' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
