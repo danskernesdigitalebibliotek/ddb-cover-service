@@ -14,7 +14,7 @@
         "ext-redis": "*",
         "ext-zend-opcache": "*",
         "api-platform/core": "^2.6",
-        "composer/package-versions-deprecated": "1.11.99.4",
+        "composer/package-versions-deprecated": "1.11.99.*",
         "danskernesdigitalebibliotek/agency-auth-bundle": "^2.0",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.4",
