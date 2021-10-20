@@ -25,8 +25,6 @@ class AuthContext implements Context
 
     /**
      * AuthContext constructor.
-     *
-     * @param AdapterInterface $tokenCache
      */
     public function __construct(AdapterInterface $tokenCache)
     {
@@ -37,8 +35,6 @@ class AuthContext implements Context
      * @BeforeScenario @login
      *
      * @see https://symfony.com/doc/current/security/entity_provider.html#creating-your-first-user
-     *
-     * @param BeforeScenarioScope $scope
      *
      * @throws InvalidArgumentException
      */

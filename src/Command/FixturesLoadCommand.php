@@ -24,8 +24,7 @@ class FixturesLoadCommand extends Command
     /**
      * FixturesLoadCommand constructor.
      *
-     * @param AppFixtures $appFixtures
-     *   The AppFixtures service
+     * @param AppFixtures $appFixtures The AppFixtures service
      */
     public function __construct(AppFixtures $appFixtures)
     {

@@ -18,17 +18,12 @@ abstract class AbstractBaseMessage
     private int $imageId;
     private bool $useSearchCache = true;
 
-    /**
-     * @return string
-     */
     public function getOperation(): string
     {
         return $this->operation;
     }
 
     /**
-     * @param string $operation
-     *
      * @return AbstractBaseMessage
      */
     public function setOperation(string $operation): self
@@ -38,17 +33,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getIdentifierType(): string
     {
         return $this->identifierType;
     }
 
     /**
-     * @param string $type
-     *
      * @return AbstractBaseMessage
      */
     public function setIdentifierType(string $type): self
@@ -58,17 +48,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getIdentifier(): string
     {
         return $this->identifier;
     }
 
     /**
-     * @param string $identifier
-     *
      * @return AbstractBaseMessage
      */
     public function setIdentifier(string $identifier): self
@@ -78,17 +63,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getVendorId(): int
     {
         return $this->vendorId;
     }
 
     /**
-     * @param int $vendorId
-     *
      * @return AbstractBaseMessage
      */
     public function setVendorId(int $vendorId): self
@@ -98,17 +78,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getImageId(): int
     {
         return $this->imageId;
     }
 
     /**
-     * @param int $imageId
-     *
      * @return AbstractBaseMessage
      */
     public function setImageId(int $imageId): self
@@ -121,8 +96,7 @@ abstract class AbstractBaseMessage
     /**
      * Use search cache.
      *
-     * @return bool|null
-     *   Defaults to true if not set
+     * @return bool|null Defaults to true if not set
      */
     public function useSearchCache(): ?bool
     {
@@ -132,8 +106,7 @@ abstract class AbstractBaseMessage
     /**
      * Should the search cache be used when processing the message.
      *
-     * @param bool $useSearchCache
-     *   True to use or false to by-pass search cache
+     * @param bool $useSearchCache True to use or false to by-pass search cache
      *
      * @return AbstractBaseMessage
      */

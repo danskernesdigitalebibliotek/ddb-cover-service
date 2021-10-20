@@ -59,8 +59,6 @@ final class ImageUrl
 
     /**
      * Get url.
-     *
-     * @return string|null
      */
     public function getUrl(): ?string
     {
@@ -69,10 +67,6 @@ final class ImageUrl
 
     /**
      * Set url.
-     *
-     * @param string|null $url
-     *
-     * @return $this
      */
     public function setUrl(?string $url): self
     {
@@ -83,8 +77,6 @@ final class ImageUrl
 
     /**
      * Get format.
-     *
-     * @return string
      */
     public function getFormat(): string
     {
@@ -93,10 +85,6 @@ final class ImageUrl
 
     /**
      * Set format.
-     *
-     * @param string $format
-     *
-     * @return ImageUrl
      */
     public function setFormat(string $format): self
     {
@@ -107,8 +95,6 @@ final class ImageUrl
 
     /**
      * Get size.
-     *
-     * @return string
      */
     public function getSize(): string
     {
@@ -117,10 +103,6 @@ final class ImageUrl
 
     /**
      * Set size.
-     *
-     * @param string $size
-     *
-     * @return ImageUrl
      */
     public function setSize(string $size): self
     {

@@ -66,11 +66,9 @@ class NoHitServiceTest extends TestCase
     /**
      * Get initialized NoHitService.
      *
-     * @param bool $enabled
-     *   Is no hit logging enabled
+     * @param bool $enabled Is no hit logging enabled
      *
-     * @return NoHitService
-     *   An initialized NoHitService
+     * @return NoHitService An initialized NoHitService
      */
     private function getNoHitsService(bool $enabled): NoHitService
     {

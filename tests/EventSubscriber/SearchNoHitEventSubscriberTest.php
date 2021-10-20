@@ -117,8 +117,7 @@ class SearchNoHitEventSubscriberTest extends TestCase
     /**
      * Get an example SearchNoHitEvent.
      *
-     * @return SearchNoHitEvent
-     *   A SearchNoHitEvent with three no hits
+     * @return SearchNoHitEvent A SearchNoHitEvent with three no hits
      */
     private function getSearchNoHitEvent(): SearchNoHitEvent
     {
@@ -133,11 +132,9 @@ class SearchNoHitEventSubscriberTest extends TestCase
     /**
      * Get a SearchNoHitEventSubscriber instance.
      *
-     * @param bool $noHitsProcessingEnabled
-     *   Should no hits processing be enabled
+     * @param bool $noHitsProcessingEnabled Should no hits processing be enabled
      *
-     * @return SearchNoHitEventSubscriber
-     *   A configured SearchNoHitEventSubscriber
+     * @return SearchNoHitEventSubscriber A configured SearchNoHitEventSubscriber
      */
     private function getSearchNoHitEventSubscriber(bool $noHitsProcessingEnabled): SearchNoHitEventSubscriber
     {

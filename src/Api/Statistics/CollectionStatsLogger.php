@@ -26,11 +26,6 @@ class CollectionStatsLogger
 
     /**
      * CollectionStatsLogger constructor.
-     *
-     * @param StatsLoggingService $statsLoggingService
-     * @param MetricsService $metricsService
-     * @param RequestStack $requestStack
-     * @param Security $security
      */
     public function __construct(StatsLoggingService $statsLoggingService, MetricsService $metricsService, RequestStack $requestStack, Security $security)
     {
@@ -42,10 +37,6 @@ class CollectionStatsLogger
 
     /**
      * Log metrics and statistics for the request.
-     *
-     * @param string $type
-     * @param array $identifiers
-     * @param array $results
      */
     public function logRequest(string $type, array $identifiers, array $results): void
     {
@@ -56,12 +47,9 @@ class CollectionStatsLogger
     /**
      * Log request statistics.
      *
-     * @param string $type
-     *   The identifier type (e.g. 'pid', 'isbn', etc).
-     * @param array $identifiers
-     *   Array of identifiers of {type}
-     * @param array $results
-     *   An array of result from an Elastica search
+     * @param string $type        The identifier type (e.g. 'pid', 'isbn', etc).
+     * @param array  $identifiers Array of identifiers of {type}
+     * @param array  $results     An array of result from an Elastica search
      */
     private function logStatistics(string $type, array $identifiers, array $results): void
     {
@@ -90,11 +78,9 @@ class CollectionStatsLogger
     /**
      * Get image URLs from search result.
      *
-     * @param array $results
-     *   An array of result from an Elastica search
+     * @param array $results An array of result from an Elastica search
      *
-     * @return array
-     *   An array of image urls strings from the results
+     * @return array An array of image urls strings from the results
      */
     private function getImageUrls(array $results): array
     {
@@ -111,15 +97,11 @@ class CollectionStatsLogger
     /**
      * Create array of matches between searches and found image urls.
      *
-     * @param array $imageUrls
-     *   Array of found image urls
-     * @param array $identifiers
-     *   Array of requested identifiers
-     * @param string $identifierType
-     *   Type of the identifiers
+     * @param array  $imageUrls      Array of found image urls
+     * @param array  $identifiers    Array of requested identifiers
+     * @param string $identifierType Type of the identifiers
      *
-     * @return array
-     *   Array of matches between found imageUrls and requested identifiers
+     * @return array Array of matches between found imageUrls and requested identifiers
      */
     private function getMatches(array $imageUrls, array $identifiers, string $identifierType): array
     {

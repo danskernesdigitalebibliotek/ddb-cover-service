@@ -26,8 +26,7 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
      * The transformations available are defined in the "cloudinary.yml" file that
      * can be found in the configuration folder.
      *
-     * @param array $bindCloudinaryTransformations
-     *   The transformation available from the configuration
+     * @param array $bindCloudinaryTransformations The transformation available from the configuration
      */
     public function __construct(array $bindCloudinaryTransformations)
     {
