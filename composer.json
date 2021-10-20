@@ -36,6 +36,7 @@
     },
     "require-dev": {
         "behatch/contexts": "^3.3",
+        "dvdoug/behat-code-coverage": "^5.2",
         "escapestudios/symfony2-coding-standard": "^3.10",
         "fakerphp/faker": "^1.14",
         "friends-of-behat/mink": "^1.8",
@@ -44,8 +45,6 @@
         "friends-of-behat/symfony-extension": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "friendsoftwig/twigcs": "^3.2",
-        "matthiasnoback/behat-local-code-coverage-extension": "^0.5.0",
-        "matthiasnoback/live-code-coverage": "^1.6",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "^4.4",
         "symfony/css-selector": "^4.4",

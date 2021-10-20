@@ -1,7 +1,6 @@
 default:
     suites:
         default:
-            local_coverage_enabled: true
             paths: [ '%paths.base%/tests/Behat/features' ]
             contexts:
                 - App\Tests\Behat\AuthContext
@@ -18,5 +17,14 @@ default:
             sessions:
                 symfony:
                     symfony: ~
-        BehatLocalCodeCoverage\LocalCodeCoverageExtension:
-            target_directory: '%paths.base%/coverage'
+        DVDoug\Behat\CodeCoverage\Extension:
+            reports:
+                xml:
+                    target: '%paths.base%/coverage/xml'
+                html:
+                    target: '%paths.base%/coverage/html'
+            filter:
+                include:
+                    directories:
+                        'src':
+                            suffix: '.php'
