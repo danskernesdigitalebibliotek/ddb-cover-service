@@ -130,6 +130,9 @@ jobs:
           files: ./coverage/xml/*.xml
           flags: behat_features, ${{ matrix.php }}
 
+      - name: List coverega dir
+        run: ls -la ./coverage/
+
   phpcsfixer:
     runs-on: ubuntu-latest
     strategy:
