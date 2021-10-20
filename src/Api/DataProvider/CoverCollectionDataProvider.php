@@ -168,18 +168,21 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     {
         if (array_key_exists('filters', $context) && array_key_exists('sizes', $context['filters'])) {
             $sizes = $context['filters']['sizes'];
-
-            $sizes = explode(',', $sizes);
-            $sizes = \is_array($sizes) ? $sizes : [$sizes];
-
             if (empty($sizes)) {
-                throw new UnknownImageSizeException('The "sizes parameter cannot be empty. Either omit the parameter or submit a list of valid image sizes.');
+                throw new UnknownImageSizeException('The "sizes" parameter cannot be empty. Either omit the parameter or submit a list of valid image sizes.');
             }
 
-            $diff = array_diff($sizes, $this->coverFactory->getValidImageSizes());
+            $sizes = explode(',', $sizes);
+            $sizes = array_map('trim', $sizes);
+            $sizes = array_map('strtolower', $sizes);
+            $sizes = \is_array($sizes) ? $sizes : [$sizes];
+
+            $validSizes = $this->coverFactory->getValidImageSizes();
+
+            $diff = array_diff($sizes, $validSizes);
             if (!empty($diff)) {
                 $this->metricsService->counter('unknown_images_size', 'Unknown images size(s) in request', 1, ['type' => 'rest']);
-                throw new UnknownImageSizeException('Unknown images size(s): '.implode(',', $diff));
+                throw new UnknownImageSizeException('Unknown images size(s): '.implode(', ', $diff).' - Valid sizes are '.implode(', ', $validSizes));
             }
         } else {
             $sizes = ['default'];

@@ -77,6 +77,9 @@ Feature:
       | identifiers | 9780119135640,9799913633580,9792806497771,9781351129428,9798058560423,9789318143272 |
       | type        | isbn                                                                                |
     Then the response status code should be 400
+    And the response should be in JSON
+    And the JSON node "root.title" should be equal to "An error occurred"
+    And the JSON node "root.detail" should be equal to "Maximum identifiers per request exceeded. 5 allowed. 6 received."
 
   @login
   Scenario: I should get a 400 bad request if i send an empty sizes parameter
@@ -87,6 +90,9 @@ Feature:
       | type        | isbn                        |
       | sizes       |                             |
     Then the response status code should be 400
+    And the response should be in JSON
+    And the JSON node "root.title" should be equal to "An error occurred"
+    And the JSON node "root.detail" should be equal to 'The "sizes" parameter cannot be empty. Either omit the parameter or submit a list of valid image sizes.'
 
   @login
   Scenario: I should get a 400 bad request if i request unknown sizes
@@ -95,5 +101,7 @@ Feature:
       | key         | value                       |
       | identifiers | 9780119135640,9799913633580 |
       | type        | isbn                        |
-      | sizes       | unknown                     |
+      | sizes       | Original, mega, huge        |
     Then the response status code should be 400
+    And the JSON node "root.title" should be equal to "An error occurred"
+    And the JSON node "root.detail" should be equal to "Unknown images size(s): mega, huge - Valid sizes are original, default, small, medium, large"
