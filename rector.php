@@ -8,7 +8,7 @@ use Rector\Set\ValueObject\SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(\Rector\Symfony\Set\SymfonySetList::SYMFONY_44);
+    $containerConfigurator->import(\Rector\Symfony\Set\SymfonySetList::SYMFONY_50);
 
     // get parameters
     $parameters = $containerConfigurator->parameters();

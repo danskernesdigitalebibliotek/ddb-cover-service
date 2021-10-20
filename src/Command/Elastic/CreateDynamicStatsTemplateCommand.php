@@ -66,7 +66,6 @@ class CreateDynamicStatsTemplateCommand extends Command
 
             return 1;
         }
-        return 0;
     }
 
     /**
