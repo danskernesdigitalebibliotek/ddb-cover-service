@@ -89,12 +89,6 @@ jobs:
           - 9200:9200
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
     steps:
-      # —— Check Elasticsearch 🔎 ——————————————————————————————————————————————
-      - name: Check the Elasticsearch connection from runner host
-        run: |
-          curl -fsSL "http://localhost:9200"
-          curl -fsSL "http://localhost:9200/_cluster/health?pretty"
-
       - name: Checkout
         uses: actions/checkout@master
 
@@ -103,7 +97,7 @@ jobs:
         with:
           php-version: ${{ matrix.php}}
           extensions: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
-          coverage: none
+          coverage: xdebug
 
       - name: Get composer cache directory
         id: composer-cache
@@ -118,6 +112,12 @@ jobs:
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      # —— Check Elasticsearch 🔎 ——————————————————————————————————————————————
+      - name: Check the Elasticsearch connection from runner host
+        run: |
+          curl -fsSL "http://localhost:9200"
+          curl -fsSL "http://localhost:9200/_cluster/health?pretty"
 
       - name: Behaviour tests
         run: |
