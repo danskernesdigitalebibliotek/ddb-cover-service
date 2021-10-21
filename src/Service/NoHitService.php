@@ -9,6 +9,7 @@ namespace App\Service;
 
 use App\Event\SearchNoHitEvent;
 use App\Utils\Types\NoHitItem;
+use ItkDev\MetricsBundle\Service\MetricsService;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

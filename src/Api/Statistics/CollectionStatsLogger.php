@@ -6,8 +6,8 @@
 
 namespace App\Api\Statistics;
 
-use App\Service\MetricsService;
 use App\Service\StatsLoggingService;
+use ItkDev\MetricsBundle\Service\MetricsService;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 

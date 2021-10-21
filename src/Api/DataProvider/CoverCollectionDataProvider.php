@@ -18,9 +18,9 @@ use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Exception\UnknownImageSizeException;
 use App\Api\Factory\CoverFactory;
 use App\Api\Statistics\CollectionStatsLogger;
-use App\Service\MetricsService;
 use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
+use ItkDev\MetricsBundle\Service\MetricsService;
 
 /**
  * Class CoverCollectionDataProvider.
