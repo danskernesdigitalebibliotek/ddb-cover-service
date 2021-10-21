@@ -6,9 +6,9 @@
 
 namespace App\Api\Elastic;
 
-use App\Service\MetricsService;
 use Elastica\Query;
 use Elasticsearch\Client;
+use ItkDev\MetricsBundle\Service\MetricsService;
 
 /**
  * Class SearchService.

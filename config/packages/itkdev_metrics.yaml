@@ -1,0 +1,9 @@
+itkdev_metrics:
+    namespace: '%env(METRICS_NAMESPACE)%'
+    adapter:
+        type: apcu
+
+    # Export metrics for these extensions
+    extensions:
+        opcache: true
+        apcu: true

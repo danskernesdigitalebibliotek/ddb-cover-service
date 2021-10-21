@@ -7,9 +7,9 @@
 
 namespace App\Tests\Service;
 
-use App\Service\MetricsService;
 use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
+use ItkDev\MetricsBundle\Service\MetricsService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -19,8 +19,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class NoHitServiceTest extends TestCase
 {
-    private $dispatcher;
-    private $metricsService;
+    private EventDispatcherInterface $dispatcher;
+    private MetricsService $metricsService;
 
     /**
      * {@inheritdoc}

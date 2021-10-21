@@ -14,4 +14,5 @@ return [
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
     DanskernesDigitaleBibliotek\AgencyAuthBundle\DanskernesDigitaleBibliotekAgencyAuthBundle::class => ['all' => true],
+    ItkDev\MetricsBundle\ItkDevMetricsBundle::class => ['all' => true],
 ];

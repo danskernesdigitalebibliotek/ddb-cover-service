@@ -1,0 +1,4 @@
+itkdev_metrics:
+    namespace: '%env(METRICS_NAMESPACE)%'
+    adapter:
+        type: memory

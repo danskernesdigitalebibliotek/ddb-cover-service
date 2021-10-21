@@ -8,9 +8,9 @@ namespace App\EventSubscriber;
 
 use App\Event\SearchNoHitEvent;
 use App\Message\SearchNoHitsMessage;
-use App\Service\MetricsService;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
+use ItkDev\MetricsBundle\Service\MetricsService;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\CacheItem;
