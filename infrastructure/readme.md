@@ -340,19 +340,16 @@ This project uses [RabbitMQ](https://www.rabbitmq.com/) as message broker for qu
 
 ```sh
 helm upgrade --install mq bitnami/rabbitmq --namespace cover-service \
---set image.tag=3.8.9-debian-10-r0 \
+--set image.tag=3.9.7-debian-10-r0 \
 --set auth.username=<USERNAME> \
 --set auth.password=<PASSWORD> \
 --set replicaCount=2 \
 --set resources.limits.memory="512Mi" \
---set persistence.enabled=true \
---set persistence.storageClass=azurefile-premium-retain \
---set persistence.accessModes[0]=ReadWriteMany \
---set persistence.size=128Gi \
 --set metrics.enabled=true \
 --set memoryHighWatermark.enabled="true" \
 --set memoryHighWatermark.type="absolute" \
---set memoryHighWatermark.value="512MB"
+--set memoryHighWatermark.value="512MB" \
+--set clustering.forceBoot=true
 ```
 
 __Note__: That you have to set the username and password in the helm command above.
