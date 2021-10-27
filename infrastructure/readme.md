@@ -346,6 +346,7 @@ helm upgrade --install mq bitnami/rabbitmq --namespace cover-service \
 --set replicaCount=2 \
 --set resources.limits.memory="512Mi" \
 --set metrics.enabled=true \
+--set persistence.storageClass=azuredisk-premium-retain \
 --set memoryHighWatermark.enabled="true" \
 --set memoryHighWatermark.type="absolute" \
 --set memoryHighWatermark.value="512MB" \
