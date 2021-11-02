@@ -313,7 +313,7 @@ helm install below with the following content.
 
 ```yaml
 ---
-configmap: |-
+commonConfiguration: |-
   maxmemory 250mb
   maxmemory-policy volatile-lfu
 ```
