@@ -210,6 +210,8 @@ class Cover
 
     /**
      * Get the isIdentifier.
+     *
+     * @return string
      */
     public function getId(): string
     {
@@ -219,7 +221,9 @@ class Cover
     /**
      * Set the isIdentifier.
      *
+     * @param string $isIdentifier
      *
+     * @return $this
      */
     public function setId(string $isIdentifier): self
     {
@@ -230,6 +234,8 @@ class Cover
 
     /**
      * Get type.
+     *
+     * @return string
      */
     public function getType(): string
     {
@@ -239,7 +245,9 @@ class Cover
     /**
      * Set type.
      *
+     * @param string $type
      *
+     * @return $this
      */
     public function setType(string $type): self
     {
@@ -250,6 +258,8 @@ class Cover
 
     /**
      * Get array of image urls.
+     *
+     * @return array
      */
     public function getImageUrls(): array
     {
@@ -259,7 +269,9 @@ class Cover
     /**
      * Add an image url.
      *
+     * @param ImageUrl $imageUrl
      *
+     * @return $this
      */
     public function addImageUrl(ImageUrl $imageUrl): self
     {

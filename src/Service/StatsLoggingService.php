@@ -24,8 +24,10 @@ class StatsLoggingService implements LoggerInterface
     /**
      * StatsLoggingService constructor.
      *
-     * @param LoggerInterface          $bindStatsLogger The logger
-     * @param EventDispatcherInterface $dispatcher      The event dispatcher
+     * @param LoggerInterface          $bindStatsLogger
+     *   The logger
+     * @param EventDispatcherInterface $dispatcher
+     *   The event dispatcher
      */
     public function __construct(LoggerInterface $bindStatsLogger, EventDispatcherInterface $dispatcher)
     {
