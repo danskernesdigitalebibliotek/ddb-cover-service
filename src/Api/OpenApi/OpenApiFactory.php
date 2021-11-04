@@ -22,6 +22,9 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
     /**
      * OpenApiFactory constructor.
+     *
+     * @param OpenApiFactoryInterface $decorated
+     * @param int $bindApiMaxIdentifiers
      */
     public function __construct(OpenApiFactoryInterface $decorated, int $bindApiMaxIdentifiers)
     {
@@ -38,7 +41,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $filteredPaths = new Model\Paths();
 
         /**
-         * @var string         $key
+         * @var string $key
          * @var Model\PathItem $pathItem
          */
         foreach ($openApi->getPaths()->getPaths() as $key => $pathItem) {

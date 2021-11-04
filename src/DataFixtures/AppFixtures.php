@@ -26,7 +26,8 @@ class AppFixtures
     /**
      * AppFixtures constructor.
      *
-     * @param ElasticService $elasticService Service to update elasticsearch
+     * @param ElasticService $elasticService
+     *   Service to update elasticsearch
      */
     public function __construct(ElasticService $elasticService)
     {

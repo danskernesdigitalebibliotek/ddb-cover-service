@@ -21,6 +21,8 @@ class MetricsService
 
     /**
      * MetricsService constructor.
+     *
+     * @param Adapter $adapter
      */
     public function __construct(Adapter $adapter)
     {
@@ -34,10 +36,14 @@ class MetricsService
      * increase or be reset to zero on restart. For example, you can use a counter to represent the number of requests
      * served, tasks completed, or errors.
      *
-     * @param string $name   The name of the metrics
-     * @param string $help   Helper text for the matrices
-     * @param int    $value  The value to increment with
-     * @param array  $labels Labels to filter by in prometheus. Default empty array.
+     * @param string $name
+     *   The name of the metrics
+     * @param string $help
+     *   Helper text for the matrices
+     * @param int $value
+     *   The value to increment with
+     * @param array $labels
+     *   Labels to filter by in prometheus. Default empty array.
      */
     public function counter(string $name, string $help, int $value = 1, array $labels = []): void
     {
@@ -55,10 +61,14 @@ class MetricsService
      *
      * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
      *
-     * @param string $name   The name of the metrics
-     * @param string $help   Helper text for the matrices
-     * @param int    $value  Value that the gauge should be set to
-     * @param array  $labels Labels to filter by in prometheus. Default empty array.
+     * @param string $name
+     *   The name of the metrics
+     * @param string $help
+     *   Helper text for the matrices
+     * @param int $value
+     *   Value that the gauge should be set to
+     * @param array $labels
+     *   Labels to filter by in prometheus. Default empty array.
      */
     public function gauge(string $name, string $help, int $value, array $labels = []): void
     {
@@ -77,10 +87,14 @@ class MetricsService
      * A histogram samples observations (usually things like request durations or response sizes) and counts them in
      * configurable buckets. It also provides a sum of all observed values.
      *
-     * @param string $name   The name of the metrics
-     * @param string $help   Helper text for the matrices
-     * @param float  $value  The value that should be added to the histogram
-     * @param array  $labels Labels to filter by in prometheus. Default empty array.
+     * @param string $name
+     *   The name of the metrics
+     * @param string $help
+     *   Helper text for the matrices
+     * @param float $value
+     *   The value that should be added to the histogram
+     * @param array $labels
+     *   Labels to filter by in prometheus. Default empty array.
      */
     public function histogram(string $name, string $help, float $value, array $labels = []): void
     {
@@ -96,7 +110,8 @@ class MetricsService
     /**
      * Render metrics in prometheus format.
      *
-     * @return string Render matrices in a single string
+     * @return string
+     *   Render matrices in a single string
      */
     public function render(): string
     {

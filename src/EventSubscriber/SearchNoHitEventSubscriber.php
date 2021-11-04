@@ -30,9 +30,12 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     /**
      * SearchNoHitEventSubscriber constructor.
      *
-     * @param bool                   $bindEnableNoHits Is no hits processing enabled
-     * @param MessageBusInterface    $bus              Queue producer to send messages (jobs)
-     * @param CacheItemPoolInterface $noHitsCache      Cache pool for storing no hits
+     * @param bool $bindEnableNoHits
+     *   Is no hits processing enabled
+     * @param MessageBusInterface $bus
+     *   Queue producer to send messages (jobs)
+     * @param CacheItemPoolInterface $noHitsCache
+     *   Cache pool for storing no hits
      */
     public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache, MetricsService $metricsService)
     {
@@ -63,7 +66,8 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      * 'NoHit' has been generated for this identifier within a specific time frame. This is controlled by the lifetime
      * config of the configured cache pool.
      *
-     * @param SearchNoHitEvent $event Search no hit event
+     * @param SearchNoHitEvent $event
+     *   Search no hit event
      */
     public function onSearchNoHitEvent(SearchNoHitEvent $event): void
     {
@@ -84,7 +88,8 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     /**
      * Send search no hit events.
      *
-     * @param array $nonCommittedCacheItems Array of cache items
+     * @param array $nonCommittedCacheItems
+     *   Array of cache items
      */
     private function sendSearchNoHitEvents(array $nonCommittedCacheItems): void
     {
@@ -106,9 +111,11 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     /**
      * Get cache items for the identifiers not present in the cache.
      *
-     * @param array $keyedNoHits Array of cacheKey => NoHitItem pairs
+     * @param array $keyedNoHits
+     *   Array of cacheKey => NoHitItem pairs
      *
-     * @return array Array of cache items not yet committed to cache
+     * @return array
+     *   Array of cache items not yet committed to cache
      */
     private function getNonCachedNoHits(array $keyedNoHits): array
     {
@@ -144,10 +151,13 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      * @see https://www.php-fig.org/psr/psr-6/
      * @see https://symfony.com/doc/current/components/cache/cache_items.html#cache-item-keys-and-values
      *
-     * @param string $type       The identifier type
-     * @param string $identifier The identifier
+     * @param string $type
+     *   The identifier type
+     * @param string $identifier
+     *   The identifier
      *
-     * @return string The cache key
+     * @return string
+     *   The cache key
      */
     private function getValidCacheKey(string $type, string $identifier): string
     {

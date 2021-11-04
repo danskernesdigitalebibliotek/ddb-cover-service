@@ -14,8 +14,12 @@ interface SearchServiceInterface
     /**
      * Search for covers.
      *
-     * @param string $type        The type of identifiers
-     * @param array  $identifiers The identifiers to search for
+     * @param string $type
+     *   The type of identifiers
+     * @param array $identifiers
+     *   The identifiers to search for
+     *
+     * @return array
      */
     public function search(string $type, array $identifiers): array;
 }

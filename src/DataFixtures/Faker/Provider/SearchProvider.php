@@ -21,7 +21,8 @@ final class SearchProvider extends BaseProvider
     /**
      * Get a random pid number.
      *
-     * @return string A random but pseudo realistic pid identifier
+     * @return string
+     *   A random but pseudo realistic pid identifier
      */
     public function pid(): string
     {
@@ -43,7 +44,8 @@ final class SearchProvider extends BaseProvider
     /**
      * Get a random ISBN13 number.
      *
-     * @return string A random but pseudo realistic ISBN13 identifier
+     * @return string
+     *   A random but pseudo realistic ISBN13 identifier
      */
     public function isbn(): string
     {
@@ -53,7 +55,8 @@ final class SearchProvider extends BaseProvider
     /**
      * Get a random identifier type ('faust' | 'isbn' | 'pid').
      *
-     * @return string A random identifier type
+     * @return string
+     *   A random identifier type
      */
     public function isType(): string
     {
@@ -63,9 +66,11 @@ final class SearchProvider extends BaseProvider
     /**
      * Get a random identifier matching the given type.
      *
-     * @param string $type The identifier type to generate identifier for
+     * @param string $type
+     *   The identifier type to generate identifier for
      *
-     * @return string A random but pseudo realistic identifier
+     * @return string
+     *   A random but pseudo realistic identifier
      *
      * @throws UnknownIsTypeException
      */
@@ -86,7 +91,8 @@ final class SearchProvider extends BaseProvider
     /**
      * Get random image format ('JPEG' | 'PNG').
      *
-     * @return string A random image format
+     * @return string
+     *   A random image format
      */
     public function imageFormat(): string
     {
@@ -96,7 +102,8 @@ final class SearchProvider extends BaseProvider
     /**
      * Get random image url for the cloudinary CDN.
      *
-     * @return string A random realistic CDN URL
+     * @return string
+     *   A random realistic CDN URL
      */
     public function imageUrl(): string
     {
@@ -106,7 +113,8 @@ final class SearchProvider extends BaseProvider
     /**
      * Get random height.
      *
-     * @return int A random height, >=128, <=10000
+     * @return int
+     *   A random height, >=128, <=10000
      */
     public function height(): int
     {
@@ -116,7 +124,8 @@ final class SearchProvider extends BaseProvider
     /**
      * Get random width.
      *
-     * @return int A random width, >=128, <=10000
+     * @return int
+     *   A random width, >=128, <=10000
      */
     public function width(): int
     {

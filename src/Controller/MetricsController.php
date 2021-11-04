@@ -21,9 +21,11 @@ class MetricsController extends AbstractController
      *
      * Render metrics collected by the application.
      *
-     * @param MetricsService $metricsService The service used to collection data in the application
+     * @param MetricsService $metricsService
+     *   The service used to collection data in the application
      *
-     * @return response HTTP response to send back to the client
+     * @return response
+     *   HTTP response to send back to the client
      */
     public function metrics(MetricsService $metricsService): Response
     {
@@ -36,6 +38,10 @@ class MetricsController extends AbstractController
 
     /**
      * Get opcache statistics.
+     *
+     * @param MetricsService $metricsService
+     *
+     * @return void
      */
     private function opcacheMetrics(MetricsService $metricsService): void
     {
@@ -71,6 +77,10 @@ class MetricsController extends AbstractController
 
     /**
      * Get APCu statistics.
+     *
+     * @param MetricsService $metricsService
+     *
+     * @return void
      */
     private function apcuMetrics(MetricsService $metricsService): void
     {

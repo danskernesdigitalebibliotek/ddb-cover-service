@@ -26,9 +26,12 @@ final class NoHitService
     /**
      * NoHitService constructor.
      *
-     * @param bool                     $bindEnableNoHits Is no hits processing enabled
-     * @param EventDispatcherInterface $dispatcher       Event dispatcher for search no hit events
-     * @param MetricsService           $metricsService   Metrics service for performance logging
+     * @param bool $bindEnableNoHits
+     *   Is no hits processing enabled
+     * @param EventDispatcherInterface $dispatcher
+     *   Event dispatcher for search no hit events
+     * @param MetricsService $metricsService
+     *   Metrics service for performance logging
      */
     public function __construct(bool $bindEnableNoHits, EventDispatcherInterface $dispatcher, MetricsService $metricsService)
     {
@@ -41,9 +44,12 @@ final class NoHitService
     /**
      * Send event to register identifiers that gave no search results.
      *
-     * @param string $type               The type ('pid', 'isbn', etc) of identifiers given
-     * @param array  $requestIdentifiers Array of requested identifiers of {type}
-     * @param array  $foundIdentifiers   Array of identifiers of {type} with covers found
+     * @param string $type
+     *   The type ('pid', 'isbn', etc) of identifiers given
+     * @param array $requestIdentifiers
+     *   Array of requested identifiers of {type}
+     * @param array $foundIdentifiers
+     *   Array of identifiers of {type} with covers found
      */
     public function handleSearchNoHits(string $type, array $requestIdentifiers, array $foundIdentifiers): void
     {
@@ -54,8 +60,10 @@ final class NoHitService
     /**
      * Dispatch no hits event.
      *
-     * @param string $type        The type ('pid', 'isbn', etc) of identifiers given
-     * @param array  $identifiers Array of no hit identifiers of {type}
+     * @param string $type
+     *   The type ('pid', 'isbn', etc) of identifiers given
+     * @param array $identifiers
+     *   Array of no hit identifiers of {type}
      */
     private function dispatchNoHits(string $type, array $identifiers): void
     {
