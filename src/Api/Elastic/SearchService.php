@@ -6,21 +6,21 @@
 
 namespace App\Api\Elastic;
 
-use App\Service\MetricsService;
 use Elastica\Query;
 use Elasticsearch\Client;
+use ItkDev\MetricsBundle\Service\MetricsService;
 
 /**
  * Class SearchService.
  */
 class SearchService implements SearchServiceInterface
 {
-    private $client;
-    private $index;
-    private $type;
-    private $minImageSize;
+    private Client $client;
+    private string$index;
+    private string $type;
+    private int $minImageSize;
 
-    private $metricsService;
+    private MetricsService $metricsService;
 
     /**
      * SearchService constructor.

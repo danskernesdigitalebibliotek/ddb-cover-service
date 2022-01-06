@@ -20,17 +20,19 @@ use App\Api\Factory\CoverFactory;
 use App\Api\Statistics\CollectionStatsLogger;
 use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
+use ItkDev\MetricsBundle\Service\MetricsService;
 
 /**
  * Class CoverCollectionDataProvider.
  */
 final class CoverCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private $searchService;
-    private $coverFactory;
-    private $noHitService;
-    private $collectionStatsLogger;
-    private $maxIdentifierCount;
+    private SearchServiceInterface $searchService;
+    private CoverFactory $coverFactory;
+    private NoHitService $noHitService;
+    private CollectionStatsLogger $collectionStatsLogger;
+    private MetricsService $metricsService;
+    private int $maxIdentifierCount;
 
     /**
      * CoverCollectionDataProvider constructor.
@@ -39,14 +41,16 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param CollectionStatsLogger $collectionStatsLogger
+     * @param MetricsService $metricsService
      * @param int $bindApiMaxIdentifiers
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, int $bindApiMaxIdentifiers)
+    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, MetricsService $metricsService, int $bindApiMaxIdentifiers)
     {
         $this->searchService = $searchService;
         $this->coverFactory = $coverFactory;
         $this->noHitService = $noHitService;
         $this->collectionStatsLogger = $collectionStatsLogger;
+        $this->metricsService = $metricsService;
         $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 
@@ -109,6 +113,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
             return $type;
         }
 
+        $this->metricsService->counter('unknown_identifier_type', 'An unknown identifier type in call', 1, ['type' => 'rest']);
         throw new UnknownIdentifierTypeException($type.' is an unknown identifier type');
     }
 
@@ -141,6 +146,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
 
         $identifierCount = count($isIdentifiers);
         if ($identifierCount > $this->maxIdentifierCount) {
+            $this->metricsService->counter('max_identifier_exceeded', 'Maximum identifiers per request exceeded', 1, ['type' => 'rest']);
             throw new IdentifierCountExceededException('Maximum identifiers per request exceeded. '.$this->maxIdentifierCount.' allowed. '.$identifierCount.' received.');
         }
 
@@ -162,17 +168,20 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     {
         if (array_key_exists('filters', $context) && array_key_exists('sizes', $context['filters'])) {
             $sizes = $context['filters']['sizes'];
-
-            $sizes = explode(',', $sizes);
-            $sizes = \is_array($sizes) ? $sizes : [$sizes];
-
             if (empty($sizes)) {
-                throw new UnknownImageSizeException('The "sizes parameter cannot be empty. Either omit the parameter or submit a list of valid image sizes.');
+                throw new UnknownImageSizeException('The "sizes" parameter cannot be empty. Either omit the parameter or submit a list of valid image sizes.');
             }
 
-            $diff = array_diff($sizes, $this->coverFactory->getValidImageSizes());
+            $sizes = explode(',', $sizes);
+            $sizes = array_map('trim', $sizes);
+            $sizes = array_map('strtolower', $sizes);
+
+            $validSizes = $this->coverFactory->getValidImageSizes();
+
+            $diff = array_diff($sizes, $validSizes);
             if (!empty($diff)) {
-                throw new UnknownImageSizeException('Unknown images size(s): '.implode(',', $diff));
+                $this->metricsService->counter('unknown_images_size', 'Unknown images size(s) in request', 1, ['type' => 'rest']);
+                throw new UnknownImageSizeException('Unknown images size(s): '.implode(', ', $diff).' - Valid sizes are '.implode(', ', $validSizes));
             }
         } else {
             $sizes = ['default'];

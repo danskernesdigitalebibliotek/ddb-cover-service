@@ -5,7 +5,8 @@ fos_elastica:
         default: { url: '%env(ELASTIC_URL)%/' }
     indexes:
         app:
-            index_name: app_%kernel.environment%
+            index_name: coverservice
+            use_alias: true
             types:
                 search:
                     properties:

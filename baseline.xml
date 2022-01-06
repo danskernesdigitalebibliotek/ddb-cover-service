@@ -12,46 +12,10 @@
     </TypeDoesNotContainType>
   </file>
   <file src="src/Api/Factory/CoverFactory.php">
-    <InvalidArrayOffset occurrences="2">
+    <InvalidArrayOffset occurrences="1">
       <code>$formats[$imageSize]['extension']</code>
       <code>$formats[$imageSize]['extension']</code>
     </InvalidArrayOffset>
-    <PossiblyNullArgument occurrences="1">
-      <code>$extension</code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="src/Api/OpenApi/OpenApiDecorator.php">
-    <PossiblyInvalidArrayAccess occurrences="3">
-      <code>$docs['components']</code>
-      <code>$docs['paths']</code>
-      <code>$docs['paths']</code>
-    </PossiblyInvalidArrayAccess>
-    <PossiblyInvalidArrayAssignment occurrences="3">
-      <code>$docs['components']</code>
-      <code>$docs['paths']</code>
-      <code>$docs['paths']</code>
-    </PossiblyInvalidArrayAssignment>
-    <PossiblyNullArgument occurrences="1">
-      <code>$docs['paths']['/api/v2/covers']['get']['parameters'][1]['description']</code>
-    </PossiblyNullArgument>
-    <PossiblyNullArrayAccess occurrences="3">
-      <code>$docs['components']</code>
-      <code>$docs['paths']</code>
-      <code>$docs['paths']</code>
-    </PossiblyNullArrayAccess>
-    <PossiblyNullArrayAssignment occurrences="3">
-      <code>$docs['components']</code>
-      <code>$docs['paths']</code>
-      <code>$docs['paths']</code>
-    </PossiblyNullArrayAssignment>
-    <PossiblyNullReference occurrences="6">
-      <code>$docs</code>
-      <code>$docs</code>
-      <code>$docs</code>
-      <code>$docs</code>
-      <code>$docs</code>
-      <code>$docs</code>
-    </PossiblyNullReference>
   </file>
   <file src="src/Api/Statistics/CollectionStatsLogger.php">
     <PossiblyNullReference occurrences="2">
