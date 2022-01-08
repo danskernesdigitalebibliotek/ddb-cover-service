@@ -256,8 +256,8 @@ helm repo update
 
 Install the cert-manager Helm chart to enable support for lets-encrypt.
 ```sh
-kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.crds.yaml
-helm install cert-manager --namespace cert-manager --version v1.2.0 jetstack/cert-manager
+kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.0/cert-manager.crds.yaml
+helm install cert-manager --namespace cert-manager --version v1.5.0 jetstack/cert-manager
 ```
 
 # Prepare the cluster (shard configuration)
@@ -275,7 +275,7 @@ We use https://github.com/bitnami/charts/tree/master/bitnami/elasticsearch to in
 
 ```sh
 helm upgrade --install es bitnami/elasticsearch --namespace cover-service \
---set image.tag=6.8.12-debian-10-r11 \
+--set image.tag=6.8.20-debian-10-r3 \
 --set metrics.enabled=true \
 --set master.persistence.enabled=true \
 --set master.persistence.storageClass=azuredisk-premium-retain \
@@ -313,7 +313,7 @@ helm install below with the following content.
 
 ```yaml
 ---
-configmap: |-
+commonConfiguration: |-
   maxmemory 250mb
   maxmemory-policy volatile-lfu
 ```
@@ -330,6 +330,8 @@ helm upgrade --install redis bitnami/redis --namespace cover-service \
 --set master.persistence.size=100Gi \
 --set volumePermissions.enabled=true \
 --set master.disableCommands="" \
+--set replica.replicaCount=0 \
+--set auth.enabled=false \
 -f values.yaml
 ```
 
@@ -338,19 +340,17 @@ This project uses [RabbitMQ](https://www.rabbitmq.com/) as message broker for qu
 
 ```sh
 helm upgrade --install mq bitnami/rabbitmq --namespace cover-service \
---set image.tag=3.8.9-debian-10-r0 \
+--set image.tag=3.9.7-debian-10-r0 \
 --set auth.username=<USERNAME> \
 --set auth.password=<PASSWORD> \
 --set replicaCount=2 \
 --set resources.limits.memory="512Mi" \
---set persistence.enabled=true \
---set persistence.storageClass=azurefile-premium-retain \
---set persistence.accessModes[0]=ReadWriteMany \
---set persistence.size=128Gi \
 --set metrics.enabled=true \
+--set persistence.storageClass=azuredisk-premium-retain \
 --set memoryHighWatermark.enabled="true" \
 --set memoryHighWatermark.type="absolute" \
---set memoryHighWatermark.value="512MB"
+--set memoryHighWatermark.value="512MB" \
+--set clustering.forceBoot=true
 ```
 
 __Note__: That you have to set the username and password in the helm command above.

@@ -1,0 +1,200 @@
+openapi: 3.0.3
+info:
+  title: 'DDF Cover Service'
+  description: |-
+    This service provides covers for library materials indexed by isbn, issn, faust, pid.
+    The service is provided by [Det Digitale Folkebibliotek](https://detdigitalefolkebibliotek.dk/section/i-brug-paa-biblioteket/cover-service)
+    ### Authentication notes
+    Authentication is done via OAuth2 against auth.dbc.dk. To obtain a valid token follow the instructions here: [Open Platform](https://openplatform.dbc.dk/v3/). To use the "Authorize" option in this tool use your 'client_id' and 'client_secret' and fill in '@agency' (e.g. '@123456') for both username and password.
+  version: '2.0'
+servers:
+  -
+    url: /
+    description: ''
+paths:
+  /api/v2/covers:
+    get:
+      operationId: getCoverCollection
+      tags:
+        - Cover
+      responses:
+        200:
+          description: 'A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original ''null'' will be returned for ''url'' and ''format for that size. - ''worst case'' you will receive a 200 OK with an empty list.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cover'
+        400:
+          description: 'Bad request, e.g. required parameters missing.'
+      summary: 'Search multiple covers'
+      description: 'Get covers by identifier in specific image format(s), specific image size(s) and with or without generic covers.'
+      parameters:
+        -
+          name: type
+          in: query
+          description: 'The type of the identifier, i.e. ''isbn'', ''faust'', ''pid'' or ''issn'''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            enum:
+              - faust
+              - isbn
+              - issn
+              - pid
+            example: pid
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: identifiers
+          in: query
+          description: 'A list of identifiers of {type}. Maximum number os identifiers per reqeust is 200'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: array
+            maxLength: 200
+            minLength: 1
+            items:
+              type: string
+              example:
+                - '870970-basis:48218725'
+                - '870970-basis:27992625'
+          style: form
+          explode: false
+          allowReserved: false
+          example:
+            - '870970-basis:29862885'
+            - '870970-basis:27992625'
+        -
+          name: sizes
+          in: query
+          description: |-
+            A list of image sizes for the cover(s) you want to receive. Please note:
+              - If the cover is not available for the requested size 'null' will be returned for that size.
+              - If the 'sizes' parameter is omitted the 'default' size will be returned,
+              - If you request the 'original' size a cover will always be returned.
+
+             The different sizes in pixels (height).
+              - default: 1000px
+              - original: [variable]
+              - small: 160px
+              - medium: 270px
+              - large: 540px
+          required: false
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - default
+                - original
+                - small
+                - medium
+                - large
+              example:
+                - original
+                - small
+                - medium
+                - large
+          style: form
+          explode: false
+          allowReserved: false
+          example:
+            - original
+            - small
+            - medium
+            - large
+      deprecated: false
+    parameters: []
+components:
+  schemas:
+    Cover:
+      type: object
+      description: ''
+      properties:
+        id:
+          type: string
+          example: '736830-basis:70773147'
+        type:
+          type: string
+          enum:
+            - pid
+            - isbn
+          example: pid
+        imageUrls:
+          type: object
+          properties:
+            default:
+              $ref: '#/components/schemas/ImageUrl'
+            original:
+              $ref: '#/components/schemas/ImageUrl'
+            small:
+              $ref: '#/components/schemas/ImageUrl'
+            medium:
+              $ref: '#/components/schemas/ImageUrl'
+            large:
+              $ref: '#/components/schemas/ImageUrl'
+          example:
+            original:
+              url: 'https://res.cloudinary.com/dandigbib/image/upload/v1543590725/bogportalen.dk/9788779161948.jpg'
+              format: jpeg
+              size: original
+            small:
+              url: 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_small/v1543590725/bogportalen.dk/9788779161948.jpg'
+              format: jpeg
+              size: small
+            medium:
+              url: 'https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_medium/v1543590725/bogportalen.dk/9788779161948.jpg'
+              format: jpeg
+              size: medium
+            large:
+              url: null
+              format: jpeg
+              size: large
+          items:
+            $ref: '#/components/schemas/ImageUrl'
+    ImageUrl:
+      type: object
+      properties:
+        url:
+          type: string
+          format: url
+          nullable: 'true'
+          example: 'https://res.cloudinary.com/dandigbib/image/upload/v1543609481/bogportalen.dk/9788702246841.jpg'
+        format:
+          type: string
+          example: jpeg
+        size:
+          type: string
+          enum:
+            - default
+            - original
+            - small
+            - medium
+            - large
+          example: large
+  responses: {  }
+  parameters: {  }
+  examples: {  }
+  requestBodies: {  }
+  headers: {  }
+  securitySchemes:
+    oauth:
+      type: oauth2
+      description: 'OAuth 2.0 password Grant'
+      flows:
+        password:
+          tokenUrl: 'https://login.bib.dk/oauth/token'
+          scopes: {  }
+security:
+  -
+    oauth: []
+tags: []

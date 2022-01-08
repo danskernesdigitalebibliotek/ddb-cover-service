@@ -1,0 +1,2 @@
+itkdev_metrics:
+  resource: '@ItkDevMetricsBundle/Resources/config/routes.xml'

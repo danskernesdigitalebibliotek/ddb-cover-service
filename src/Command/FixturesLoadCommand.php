@@ -19,7 +19,7 @@ class FixturesLoadCommand extends Command
 {
     protected static $defaultName = 'app:fixtures:load';
 
-    private $appFixtures;
+    private AppFixtures $appFixtures;
 
     /**
      * FixturesLoadCommand constructor.

@@ -18,7 +18,7 @@ use App\Service\CoverStore\CoverStoreTransformationInterface;
  */
 class CoverFactory
 {
-    private $transformer;
+    private CoverStoreTransformationInterface $transformer;
 
     /**
      * IdentifierFactory constructor.
@@ -112,7 +112,7 @@ class CoverFactory
         }
 
         $extension = $formats[$imageSize]['extension'] ?? null;
-        $format = isset($formats[$imageSize]['extension']) ? $this->getFormatFromExt($extension) : $originalFormat;
+        $format = !is_null($extension) ? $this->getFormatFromExt($extension) : $originalFormat;
 
         return $this->getFormatFromExt($format);
     }

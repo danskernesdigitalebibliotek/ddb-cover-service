@@ -10,8 +10,10 @@ use App\Event\SearchNoHitEvent;
 use App\Message\SearchNoHitsMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
+use ItkDev\MetricsBundle\Service\MetricsService;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -20,9 +22,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
  */
 class SearchNoHitEventSubscriber implements EventSubscriberInterface
 {
-    private $noHitsProcessingEnabled;
-    private $bus;
-    private $noHitsCache;
+    private bool $noHitsProcessingEnabled;
+    private MessageBusInterface $bus;
+    private CacheItemPoolInterface $noHitsCache;
+    private MetricsService $metricsService;
 
     /**
      * SearchNoHitEventSubscriber constructor.
@@ -34,18 +37,19 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      * @param CacheItemPoolInterface $noHitsCache
      *   Cache pool for storing no hits
      */
-    public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache)
+    public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache, MetricsService $metricsService)
     {
         $this->noHitsProcessingEnabled = $bindEnableNoHits;
 
         $this->bus = $bus;
         $this->noHitsCache = $noHitsCache;
+        $this->metricsService = $metricsService;
     }
 
     /**
      * {@inheritdoc}
      *
-     * Defines the events that we subscribes to.
+     * Defines the events that we subscribe to.
      */
     public static function getSubscribedEvents(): array
     {
@@ -57,12 +61,10 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
     /**
      * Handle 'SearchNoHit' event.
      *
-     * If a request for an unknown identifier is received we need to
-     * perform additional indexing for that identifier to ensure we
-     * don't have a cover for it. Given the expensive nature of the
-     * indexing operations we cache weather a 'NoHit' has been generated
-     * for this identifier within a specific time frame. This is
-     * controlled by the lifetime config of the configured cache pool.
+     * If a request for an unknown identifier is received we need to perform additional indexing for that identifier to
+     * ensure we don't have a cover for it. Given the expensive nature of the indexing operations we cache weather a
+     * 'NoHit' has been generated for this identifier within a specific time frame. This is controlled by the lifetime
+     * config of the configured cache pool.
      *
      * @param SearchNoHitEvent $event
      *   Search no hit event
@@ -122,12 +124,16 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
             $cacheKeys = array_keys($keyedNoHits);
             $cacheItems = $this->noHitsCache->getItems($cacheKeys);
             foreach ($cacheItems as $cacheItem) {
+                /** @var CacheItem $cacheItem */
                 if (!$cacheItem->isHit()) {
+                    $this->metricsService->counter('no_hits_cache_miss', 'No hit not in cache', 1, ['type' => 'rest']);
+
                     /** @var NoHitItem $noHitItem */
-                    $cacheKey = $cacheItem->getKey();
-                    $noHitItem = $keyedNoHits[$cacheKey];
+                    $noHitItem = $keyedNoHits[$cacheItem->getKey()];
                     $cacheItem->set($noHitItem);
                     $nonCommittedCacheItems[] = $cacheItem;
+                } else {
+                    $this->metricsService->counter('no_hits_cache_hit', 'No hit found in cache', 1, ['type' => 'rest']);
                 }
             }
         } catch (InvalidArgumentException $e) {

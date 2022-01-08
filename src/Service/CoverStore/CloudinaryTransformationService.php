@@ -18,7 +18,7 @@ use App\Exception\CoverStoreTransformationException;
  */
 class CloudinaryTransformationService implements CoverStoreTransformationInterface
 {
-    private $transformations;
+    private array $transformations;
 
     /**
      * CloudinaryTransformationService constructor.
@@ -47,7 +47,7 @@ class CloudinaryTransformationService implements CoverStoreTransformationInterfa
 
         // Insert named transformation if it exists.
         if (!empty($transformation['transformation'])) {
-            // We do not allow upscaling of images. Return null if the transformation will result in a larger image
+            // We do not allow up-scaling of images. Return null if the transformation will result in a larger image
             // than the original.
             if ($transformation['size'] > $height) {
                 return null;
