@@ -30,7 +30,6 @@ services:
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
 
             $bindElasticSearchUrl: '%env(ELASTIC_URL)%'
-            $bindElasticStatsIndexPrefix: '%env(ELASTIC_STATS_INDEX_PREFIX)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
