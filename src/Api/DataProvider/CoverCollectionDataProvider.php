@@ -17,7 +17,6 @@ use App\Api\Exception\RequiredParameterMissingException;
 use App\Api\Exception\UnknownIdentifierTypeException;
 use App\Api\Exception\UnknownImageSizeException;
 use App\Api\Factory\CoverFactory;
-use App\Api\Statistics\CollectionStatsLogger;
 use App\Service\NoHitService;
 use App\Utils\Types\IdentifierType;
 use ItkDev\MetricsBundle\Service\MetricsService;
@@ -30,7 +29,6 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
     private SearchServiceInterface $searchService;
     private CoverFactory $coverFactory;
     private NoHitService $noHitService;
-    private CollectionStatsLogger $collectionStatsLogger;
     private MetricsService $metricsService;
     private int $maxIdentifierCount;
 
@@ -40,16 +38,14 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param SearchServiceInterface $searchService
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
-     * @param CollectionStatsLogger $collectionStatsLogger
      * @param MetricsService $metricsService
      * @param int $bindApiMaxIdentifiers
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, CollectionStatsLogger $collectionStatsLogger, MetricsService $metricsService, int $bindApiMaxIdentifiers)
+    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, MetricsService $metricsService, int $bindApiMaxIdentifiers)
     {
         $this->searchService = $searchService;
         $this->coverFactory = $coverFactory;
         $this->noHitService = $noHitService;
-        $this->collectionStatsLogger = $collectionStatsLogger;
         $this->metricsService = $metricsService;
         $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
@@ -85,7 +81,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
             yield $this->coverFactory->createCoverDto($identifierType, $imageSizes, $result);
         }
 
-        $this->collectionStatsLogger->logRequest($identifierType, $isIdentifiers, $results);
+        $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);
         $this->noHitService->handleSearchNoHits($identifierType, $isIdentifiers, $foundIdentifiers);
     }
 
