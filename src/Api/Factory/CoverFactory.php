@@ -137,4 +137,5 @@ class CoverFactory
                 return $extension;
         }
     }
+
 }
