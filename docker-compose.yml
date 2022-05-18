@@ -53,9 +53,10 @@ services:
       - '6379'
 
   rabbit:
-    image: rabbitmq:3.8-management
+    image: rabbitmq:3.9-management
     networks:
       - app
+      - frontend
     ports:
       - 15672
     environment:
