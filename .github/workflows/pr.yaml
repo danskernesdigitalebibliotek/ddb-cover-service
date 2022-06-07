@@ -224,7 +224,7 @@ jobs:
           node-version: '14'
       - run: yarn install
       - name: markdownlint
-        run: yarn markdownlint README.md
+        run: yarn markdownlint README.md CHANGELOG.md
 
   helm:
     name: Helm
