@@ -24,12 +24,11 @@ services:
             # Bound env variables
             $bindEnableNoHits: '%env(bool:APP_ENABLE_NO_HITS)%'
             $bindApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
-            $bindElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
-            $bindElasticType: '%env(ELASTIC_TYPE)%'
-            $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
 
             $bindElasticSearchUrl: '%env(ELASTIC_URL)%'
+            $bindElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
+            $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
