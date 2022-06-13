@@ -23,10 +23,7 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - .:/app:delegated
-    tmpfs:
-      - /app/var/cache:size=1G
-      - /tmp:size=1G
+      - nfsApp:/app:delegated
 
   nginx:
     image: nginx:latest
@@ -84,7 +81,25 @@ services:
       - xpack.security.transport.ssl.certificate=/usr/share/elasticsearch/data/es01/es01.crt
       - xpack.security.transport.ssl.key=/usr/share/elasticsearch/data/es01/es01.key
     volumes:
-      - ${PWD}/.docker/es:/usr/share/elasticsearch/data:rw
+      - nfsElastic:/usr/share/elasticsearch/data:rw
     ports:
       - '9200'
       - '9300'
+
+volumes:
+  # Named volume requires that you have NFS shares enabled (performance boost on Macs).
+  # Use `itkdev-docker-compose nfs:enable` to enable NFS shares. If you don't want to use it remove it from here and
+  # change the volume mapping to use normal shares in the containers. See
+  # https://sean-handley.medium.com/how-to-set-up-docker-for-mac-with-native-nfs-145151458adc
+  nfsApp:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+      device: ":$PWD"
+  nfsElastic:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+      device: ":$PWD/.docker/es"
