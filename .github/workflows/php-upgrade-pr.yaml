@@ -87,10 +87,16 @@ jobs:
     name: Behaviour tests (${{ matrix.php}})
     services:
       elasticsearch:
-        image: elasticsearch:8.2.2
+        image: elasticsearch:7.17.4
+        env:
+          discovery.type: single-node
         ports:
           - 9200:9200
-        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=10s --health-retries=10
+        options: >-
+          --health-cmd "curl http://localhost:9200/_cluster/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       # —— Check Elasticsearch 🔎 ——————————————————————————————————————————————
       - name: Check the Elasticsearch connection from runner host
@@ -124,7 +130,6 @@ jobs:
 
       - name: Behaviour tests
         run: |
-          APP_ENV=test ELASTIC_URL=http://localhost:9200 bin/console fos:elastica:create
           ELASTIC_URL=http://localhost:9200 phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
 
   phpcsfixer:

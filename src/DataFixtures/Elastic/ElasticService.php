@@ -7,7 +7,6 @@
 namespace App\DataFixtures\Elastic;
 
 use App\DataFixtures\Faker\Search;
-use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
 /**
@@ -36,7 +35,9 @@ class ElasticService
     public function index(Search ...$searches): void
     {
         $client = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
-        $this->createIndex($client);
+        if (!$client->indices()->exists(['index' => $this->indexName])) {
+            $this->createIndex();
+        }
 
         $params = ['body' => []];
 
@@ -59,17 +60,15 @@ class ElasticService
         }
 
         $client->bulk($params);
+        $client->indices()->refresh(['index' => $this->indexName]);
     }
 
     /**
      * Create new index.
-     *
-     * @param Client $client
-     *
-     * @return void
      */
-    private function createIndex(Client $client): void
+    public function createIndex(): void
     {
+        $client = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
         $client->indices()->create([
             'index' => $this->indexName,
             'body' => [
@@ -101,5 +100,14 @@ class ElasticService
                 ],
             ],
         ]);
+    }
+
+    /**
+     * Delete current index.
+     */
+    public function deleteIndex(): void
+    {
+        $client = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
+        $client->indices()->delete(['index' => $this->indexName]);
     }
 }
