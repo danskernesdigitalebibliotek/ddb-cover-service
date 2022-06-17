@@ -57,7 +57,7 @@ jobs:
 
       - name: Behaviour tests
         run: |
-          ELASTIC_URL=http://127.0.0.1:9200 ./vendor/bin/behat
+          ELASTIC_URL=http://localhost:9200 ./vendor/bin/behat
 
       - name: Upload coverage to Codecov test
         uses: codecov/codecov-action@v2
