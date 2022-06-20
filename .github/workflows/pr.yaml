@@ -84,7 +84,7 @@ jobs:
     name: Behaviour tests (${{ matrix.php}})
     services:
       elasticsearch:
-        image: elasticsearch:7.17.4
+        image: elasticsearch:8.2.2
         env:
           discovery.type: single-node
         ports:
