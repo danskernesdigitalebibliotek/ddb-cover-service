@@ -94,7 +94,7 @@ jobs:
         with:
           php-version: ${{ matrix.php}}
           extensions: ctype, iconv, imagick, json, redis, soap, xmlreader, zip
-          coverage: xdebug
+          coverage: none
 
       - name: Get composer cache directory
         id: composer-cache
@@ -108,8 +108,8 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.dependency-version }}-
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
-
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
+      
       # Setup ElasticSearch
       # @see https://github.com/elastic/elastic-github-actions/tree/master/elasticsearch
       - name: Configure sysctl limits
@@ -135,12 +135,6 @@ jobs:
       - name: Behaviour tests
         run: |
           ELASTIC_URL=http://localhost:9200 ./vendor/bin/behat
-
-      - name: Upload coverage to Codecov test
-        uses: codecov/codecov-action@v2
-        with:
-          files: ./coverage/clover.xml
-          flags: behat_features, ${{ matrix.php }}
 
   phpcsfixer:
     runs-on: ubuntu-latest
