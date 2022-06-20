@@ -34,6 +34,10 @@ class ElasticService
      */
     public function index(Search ...$searches): void
     {
+        if (empty($searches)) {
+            return;
+        }
+
         $client = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
         if (!$client->indices()->exists(['index' => $this->indexName])) {
             $this->createIndex();
@@ -108,6 +112,8 @@ class ElasticService
     public function deleteIndex(): void
     {
         $client = ClientBuilder::create()->setHosts([$this->elasticHost])->build();
-        $client->indices()->delete(['index' => $this->indexName]);
+        if ($client->indices()->exists(['index' => $this->indexName])) {
+            $client->indices()->delete(['index' => $this->indexName]);
+        }
     }
 }
