@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0' ]
+        php: [ '8.0', '8.1' ]
     name: Validate composer (${{ matrix.php}})
     steps:
       - uses: actions/checkout@master
@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0' ]
+        php: [ '8.0', '8.1' ]
     steps:
       - uses: actions/checkout@master
 
@@ -83,21 +83,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0' ]
+        php: [ '8.0', '8.1' ]
     name: Behaviour tests (${{ matrix.php}})
-    services:
-      elasticsearch:
-        image: elasticsearch:6.8.4
-        ports:
-          - 9200:9200
-        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
     steps:
-      # —— Check Elasticsearch 🔎 ——————————————————————————————————————————————
-      - name: Check the Elasticsearch connection from runner host
-        run: |
-          curl -fsSL "http://localhost:9200"
-          curl -fsSL "http://localhost:9200/_cluster/health?pretty"
-
       - name: Checkout
         uses: actions/checkout@master
 
@@ -121,18 +109,39 @@ jobs:
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
+      
+      # Setup ElasticSearch
+      # @see https://github.com/elastic/elastic-github-actions/tree/master/elasticsearch
+      - name: Configure sysctl limits
+        run: |
+          sudo swapoff -a
+          sudo sysctl -w vm.swappiness=1
+          sudo sysctl -w fs.file-max=262144
+          sudo sysctl -w vm.max_map_count=262144
+
+      - name: Runs Elasticsearch
+        uses: elastic/elastic-github-actions/elasticsearch@master
+        with:
+          stack-version: 8.2.2
+          security-enabled: false
+
+      - name: Wait for ES to be ready
+        run: |
+          while ! curl -s -X GET http://127.0.0.1:9200/_cluster/health\?wait_for_status\=green\&timeout\=60s | grep -q '"status":"green"'
+          do
+            echo "==> Waiting for ElasticSearch cluster green status" && sleep 1
+          done
 
       - name: Behaviour tests
         run: |
-          APP_ENV=test ELASTIC_URL=http://localhost:9200 bin/console fos:elastica:create
-          ELASTIC_URL=http://localhost:9200 phpdbg -d memory_limit=-1 -qrr ./vendor/bin/behat
+          ELASTIC_URL=http://localhost:9200 ./vendor/bin/behat
 
   phpcsfixer:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0' ]
+        php: [ '8.0', '8.1' ]
     name: Coding style (${{ matrix.php }})
     steps:
       - uses: actions/checkout@master
@@ -169,7 +178,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0' ]
+        php: [ '8.0', '8.1' ]
     name: Psalm static analysis (${{ matrix.php}})
     steps:
       - uses: actions/checkout@master
@@ -246,7 +255,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0' ]
+        php: [ '8.0', '8.1' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2

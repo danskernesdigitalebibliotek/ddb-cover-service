@@ -82,12 +82,6 @@ jobs:
       matrix:
         php: [ '7.4' ]
     name: Behaviour tests (${{ matrix.php}})
-    services:
-      elasticsearch:
-        image: elasticsearch:6.8.4
-        ports:
-          - 9200:9200
-        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -113,15 +107,30 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
-      # —— Check Elasticsearch 🔎 ——————————————————————————————————————————————
-      - name: Check the Elasticsearch connection from runner host
+      # Setup ElasticSearch
+      # @see https://github.com/elastic/elastic-github-actions/tree/master/elasticsearch
+      - name: Configure sysctl limits
         run: |
-          curl -fsSL "http://localhost:9200"
-          curl -fsSL "http://localhost:9200/_cluster/health?pretty"
+          sudo swapoff -a
+          sudo sysctl -w vm.swappiness=1
+          sudo sysctl -w fs.file-max=262144
+          sudo sysctl -w vm.max_map_count=262144
+
+      - name: Runs Elasticsearch
+        uses: elastic/elastic-github-actions/elasticsearch@master
+        with:
+          stack-version: 8.2.2
+          security-enabled: false
+
+      - name: Wait for ES to be ready
+        run: |
+          while ! curl -s -X GET http://127.0.0.1:9200/_cluster/health\?wait_for_status\=green\&timeout\=60s | grep -q '"status":"green"'
+          do
+            echo "==> Waiting for ElasticSearch cluster green status" && sleep 1
+          done
 
       - name: Behaviour tests
         run: |
-          APP_ENV=test ELASTIC_URL=http://localhost:9200 bin/console fos:elastica:create
           ELASTIC_URL=http://localhost:9200 ./vendor/bin/behat
 
       - name: Upload coverage to Codecov test

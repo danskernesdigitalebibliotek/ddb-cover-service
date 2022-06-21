@@ -11,37 +11,22 @@ use App\DataFixtures\Elastic\ElasticService;
 use App\DataFixtures\Faker\Search;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use FOS\ElasticaBundle\Configuration\ConfigManager;
-use FOS\ElasticaBundle\Index\IndexManager;
-use FOS\ElasticaBundle\Index\Resetter;
 
 /**
  * Class FixturesContext.
  */
 class FixturesContext implements Context
 {
-    private $elasticService;
-
-    private $configManager;
-    private $indexManager;
-    private $resetter;
+    private ElasticService $elasticService;
 
     /**
      * FixturesContext constructor.
      *
      * @param ElasticService $elasticService
-     * @param IndexManager $indexManager
-     * @param Resetter $resetter
-     * @param ConfigManager $configManager
      */
-    public function __construct(ElasticService $elasticService, IndexManager $indexManager, Resetter $resetter, ConfigManager $configManager)
+    public function __construct(ElasticService $elasticService)
     {
         $this->elasticService = $elasticService;
-
-        // @TODO: To be refactored when Fos\Elastica is removed.
-        $this->configManager = $configManager;
-        $this->indexManager = $indexManager;
-        $this->resetter = $resetter;
     }
 
     /**
@@ -72,9 +57,6 @@ class FixturesContext implements Context
         }
 
         $this->elasticService->index(...$searches);
-
-        // Give elastic 1 second to build index.
-        \sleep(1);
     }
 
     /**
@@ -84,13 +66,7 @@ class FixturesContext implements Context
      */
     public function prepareIndexes(): void
     {
-        $indexes = array_keys($this->indexManager->getAllIndexes());
-
-        if (!$indexes) {
-            $this->createIndexes();
-        } else {
-            $this->resetIndexes();
-        }
+        $this->resetIndexes();
     }
 
     /**
@@ -98,28 +74,7 @@ class FixturesContext implements Context
      */
     private function resetIndexes(): void
     {
-        $indexes = array_keys($this->indexManager->getAllIndexes());
-
-        foreach ($indexes as $index) {
-            $this->resetter->resetIndex($index, false, true);
-        }
-    }
-
-    /**
-     * Create Elastic indexes.
-     */
-    private function createIndexes(): void
-    {
-        $indexes = array_keys($this->indexManager->getAllIndexes());
-
-        foreach ($indexes as $indexName) {
-            $indexConfig = $this->configManager->getIndexConfiguration($indexName);
-            $index = $this->indexManager->getIndex($indexName);
-            if ($indexConfig->isUseAlias()) {
-                $this->aliasProcessor->setRootName($indexConfig, $index);
-            }
-            $mapping = $this->mappingBuilder->buildIndexMapping($indexConfig);
-            $index->create($mapping, false);
-        }
+        $this->elasticService->deleteIndex();
+        $this->elasticService->createIndex();
     }
 }
