@@ -17,6 +17,7 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 ### Changed
 - Update rabbit MQ to 3.9 in composer setup.
 - Update symfony/fex
+- Switched from behat tests to php-unit tests only
 
 ## [3.0.5] - 2022-18-03
 

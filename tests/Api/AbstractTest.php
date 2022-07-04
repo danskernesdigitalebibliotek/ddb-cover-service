@@ -5,7 +5,6 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use ApiPlatform\Core\Exception\RuntimeException;
-use App\DataFixtures\AppFixtures;
 use DanskernesDigitaleBibliotek\AgencyAuthBundle\Security\User;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
