@@ -2,19 +2,8 @@
 
 namespace App\Tests\Api;
 
-use App\DataFixtures\AppFixtures;
-
 class CoverTest extends AbstractTest
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        /** @var AppFixtures $fixture */
-        $fixture = self::$container->get('App\DataFixtures\AppFixtures');
-        $fixture->load();
-    }
-
     public function testGetCovers(): void
     {
         $response = $this->createClientWithCredentials()->request('GET', $this->apiPath.'/covers', [

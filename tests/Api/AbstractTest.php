@@ -5,6 +5,7 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use ApiPlatform\Core\Exception\RuntimeException;
+use App\DataFixtures\AppFixtures;
 use DanskernesDigitaleBibliotek\AgencyAuthBundle\Security\User;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
@@ -14,6 +15,16 @@ abstract class AbstractTest extends ApiTestCase
     private ?Client $clientWithCredentials = null;
     private AdapterInterface $tokenCache;
     protected string $apiPath = '';
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::bootKernel();
+
+        // Load fixture once pr. test class only to speed up tests.
+        $fixture = self::$container->get('App\DataFixtures\AppFixtures');
+        $fixture->load();
+    }
 
     public function setUp(): void
     {
