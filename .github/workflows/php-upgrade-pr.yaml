@@ -88,7 +88,7 @@ jobs:
           done
 
       - name: Unit tests
-        run: ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+        run: ELASTIC_URL=http://localhost:9200 ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
       - name: Upload coverage to Codecov test
         uses: codecov/codecov-action@v1
