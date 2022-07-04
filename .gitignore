@@ -14,11 +14,6 @@
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
-
-###> friends-of-behat/symfony-extension ###
-/behat.yml
-###< friends-of-behat/symfony-extension ###
-
 ###> code coverage reports ###
 /coverage
 ###< code coverage reports ###
