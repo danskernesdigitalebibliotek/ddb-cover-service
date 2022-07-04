@@ -6,7 +6,7 @@ class AuthenticationTest extends AbstractTest
 {
     public function testDocsAccess(): void
     {
-        $response = static::createClient()->request('GET', $this->apiPath, [
+        static::createClient()->request('GET', $this->apiPath, [
             'headers' => [
                 'accept' => 'text/html',
             ],
@@ -16,9 +16,17 @@ class AuthenticationTest extends AbstractTest
 
     public function testLoginCovers(): void
     {
-        $response = $this->createClientWithCredentials()->request('GET', $this->apiPath.'/covers?type=pid&identifiers=870970-basis%3A29862885,870970-basis%3A27992625&sizes=original,small,medium,large', [
+        $this->createClientWithCredentials()->request('GET', $this->apiPath.'/covers', [
             'headers' => [
                 'accept' => 'application/json',
+            ],
+            'query' => [
+              'type' => 'pid',
+              'identifiers' => implode(',', [
+                  '870970-basis:29862885',
+                  '870970-basis:27992625',
+              ]),
+              'sizes' => implode(',',['original', 'small', 'medium', 'large']),
             ],
         ]);
         $this->assertResponseIsSuccessful();
@@ -26,9 +34,17 @@ class AuthenticationTest extends AbstractTest
 
     public function testAccessDenied(): void
     {
-        $response = static::createClient()->request('GET', $this->apiPath.'/covers?type=pid&identifiers=870970-basis%3A29862885,870970-basis%3A27992625&sizes=original,small,medium,large', [
+        static::createClient()->request('GET', $this->apiPath.'/covers', [
             'headers' => [
                 'accept' => 'application/json',
+            ],
+            'query' => [
+                'type' => 'pid',
+                'identifiers' => implode(',', [
+                    '870970-basis:29862885',
+                    '870970-basis:27992625',
+                ]),
+                'sizes' => implode(',',['original', 'small', 'medium', 'large']),
             ],
         ]);
         $this->assertResponseStatusCodeSame(401);

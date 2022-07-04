@@ -56,8 +56,16 @@ class AppFixtures
                 $search->setIsIdentifier('870970-basis:29862885');
                 $search->setHeight(2000);
             } elseif (2 === $i) {
+                $search->setIsType(IdentifierType::ISBN);
+                $search->setIsIdentifier('9785341366046');
+                $search->setHeight(2000);
+            } elseif (3 === $i) {
                 $search->setIsType(IdentifierType::PID);
                 $search->setIsIdentifier('870970-basis:27992625');
+                $search->setHeight(500);
+            } elseif (4 === $i) {
+                $search->setIsType(IdentifierType::ISBN);
+                $search->setIsIdentifier('9799913633580');
                 $search->setHeight(500);
             } else {
                 $search->setIsType($faker->isType());
