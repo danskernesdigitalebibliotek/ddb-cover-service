@@ -26,7 +26,7 @@ class AuthenticationTest extends AbstractTest
                   '870970-basis:29862885',
                   '870970-basis:27992625',
               ]),
-              'sizes' => implode(',',['original', 'small', 'medium', 'large']),
+              'sizes' => implode(',', ['original', 'small', 'medium', 'large']),
             ],
         ]);
         $this->assertResponseIsSuccessful();
@@ -44,7 +44,7 @@ class AuthenticationTest extends AbstractTest
                     '870970-basis:29862885',
                     '870970-basis:27992625',
                 ]),
-                'sizes' => implode(',',['original', 'small', 'medium', 'large']),
+                'sizes' => implode(',', ['original', 'small', 'medium', 'large']),
             ],
         ]);
         $this->assertResponseStatusCodeSame(401);

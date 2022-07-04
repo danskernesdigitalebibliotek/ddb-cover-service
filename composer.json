@@ -14,7 +14,6 @@
         "ext-redis": "*",
         "ext-zend-opcache": "*",
         "api-platform/core": "^2.6",
-        "composer/package-versions-deprecated": "1.11.99.2",
         "danskernesdigitalebibliotek/agency-auth-bundle": "^2.0",
         "itk-dev/metrics-bundle": "^0.0.1",
         "nelmio/cors-bundle": "^2.1",

@@ -27,7 +27,7 @@ class CoverTest extends AbstractTest
                     '870970-basis:29862885',
                     '870970-basis:27992625',
                 ]),
-                'sizes' => implode(',',['original', 'small', 'medium', 'large']),
+                'sizes' => implode(',', ['original', 'small', 'medium', 'large']),
             ],
         ]);
         $body = $response->getContent();
@@ -56,7 +56,7 @@ class CoverTest extends AbstractTest
                         'size' => 'medium',
                     ],
                     'large' => [
-                        'url' => NULL,
+                        'url' => null,
                         'format' => 'jpeg',
                         'size' => 'large',
                     ],
@@ -104,7 +104,7 @@ class CoverTest extends AbstractTest
                     '870970-basis:29862885',
                     '870970-basis:11111111',
                 ]),
-                'sizes' => implode(',',['original', 'small', 'medium', 'large']),
+                'sizes' => implode(',', ['original', 'small', 'medium', 'large']),
             ],
         ]);
         $body = $response->getContent();
@@ -154,7 +154,7 @@ class CoverTest extends AbstractTest
                 'identifiers' => implode(',', [
                     '870970-basis:11111111',
                 ]),
-                'sizes' => implode(',',['original', 'small', 'medium', 'large']),
+                'sizes' => implode(',', ['original', 'small', 'medium', 'large']),
             ],
         ]);
         $body = $response->getContent();
@@ -167,7 +167,7 @@ class CoverTest extends AbstractTest
     }
 
     /**
-     * I should get a 400 bad request if I send to many identifiers
+     * I should get a 400 bad request if I send to many identifiers.
      */
     public function testToManyIdentifiers(): void
     {
@@ -185,14 +185,14 @@ class CoverTest extends AbstractTest
                     '9798058560423',
                     '9789318143272',
                 ]),
-                'sizes' => implode(',',['original', 'small', 'medium', 'large']),
+                'sizes' => implode(',', ['original', 'small', 'medium', 'large']),
             ],
         ]);
         $this->assertResponseStatusCodeSame(400);
     }
 
     /**
-     * I should get a 400 bad request if I send an empty sizes parameter
+     * I should get a 400 bad request if I send an empty sizes parameter.
      */
     public function testEmptySizeQuery(): void
     {
@@ -243,8 +243,8 @@ class CoverTest extends AbstractTest
                         'url' => null,
                         'format' => 'jpeg',
                         'size' => 'default',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'id' => '870970-basis:29862885',
@@ -262,7 +262,7 @@ class CoverTest extends AbstractTest
     }
 
     /**
-     * I should get a 400 bad request if I request unknown sizes
+     * I should get a 400 bad request if I request unknown sizes.
      */
     public function testRequestUnknownSize(): void
     {
@@ -283,7 +283,7 @@ class CoverTest extends AbstractTest
     }
 
     /**
-     * I should get a 200 ok if I request known size
+     * I should get a 200 ok if I request known size.
      */
     public function testKnownSize(): void
     {
@@ -339,7 +339,7 @@ class CoverTest extends AbstractTest
     }
 
     /**
-     * I should get a 200 ok if I request known sizes
+     * I should get a 200 ok if I request known sizes.
      */
     public function testGetSmallMediumCovers(): void
     {
@@ -353,7 +353,7 @@ class CoverTest extends AbstractTest
                     '870970-basis:29862885',
                     '870970-basis:27992625',
                 ]),
-                'sizes' => implode(',',['small', 'medium']),
+                'sizes' => implode(',', ['small', 'medium']),
             ],
         ]);
         $body = $response->getContent();
