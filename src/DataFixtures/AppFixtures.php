@@ -60,14 +60,14 @@ class AppFixtures
                 $search->setIsIdentifier('870970-basis:27992625');
                 $search->setHeight(500);
             } else {
-                $search->setIsType($faker->isType);
+                $search->setIsType($faker->isType());
                 $search->setIsIdentifier($faker->isIdentifier($search->getIsType()));
-                $search->setHeight($faker->height);
+                $search->setHeight($faker->height());
             }
 
-            $search->setImageFormat($faker->imageFormat);
-            $search->setImageUrl($faker->imageUrl);
-            $search->setWidth($faker->width);
+            $search->setImageFormat($faker->imageFormat());
+            $search->setImageUrl($faker->imageUrl());
+            $search->setWidth($faker->width());
 
             $searches[] = $search;
 
