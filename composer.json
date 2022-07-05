@@ -108,7 +108,7 @@
             "@check-coding-standards/twigcs"
         ],
         "coding-standards-apply": [
-            "php-cs-fixer --config=.php_cs.dist fix"
+            "php-cs-fixer fix"
         ],
         "phpunit": [
             "./vendor/bin/phpunit"
