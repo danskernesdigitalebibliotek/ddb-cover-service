@@ -20,7 +20,6 @@
         "phpdocumentor/reflection-docblock": "^5.2",
         "predis/predis": "^1.1",
         "ruflin/elastica": "^7.1",
-        "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "^5.2",
         "symfony/console": "^5.2",
         "symfony/dotenv": "^5.2",
