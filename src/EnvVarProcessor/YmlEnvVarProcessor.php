@@ -18,7 +18,7 @@ class YmlEnvVarProcessor implements EnvVarProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function getEnv($prefix, $name, \Closure $getEnv): string
+    public function getEnv($prefix, $name, \Closure $getEnv): mixed
     {
         $env = $getEnv($name);
 
