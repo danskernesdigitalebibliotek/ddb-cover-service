@@ -36,8 +36,8 @@ jobs:
           set -a && source .env && set +a
           APP_ENV=prod composer install --no-dev -o --ignore-platform-reqs
 
-  unit-tests:
-    name: Unit tests (${{ matrix.php }})
+  test-suite:
+    name: Test suite (${{ matrix.php }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -87,7 +87,7 @@ jobs:
             echo "==> Waiting for ElasticSearch cluster green status" && sleep 1
           done
 
-      - name: Unit tests
+      - name: Test suite
         run: ELASTIC_URL=http://localhost:9200 ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
       - name: Upload coverage to Codecov test
