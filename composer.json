@@ -17,7 +17,6 @@
         "danskernesdigitalebibliotek/agency-auth-bundle": "^3.0",
         "itk-dev/metrics-bundle": "^0.0.1",
         "nelmio/cors-bundle": "^2.1",
-        "phpdocumentor/reflection-docblock": "^5.3",
         "predis/predis": "^1.1",
         "ruflin/elastica": "^7.1",
         "sensio/framework-extra-bundle": "^6.2",
