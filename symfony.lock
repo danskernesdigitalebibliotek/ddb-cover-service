@@ -364,9 +364,6 @@
     "symfony/css-selector": {
         "version": "v4.4.8"
     },
-    "symfony/debug": {
-        "version": "v4.4.7"
-    },
     "symfony/debug-bundle": {
         "version": "4.1",
         "recipe": {
@@ -456,9 +453,6 @@
     "symfony/http-kernel": {
         "version": "v4.4.7"
     },
-    "symfony/inflector": {
-        "version": "v4.4.7"
-    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -479,9 +473,6 @@
         "files": [
             "config/packages/messenger.yaml"
         ]
-    },
-    "symfony/mime": {
-        "version": "v4.4.7"
     },
     "symfony/monolog-bridge": {
         "version": "v4.4.8"
@@ -520,9 +511,6 @@
             "phpunit.xml.dist",
             "tests/bootstrap.php"
         ]
-    },
-    "symfony/polyfill-intl-idn": {
-        "version": "v1.15.0"
     },
     "symfony/polyfill-intl-normalizer": {
         "version": "v1.23.0"
