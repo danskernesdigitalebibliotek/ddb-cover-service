@@ -20,6 +20,7 @@
         "phpdocumentor/reflection-docblock": "^5.2",
         "predis/predis": "^1.1",
         "ruflin/elastica": "^7.1",
+        "sensio/framework-extra-bundle": "^6.2",
         "symfony/asset": "^5.2",
         "symfony/console": "^5.2",
         "symfony/dotenv": "^5.2",
@@ -98,7 +99,7 @@
             "@auto-scripts"
         ],
         "check-coding-standards/php-cs-fixer": [
-            "php-cs-fixer --config=.php_cs.dist fix --dry-run --format=checkstyle"
+            "php-cs-fixer fix --dry-run --format=checkstyle"
         ],
         "check-coding-standards/twigcs": [
             "twigcs lint templates"
