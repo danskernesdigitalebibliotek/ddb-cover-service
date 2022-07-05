@@ -9,7 +9,7 @@ networks:
 
 services:
   phpfpm:
-    image: itkdev/php7.4-fpm
+    image: itkdev/php8.1-fpm
     networks:
       - app
     environment:
