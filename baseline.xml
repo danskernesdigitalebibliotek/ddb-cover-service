@@ -1,47 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.8.1@f73f2299dbc59a3e6c4d66cff4605176e728ee69">
   <file src="src/Api/DataProvider/CoverCollectionDataProvider.php">
-    <RedundantCondition occurrences="2">
+    <RedundantCondition occurrences="1">
       <code>\is_array($isIdentifiers)</code>
-      <code>\is_array($sizes)</code>
     </RedundantCondition>
-    <TypeDoesNotContainType occurrences="3">
+    <TypeDoesNotContainType occurrences="1">
       <code>[$isIdentifiers]</code>
-      <code>[$sizes]</code>
-      <code>empty($sizes)</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/Api/Factory/CoverFactory.php">
     <InvalidArrayOffset occurrences="1">
       <code>$formats[$imageSize]['extension']</code>
-      <code>$formats[$imageSize]['extension']</code>
     </InvalidArrayOffset>
   </file>
-  <file src="src/Api/Statistics/CollectionStatsLogger.php">
-    <PossiblyNullReference occurrences="2">
-      <code>getAgency</code>
-      <code>getClientIp</code>
-    </PossiblyNullReference>
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>getAgency</code>
-    </UndefinedInterfaceMethod>
-  </file>
   <file src="src/DataFixtures/AppFixtures.php">
-    <UndefinedMagicMethod occurrences="1">
+    <UndefinedMagicMethod occurrences="5">
+      <code>height</code>
+      <code>imageFormat</code>
       <code>isIdentifier</code>
+      <code>isType</code>
+      <code>width</code>
     </UndefinedMagicMethod>
-    <UndefinedMagicPropertyFetch occurrences="5">
-      <code>$faker-&gt;height</code>
-      <code>$faker-&gt;imageFormat</code>
-      <code>$faker-&gt;imageUrl</code>
-      <code>$faker-&gt;isType</code>
-      <code>$faker-&gt;width</code>
-    </UndefinedMagicPropertyFetch>
-  </file>
-  <file src="src/DataFixtures/Elastic/ElasticService.php">
-    <PossiblyInvalidArrayOffset occurrences="1">
-      <code>$clientConfig['connections']</code>
-    </PossiblyInvalidArrayOffset>
   </file>
   <file src="src/EventSubscriber/SearchNoHitEventSubscriber.php">
     <InvalidCatch occurrences="1"/>
