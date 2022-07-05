@@ -18,3 +18,12 @@ framework:
 
         routing:
             'App\Message\SearchNoHitsMessage': async_no_hit
+
+# when@test:
+#    framework:
+#        messenger:
+#            transports:
+#                # replace with your transport name here (e.g., my_transport: 'in-memory://')
+#                # For more Messenger testing tools, see https://github.com/zenstruck/messenger-test
+#                async: 'in-memory://'
+

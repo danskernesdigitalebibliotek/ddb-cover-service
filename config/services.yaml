@@ -2,7 +2,7 @@
 # Files in the packages/subdirectory configure your dependencies.
 
 # Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
@@ -65,4 +65,3 @@ services:
         lazy: true
     App\DataFixtures\AppFixtures\Elastic\ElasticService:
         lazy: true
-
