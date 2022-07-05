@@ -8,8 +8,8 @@ security:
             security: false
         api:
             pattern: '^%app.path.prefix%'
-            stateless: true
-            anonymous: lazy
+            anonymous: true
+            lazy: true
             guard:
                 authenticators:
                     - DanskernesDigitaleBibliotek\AgencyAuthBundle\Security\TokenAuthenticator
