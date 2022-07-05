@@ -141,6 +141,6 @@ class SearchNoHitEventSubscriberTest extends TestCase
      */
     private function getSearchNoHitEventSubscriber(bool $noHitsProcessingEnabled): SearchNoHitEventSubscriber
     {
-        return new SearchNoHitEventSubscriber($noHitsProcessingEnabled, $this->bus, $this->noHitsCache, $this->metricsService);
+        return new SearchNoHitEventSubscriber($this->bus, $this->noHitsCache, $this->metricsService, $noHitsProcessingEnabled);
     }
 }

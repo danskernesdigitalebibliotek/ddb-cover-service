@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Command to populate elasticsearch.
@@ -7,6 +8,7 @@
 namespace App\Command;
 
 use App\DataFixtures\AppFixtures;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,22 +17,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Class FixturesLoadCommand.
  */
+#[AsCommand(name: 'app:fixtures:load')]
 class FixturesLoadCommand extends Command
 {
-    protected static $defaultName = 'app:fixtures:load';
-
-    private AppFixtures $appFixtures;
-
     /**
      * FixturesLoadCommand constructor.
      *
      * @param AppFixtures $appFixtures
      *   The AppFixtures service
      */
-    public function __construct(AppFixtures $appFixtures)
+    public function __construct(private readonly AppFixtures $appFixtures)
     {
-        $this->appFixtures = $appFixtures;
-
         parent::__construct();
     }
 

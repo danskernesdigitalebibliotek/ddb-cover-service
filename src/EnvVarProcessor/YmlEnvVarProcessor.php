@@ -7,6 +7,7 @@
 
 namespace App\EnvVarProcessor;
 
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -28,6 +29,7 @@ class YmlEnvVarProcessor implements EnvVarProcessorInterface
     /**
      * {@inheritdoc}
      */
+    #[ArrayShape(['yml' => 'string'])]
     public static function getProvidedTypes(): array
     {
         return [

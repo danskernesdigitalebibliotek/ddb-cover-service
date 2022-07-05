@@ -21,17 +21,15 @@ class AppFixtures
     private const BATCH_SIZE = 100;
     private const FAKER_SEED = 123456789;
 
-    private ElasticService $elasticService;
-
     /**
      * AppFixtures constructor.
      *
      * @param ElasticService $elasticService
      *   Service to update elasticsearch
      */
-    public function __construct(ElasticService $elasticService)
-    {
-        $this->elasticService = $elasticService;
+    public function __construct(
+        private readonly ElasticService $elasticService
+    ) {
     }
 
     /**

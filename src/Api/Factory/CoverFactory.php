@@ -18,24 +18,20 @@ use App\Service\CoverStore\CoverStoreTransformationInterface;
  */
 class CoverFactory
 {
-    private CoverStoreTransformationInterface $transformer;
-
     /**
      * IdentifierFactory constructor.
      *
      * @param CoverStoreTransformationInterface $transformer
      *   The cover store transformation service to get urls for transformed covers
      */
-    public function __construct(CoverStoreTransformationInterface $transformer)
-    {
-        $this->transformer = $transformer;
+    public function __construct(
+        private readonly CoverStoreTransformationInterface $transformer
+    ) {
     }
 
     /**
      * Create Identifier Dto from identifier type.
      *
-     * @param string $type
-     *   The identifier type (e.g. 'pid', 'isbn', etc)
      * @param array $imageSizes
      *   The image sizes requested
      * @param array $data
@@ -44,7 +40,7 @@ class CoverFactory
      * @return Cover
      *   A new {type} identifier data transfer object (DTO) with values set from {data}
      */
-    public function createCoverDto(string $type, array $imageSizes, array $data): Cover
+    public function createCoverDto(array $imageSizes, array $data): Cover
     {
         $cover = new Cover();
         $this->setData($cover, $imageSizes, $data);
@@ -130,11 +126,9 @@ class CoverFactory
     {
         $extension = strtolower($extension);
 
-        switch ($extension) {
-            case 'jpg':
-                return 'jpeg';
-            default:
-                return $extension;
-        }
+        return match ($extension) {
+            'jpg' => 'jpeg',
+            default => $extension,
+        };
     }
 }

@@ -74,6 +74,6 @@ class NoHitServiceTest extends TestCase
      */
     private function getNoHitsService(bool $enabled): NoHitService
     {
-        return new NoHitService($enabled, $this->dispatcher, $this->metricsService);
+        return new NoHitService($this->dispatcher, $this->metricsService, $enabled);
     }
 }
