@@ -103,7 +103,7 @@
             "php-cs-fixer fix --dry-run --format=checkstyle"
         ],
         "check-coding-standards/twigcs": [
-            "twigcs lint templates"
+            "twigcs templates"
         ],
         "coding-standards-check": [
             "@check-coding-standards/php-cs-fixer",
