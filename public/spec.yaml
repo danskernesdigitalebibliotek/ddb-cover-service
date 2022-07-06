@@ -19,7 +19,7 @@ paths:
         - Cover
       responses:
         200:
-          description: 'A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original ''null'' will be returned for ''url'' and ''format for that size. - ''worst case'' you will receive a 200 OK with an empty list.'
+          description: "A list of covers is returned. Notice that - unknown covers will not be present in the list. - if the requested size is larger than the original 'null' will be returned for 'url' and 'format for that size. - 'worst case' you will receive a 200 OK with an empty list."
           content:
             application/json:
               schema:
@@ -34,7 +34,7 @@ paths:
         -
           name: type
           in: query
-          description: 'The type of the identifier, i.e. ''isbn'', ''faust'', ''pid'' or ''issn'''
+          description: "The type of the identifier, i.e. 'isbn', 'faust', 'pid' or 'issn'"
           required: true
           deprecated: false
           allowEmptyValue: false
