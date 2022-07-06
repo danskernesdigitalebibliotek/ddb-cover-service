@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74f5f0ed072b3c36fd8752acc16283a2",
+    "content-hash": "3d319c9ce473d3b9d7c01e51d10fc234",
     "packages": [
         {
             "name": "api-platform/core",
@@ -779,27 +779,38 @@
         },
         {
             "name": "itk-dev/metrics-bundle",
-            "version": "0.0.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/metrics-bundle.git",
-                "reference": "9f68c16cf98f44562c233628b4c5ff7a2b704a91"
+                "reference": "9f5b784a7c91e86c0f8618b7e8b251c4a82721a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/metrics-bundle/zipball/9f68c16cf98f44562c233628b4c5ff7a2b704a91",
-                "reference": "9f68c16cf98f44562c233628b4c5ff7a2b704a91",
+                "url": "https://api.github.com/repos/itk-dev/metrics-bundle/zipball/9f5b784a7c91e86c0f8618b7e8b251c4a82721a8",
+                "reference": "9f5b784a7c91e86c0f8618b7e8b251c4a82721a8",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4|^8.0|^8.1",
-                "promphp/prometheus_client_php": "^2.2"
+                "php": "^8.1",
+                "promphp/prometheus_client_php": "^2.2",
+                "symfony/config": "^6.1",
+                "symfony/dependency-injection": "^6.1",
+                "symfony/framework-bundle": "^6.1",
+                "symfony/http-foundation": "^6.1"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.2",
                 "vimeo/psalm": "^4.7"
             },
             "type": "symfony-bundle",
+            "extra": {
+                "symfony": {
+                    "allow-contrib": false,
+                    "require": "6.1.*",
+                    "docker": false
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "ItkDev\\MetricsBundle\\": "src/"
@@ -818,9 +829,9 @@
             "description": "Provide metrics for prometheus",
             "support": {
                 "issues": "https://github.com/itk-dev/metrics-bundle/issues",
-                "source": "https://github.com/itk-dev/metrics-bundle/tree/0.0.1"
+                "source": "https://github.com/itk-dev/metrics-bundle/tree/1.0.0"
             },
-            "time": "2021-10-19T08:27:23+00:00"
+            "time": "2022-07-06T09:04:50+00:00"
         },
         {
             "name": "laminas/laminas-code",

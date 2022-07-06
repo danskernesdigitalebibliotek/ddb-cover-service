@@ -15,7 +15,7 @@
         "ext-zend-opcache": "*",
         "api-platform/core": "^2.6",
         "danskernesdigitalebibliotek/agency-auth-bundle": "^3.0",
-        "itk-dev/metrics-bundle": "^0.0.1",
+        "itk-dev/metrics-bundle": "^1.0",
         "nelmio/cors-bundle": "^2.1",
         "predis/predis": "^1.1",
         "ruflin/elastica": "^7.1",
