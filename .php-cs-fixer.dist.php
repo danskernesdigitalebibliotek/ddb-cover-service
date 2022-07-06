@@ -1,12 +1,12 @@
 <?php
 
-$finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__.'/{src,tests}')
-    // To get the correct OpenAPi docs output we have to break the rules in Api/Dto/Cover.php L87-96,
+$finder = (new PhpCsFixer\Finder())
+    ->in(__DIR__)
+    ->exclude('var')
     ->notPath('Api/Dto/Cover.php')
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => false,
@@ -14,4 +14,6 @@ return PhpCsFixer\Config::create()
         'no_superfluous_phpdoc_tags' => false,
         'array_syntax' => ['syntax' => 'short'],
     ])
-    ->setFinder($finder);
+    ->setFinder($finder)
+    ->setCacheFile('.php-cs-fixer.cache') // forward compatibility with 3.x line
+;
