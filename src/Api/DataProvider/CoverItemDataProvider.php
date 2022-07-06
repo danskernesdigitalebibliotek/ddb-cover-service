@@ -18,9 +18,6 @@ use App\Api\Dto\Cover;
  */
 final class CoverItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return Cover::class === $resourceClass;

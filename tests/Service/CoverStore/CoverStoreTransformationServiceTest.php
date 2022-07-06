@@ -10,6 +10,7 @@ namespace App\Tests\Service\CoverStore;
 use App\Exception\CoverStoreTransformationException;
 use App\Service\CoverStore\CloudinaryTransformationService;
 use App\Service\CoverStore\CoverStoreTransformationInterface;
+use JetBrains\PhpStorm\ArrayShape;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -129,7 +130,8 @@ class CoverStoreTransformationServiceTest extends TestCase
      * @return array
      *   Configuration array as build by the YML file
      */
-    private function getTransformations()
+    #[ArrayShape(['original' => 'array', 'default' => 'array', 't1' => 'array', 't2' => 'array', 't3' => 'array'])]
+    private function getTransformations(): array
     {
         return [
             'original' => [],

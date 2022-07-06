@@ -21,15 +21,17 @@ abstract class AbstractTest extends ApiTestCase
         static::bootKernel();
 
         // Load fixture once pr. test class only to speed up tests.
-        $fixture = self::$container->get('App\DataFixtures\AppFixtures');
+        $container = static::getContainer();
+        $fixture = $container->get('App\DataFixtures\AppFixtures');
         $fixture->load();
     }
 
     public function setUp(): void
     {
         self::bootKernel();
-        $this->tokenCache = self::$container->get('token.cache');
-        $this->apiPath = self::$container->getParameter('app.path.prefix');
+        $container = static::getContainer();
+        $this->tokenCache = $container->get('token.cache');
+        $this->apiPath = $container->getParameter('app.path.prefix');
     }
 
     public function tearDown(): void
@@ -89,7 +91,8 @@ abstract class AbstractTest extends ApiTestCase
         $clientId = '7623cb9a-4573-406a-22ef-f5f8716f07a9';
 
         $user = new User();
-        $user->setPassword($token);
+        $user->setActive(true);
+        $user->setToken($token);
         $user->setExpires(new \DateTime('now + 1 day'));
         $user->setAgency('775100');
         $user->setAuthType('anonymous');

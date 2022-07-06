@@ -17,17 +17,15 @@ class SearchNoHitEvent extends Event
 {
     public const NAME = 'app.search.nohit';
 
-    private array $noHits;
-
     /**
      * SearchNoHitEvent constructor.
      *
      * @param array $noHits
      *   Array containing 'NoHitItem' objects
      */
-    public function __construct(array $noHits)
-    {
-        $this->noHits = $noHits;
+    public function __construct(
+        private readonly array $noHits
+    ) {
     }
 
     /**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.8.1@f73f2299dbc59a3e6c4d66cff4605176e728ee69">
+<files psalm-version="4.24.0@06dd975cb55d36af80f242561738f16c5f58264f">
   <file src="src/Api/DataProvider/CoverCollectionDataProvider.php">
     <RedundantCondition occurrences="1">
       <code>\is_array($isIdentifiers)</code>
@@ -22,12 +22,19 @@
       <code>width</code>
     </UndefinedMagicMethod>
   </file>
-  <file src="src/EventSubscriber/SearchNoHitEventSubscriber.php">
-    <InvalidCatch occurrences="1"/>
+  <file src="src/EnvVarProcessor/AppendDateStampEnvVarProcessor.php">
+    <UndefinedAttributeClass occurrences="1">
+      <code>ArrayShape</code>
+    </UndefinedAttributeClass>
   </file>
-  <file src="src/Service/NoHitService.php">
-    <TooManyArguments occurrences="1">
-      <code>dispatch</code>
-    </TooManyArguments>
+  <file src="src/EnvVarProcessor/YmlEnvVarProcessor.php">
+    <UndefinedAttributeClass occurrences="1">
+      <code>ArrayShape</code>
+    </UndefinedAttributeClass>
+  </file>
+  <file src="src/EventSubscriber/SearchNoHitEventSubscriber.php">
+    <UndefinedAttributeClass occurrences="1">
+      <code>ArrayShape</code>
+    </UndefinedAttributeClass>
   </file>
 </files>

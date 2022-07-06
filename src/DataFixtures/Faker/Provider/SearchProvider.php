@@ -76,16 +76,12 @@ final class SearchProvider extends BaseProvider
      */
     public function isIdentifier(string $type): string
     {
-        switch ($type) {
-            case IdentifierType::FAUST:
-                return $this->faust();
-            case IdentifierType::ISBN:
-                return $this->isbn();
-            case IdentifierType::PID:
-                return $this->pid();
-            default:
-                throw new UnknownIsTypeException('Cannot create fake data for unknown identifier '.$type);
-        }
+        return match ($type) {
+            IdentifierType::FAUST => $this->faust(),
+            IdentifierType::ISBN => $this->isbn(),
+            IdentifierType::PID => $this->pid(),
+            default => throw new UnknownIsTypeException('Cannot create fake data for unknown identifier '.$type),
+        };
     }
 
     /**
