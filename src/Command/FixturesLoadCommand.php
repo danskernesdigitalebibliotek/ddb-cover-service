@@ -26,8 +26,9 @@ class FixturesLoadCommand extends Command
      * @param AppFixtures $appFixtures
      *   The AppFixtures service
      */
-    public function __construct(private readonly AppFixtures $appFixtures)
-    {
+    public function __construct(
+        private readonly AppFixtures $appFixtures
+    ) {
         parent::__construct();
     }
 

@@ -46,6 +46,7 @@
         "fakerphp/faker": "^1.14",
         "friendsofphp/php-cs-fixer": "^3.8",
         "friendsoftwig/twigcs": "^6.0",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "^6.1",
         "symfony/css-selector": "^6.1",

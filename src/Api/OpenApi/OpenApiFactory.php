@@ -27,8 +27,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
      */
     public function __construct(
         private readonly OpenApiFactoryInterface $decorated,
-        int $bindApiMaxIdentifiers)
-    {
+        int $bindApiMaxIdentifiers
+    ) {
         $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 

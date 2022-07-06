@@ -42,8 +42,8 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
         private readonly CoverFactory $coverFactory,
         private readonly NoHitService $noHitService,
         private readonly MetricsService $metricsService,
-        int $bindApiMaxIdentifiers)
-    {
+        int $bindApiMaxIdentifiers
+    ) {
         $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 

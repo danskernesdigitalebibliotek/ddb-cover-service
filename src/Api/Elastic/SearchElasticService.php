@@ -30,8 +30,8 @@ class SearchElasticService implements SearchServiceInterface
         private readonly Client $client,
         private readonly MetricsService $metricsService,
         string $bindElasticIndex,
-        int $bindElasticMinImageSize)
-    {
+        int $bindElasticMinImageSize
+    ) {
         $this->index = $bindElasticIndex;
         $this->minImageSize = $bindElasticMinImageSize;
     }
