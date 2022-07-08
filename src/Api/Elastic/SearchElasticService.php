@@ -15,25 +15,20 @@ use ItkDev\MetricsBundle\Service\MetricsService;
  */
 class SearchElasticService implements SearchServiceInterface
 {
-    private string$index;
-    private int $minImageSize;
-
     /**
      * SearchService constructor.
      *
      * @param Client $client
-     * @param string $bindIndexingIndex
-     * @param int $bindIndexingMinImageSize
      * @param MetricsService $metricsService
+     * @param string $index
+     * @param int $minImageSize
      */
     public function __construct(
         private readonly Client $client,
         private readonly MetricsService $metricsService,
-        string $bindIndexingIndex,
-        int $bindIndexingMinImageSize
+        private readonly string $index,
+        private readonly int $minImageSize
     ) {
-        $this->index = $bindIndexingIndex;
-        $this->minImageSize = $bindIndexingMinImageSize;
     }
 
     /**

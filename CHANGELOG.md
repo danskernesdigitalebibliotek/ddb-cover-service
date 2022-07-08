@@ -18,7 +18,11 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 - Update rabbit MQ to 3.9 in composer setup.
 - Update symfony/fex
 - Switched from behat tests to php-unit tests only
-- Updated to Symfony 5.2
+- Updated to Symfony 6.1
+- Update Elastic .env variables to indexing to match imports.
+- Update PHP version in docker builds
+- Update helm charts
+- Update nginx version (1.23) in docker builds
 
 ## [3.0.5] - 2022-18-03
 

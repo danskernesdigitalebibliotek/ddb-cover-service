@@ -14,16 +14,13 @@ use Elasticsearch\ClientBuilder;
  */
 class ElasticService
 {
-    private string $elasticHost;
-    private string $indexName;
-
     /**
      * ElasticService constructor.
      */
-    public function __construct(string $bindIndexingUrl, string $bindIndexingIndex)
-    {
-        $this->elasticHost = $bindIndexingUrl;
-        $this->indexName = $bindIndexingIndex;
+    public function __construct(
+        private readonly string $elasticHost,
+        private readonly string $indexName,
+    ) {
     }
 
     /**

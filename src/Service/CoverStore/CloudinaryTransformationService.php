@@ -18,20 +18,18 @@ use App\Exception\CoverStoreTransformationException;
  */
 class CloudinaryTransformationService implements CoverStoreTransformationInterface
 {
-    private array $transformations;
-
     /**
      * CloudinaryTransformationService constructor.
      *
      * The transformations available are defined in the "cloudinary.yml" file that
      * can be found in the configuration folder.
      *
-     * @param array $bindCloudinaryTransformations
+     * @param array $transformations
      *   The transformation available from the configuration
      */
-    public function __construct(array $bindCloudinaryTransformations)
-    {
-        $this->transformations = $bindCloudinaryTransformations;
+    public function __construct(
+        private readonly array $transformations
+    ) {
     }
 
     /**

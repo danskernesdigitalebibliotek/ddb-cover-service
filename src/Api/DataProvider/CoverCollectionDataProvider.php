@@ -26,8 +26,6 @@ use ItkDev\MetricsBundle\Service\MetricsService;
  */
 final class CoverCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private int $maxIdentifierCount;
-
     /**
      * CoverCollectionDataProvider constructor.
      *
@@ -35,16 +33,15 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param MetricsService $metricsService
-     * @param int $bindApiMaxIdentifiers
+     * @param int $maxIdentifierCount
      */
     public function __construct(
         private readonly SearchServiceInterface $searchService,
         private readonly CoverFactory $coverFactory,
         private readonly NoHitService $noHitService,
         private readonly MetricsService $metricsService,
-        int $bindApiMaxIdentifiers
+        private readonly int $maxIdentifierCount
     ) {
-        $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool

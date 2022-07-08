@@ -17,19 +17,16 @@ use ApiPlatform\Core\OpenApi\OpenApi;
  */
 class OpenApiFactory implements OpenApiFactoryInterface
 {
-    private int $maxIdentifierCount;
-
     /**
      * OpenApiFactory constructor.
      *
      * @param OpenApiFactoryInterface $decorated
-     * @param int $bindApiMaxIdentifiers
+     * @param int $maxIdentifierCount
      */
     public function __construct(
         private readonly OpenApiFactoryInterface $decorated,
-        int $bindApiMaxIdentifiers
+        private readonly int $maxIdentifierCount
     ) {
-        $this->maxIdentifierCount = $bindApiMaxIdentifiers;
     }
 
     /**
