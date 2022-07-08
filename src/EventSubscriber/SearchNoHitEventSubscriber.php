@@ -23,24 +23,21 @@ use Symfony\Component\Messenger\MessageBusInterface;
  */
 class SearchNoHitEventSubscriber implements EventSubscriberInterface
 {
-    private bool $noHitsProcessingEnabled;
-
     /**
      * SearchNoHitEventSubscriber constructor.
      *
      * @param MessageBusInterface $bus
      * @param CacheItemPoolInterface $noHitsCache
      * @param MetricsService $metricsService
-     * @param bool $bindEnableNoHits
+     * @param bool $noHitsProcessingEnabled
      *   Is no hits processing enabled
      */
     public function __construct(
         private readonly MessageBusInterface $bus,
         private readonly CacheItemPoolInterface $noHitsCache,
         private readonly MetricsService $metricsService,
-        bool $bindEnableNoHits
+        private readonly bool $noHitsProcessingEnabled
     ) {
-        $this->noHitsProcessingEnabled = $bindEnableNoHits;
     }
 
     /**

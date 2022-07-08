@@ -21,15 +21,6 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
 
         bind:
-            # Bound env variables
-            $bindEnableNoHits: '%env(bool:APP_ENABLE_NO_HITS)%'
-            $bindApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
-            $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
-
-            $bindElasticSearchUrl: '%env(ELASTIC_URL)%'
-            $bindElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
-            $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
-
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
 
@@ -53,9 +44,37 @@ services:
     # OpenApi/Swagger decoration
     App\Api\OpenApi\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
-        arguments: [ '@App\Api\OpenApi\OpenApiFactory.inner' ]
+        arguments:
+            $decorated: '@App\Api\OpenApi\OpenApiFactory.inner'
+            $maxIdentifierCount: '%env(int:APP_API_MAX_IDENTIFIERS)%'
         autoconfigure: false
         autowire: false
+
+    App\Api\DataProvider\CoverCollectionDataProvider:
+        arguments:
+            $maxIdentifierCount: '%env(int:APP_API_MAX_IDENTIFIERS)%'
+
+    App\EventSubscriber\SearchNoHitEventSubscriber:
+        arguments:
+            $noHitsProcessingEnabled: '%env(bool:APP_ENABLE_NO_HITS)%'
+
+    App\Service\NoHitService:
+        arguments:
+            $noHitsProcessingEnabled: '%env(bool:APP_ENABLE_NO_HITS)%'
+
+    App\Service\CoverStore\CloudinaryTransformationService:
+        arguments:
+            $transformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+
+    App\DataFixtures\Elastic\ElasticService:
+        arguments:
+            $elasticHost: '%env(INDEXING_URL)%'
+            $indexName: '%env(resolve:INDEXING_INDEX)%'
+
+    App\Api\Elastic\SearchElasticService:
+        arguments:
+            $index: '%env(resolve:INDEXING_INDEX)%'
+            $minImageSize: '%env(int:INDEXING_MIN_IMAGE_SIZE)%'
 
     # Fixtures Service
     # Used in 'dev' and 'test' env only
