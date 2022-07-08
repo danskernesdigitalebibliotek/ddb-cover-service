@@ -47,7 +47,7 @@ api_platform:
         enabled: false
 
     elasticsearch:
-        hosts: ['%env(ELASTIC_URL)%']
+        hosts: ['%env(INDEXING_URL)%']
 
     graphql:
         enabled: false

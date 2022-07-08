@@ -20,10 +20,10 @@ class ElasticService
     /**
      * ElasticService constructor.
      */
-    public function __construct(string $bindElasticSearchUrl, string $bindElasticIndex)
+    public function __construct(string $bindIndexingUrl, string $bindIndexingIndex)
     {
-        $this->elasticHost = $bindElasticSearchUrl;
-        $this->indexName = $bindElasticIndex;
+        $this->elasticHost = $bindIndexingUrl;
+        $this->indexName = $bindIndexingIndex;
     }
 
     /**

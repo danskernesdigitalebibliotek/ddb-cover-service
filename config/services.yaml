@@ -26,9 +26,9 @@ services:
             $bindApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
             $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
 
-            $bindElasticSearchUrl: '%env(ELASTIC_URL)%'
-            $bindElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
-            $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
+            $bindIndexingUrl: '%env(INDEXING_URL)%'
+            $bindIndexingIndex: '%env(resolve:INDEXING_INDEX)%'
+            $bindIndexingMinImageSize: '%env(int:INDEXING_MIN_IMAGE_SIZE)%'
 
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'

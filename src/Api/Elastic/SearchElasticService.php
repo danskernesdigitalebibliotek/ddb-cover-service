@@ -22,18 +22,18 @@ class SearchElasticService implements SearchServiceInterface
      * SearchService constructor.
      *
      * @param Client $client
-     * @param string $bindElasticIndex
-     * @param int $bindElasticMinImageSize
+     * @param string $bindIndexingIndex
+     * @param int $bindIndexingMinImageSize
      * @param MetricsService $metricsService
      */
     public function __construct(
         private readonly Client $client,
         private readonly MetricsService $metricsService,
-        string $bindElasticIndex,
-        int $bindElasticMinImageSize
+        string $bindIndexingIndex,
+        int $bindIndexingMinImageSize
     ) {
-        $this->index = $bindElasticIndex;
-        $this->minImageSize = $bindElasticMinImageSize;
+        $this->index = $bindIndexingIndex;
+        $this->minImageSize = $bindIndexingMinImageSize;
     }
 
     /**
