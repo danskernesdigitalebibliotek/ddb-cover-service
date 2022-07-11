@@ -14,7 +14,7 @@ data:
   APP_REDIS_CACHE_PORT: {{ .Values.app.redis.port | quote }}
   APP_REDIS_CACHE_DB: {{ .Values.app.redis.cache_db | quote }}
   APP_REDIS_CACHE_PREFIX: {{ .Values.app.redis.prefix | quote }}
-  APP_INDEXING_URL: {{ .Values.app.elastic_url | quote }}
+  APP_INDEXING_URL: {{ .Values.app.indexing_url | quote }}
   APP_ENABLE_NO_HITS: {{ .Values.app.no_hits.enabled | quote }}
   APP_NO_HITS_CACHE_TTL: {{ .Values.app.no_hits.cache_ttl | quote }}
   APP_NO_HITS_TTL: {{ mul .Values.app.no_hits_ttl 1000 | quote }}
