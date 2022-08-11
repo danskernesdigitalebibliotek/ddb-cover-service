@@ -23,12 +23,12 @@ app:
     version: "latest"
     imagePullPolicy: "IfNotPresent"
   no_hits:
-    enbled: "false"
+    enabled: "false"
     cache_ttl: "172800"
   no_hits_ttl: 3600
   cors_allow_origin: "*"
   trusted_proxies: "127.0.0.1,10.240.0.0/16"
-  elastic_url: "http://es-elasticsearch-coordinating-only.cover-service.svc.cluster.local:9200"
+  indexing_url: "http://es-elasticsearch.cover-service.svc.cluster.local:9200"
   redis:
     server: "redis-master.cover-service.svc.cluster.local"
     prefix: "DDBCoverV2"
@@ -48,5 +48,5 @@ app:
 nginx:
   exporter:
     image:
-      version: 0.6.0
+      version: 0.10.0
 

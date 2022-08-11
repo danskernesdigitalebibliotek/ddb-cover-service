@@ -2,7 +2,7 @@
 # Files in the packages/subdirectory configure your dependencies.
 
 # Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.path.prefix: '%env(APP_PATH_PREFIX)%'
     env(CLOUDINARY_CONFIG_FILE): '%kernel.project_dir%/config/cloudinary.yml'
@@ -21,40 +21,60 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
 
         bind:
-            # Bound env variables
-            $bindEnableNoHits: '%env(bool:APP_ENABLE_NO_HITS)%'
-            $bindApiMaxIdentifiers: '%env(int:APP_API_MAX_IDENTIFIERS)%'
-            $bindElasticIndex: '%env(resolve:ELASTIC_INDEX)%'
-            $bindElasticType: '%env(ELASTIC_TYPE)%'
-            $bindElasticMinImageSize: '%env(int:ELASTIC_MIN_IMAGE_SIZE)%'
-            $bindCloudinaryTransformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
-
-            $bindElasticSearchUrl: '%env(ELASTIC_URL)%'
-
             # Bound services
             Elasticsearch\Client: '@api_platform.elasticsearch.client'
 
     # Make classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Migrations,Tests,Kernel.php}'
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
-        resource: '../src/Controller'
+        resource: '../src/Controller/'
         tags: ['controller.service_arguments']
-
 
     #### App ####
 
     # OpenApi/Swagger decoration
     App\Api\OpenApi\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
-        arguments: [ '@App\Api\OpenApi\OpenApiFactory.inner' ]
+        arguments:
+            $decorated: '@App\Api\OpenApi\OpenApiFactory.inner'
+            $maxIdentifierCount: '%env(int:APP_API_MAX_IDENTIFIERS)%'
         autoconfigure: false
         autowire: false
+
+    App\Api\DataProvider\CoverCollectionDataProvider:
+        arguments:
+            $maxIdentifierCount: '%env(int:APP_API_MAX_IDENTIFIERS)%'
+
+    App\EventSubscriber\SearchNoHitEventSubscriber:
+        arguments:
+            $noHitsProcessingEnabled: '%env(bool:APP_ENABLE_NO_HITS)%'
+
+    App\Service\NoHitService:
+        arguments:
+            $noHitsProcessingEnabled: '%env(bool:APP_ENABLE_NO_HITS)%'
+
+    App\Service\CoverStore\CloudinaryTransformationService:
+        arguments:
+            $transformations: '%env(yml:file:resolve:CLOUDINARY_CONFIG_FILE)%'
+
+    App\DataFixtures\Elastic\ElasticService:
+        arguments:
+            $elasticHost: '%env(INDEXING_URL)%'
+            $indexName: '%env(resolve:INDEXING_INDEX)%'
+
+    App\Api\Elastic\SearchElasticService:
+        arguments:
+            $index: '%env(resolve:INDEXING_INDEX)%'
+            $minImageSize: '%env(int:INDEXING_MIN_IMAGE_SIZE)%'
 
     # Fixtures Service
     # Used in 'dev' and 'test' env only
@@ -64,4 +84,3 @@ services:
         lazy: true
     App\DataFixtures\AppFixtures\Elastic\ElasticService:
         lazy: true
-

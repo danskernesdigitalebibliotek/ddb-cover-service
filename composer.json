@@ -4,7 +4,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.4",
+        "php": "^8.1",
         "ext-amqp": "*",
         "ext-apcu": "*",
         "ext-ctype": "*",
@@ -13,51 +13,60 @@
         "ext-json": "*",
         "ext-redis": "*",
         "ext-zend-opcache": "*",
-        "api-platform/api-pack": "^1.1",
-        "danskernesdigitalebibliotek/agency-auth-bundle": "^2.0",
-        "elasticsearch/elasticsearch": "^6.7",
-        "friendsofsymfony/elastica-bundle": "^5.1",
-        "itk-dev/metrics-bundle": "^0.0.1",
+        "api-platform/core": "^2.6",
+        "danskernesdigitalebibliotek/agency-auth-bundle": "^3.0",
+        "itk-dev/metrics-bundle": "^1.0",
+        "nelmio/cors-bundle": "^2.1",
         "predis/predis": "^1.1",
-        "ruflin/elastica": "^6.0",
-        "sensio/framework-extra-bundle": "^5.5",
-        "symfony/console": "^4.0",
-        "symfony/dotenv": "^4.0",
+        "ruflin/elastica": "^7.1",
+        "sensio/framework-extra-bundle": "^6.2",
+        "symfony/asset": "^6.1",
+        "symfony/console": "^6.1",
+        "symfony/dotenv": "^6.1",
+        "symfony/expression-language": "^6.1",
         "symfony/flex": "^1.0",
-        "symfony/framework-bundle": "^4.0",
-        "symfony/http-client": "4.4.*",
-        "symfony/messenger": "4.4.*",
+        "symfony/framework-bundle": "^6.1",
+        "symfony/http-client": "^6.1",
+        "symfony/messenger": "^6.1",
         "symfony/monolog-bundle": "^3.5",
-        "symfony/process": "^4.0",
-        "symfony/proxy-manager-bridge": "^4.0",
-        "symfony/security-bundle": "4.4.*",
-        "symfony/translation": "^4.0",
-        "symfony/yaml": "^4.0"
+        "symfony/process": "^6.1",
+        "symfony/property-access": "^6.1",
+        "symfony/property-info": "^6.1",
+        "symfony/proxy-manager-bridge": "^6.1",
+        "symfony/runtime": "^6.1",
+        "symfony/security-bundle": "^6.1",
+        "symfony/serializer": "^6.1",
+        "symfony/translation": "^6.1",
+        "symfony/twig-bundle": "^6.1",
+        "symfony/validator": "^6.1",
+        "symfony/yaml": "^6.1"
     },
     "require-dev": {
-        "behatch/contexts": "^3.3",
-        "dvdoug/behat-code-coverage": "^5.2",
         "escapestudios/symfony2-coding-standard": "^3.10",
         "fakerphp/faker": "^1.14",
-        "friends-of-behat/mink": "^1.8",
-        "friends-of-behat/mink-browserkit-driver": "^1.4",
-        "friends-of-behat/mink-extension": "^2.4",
-        "friends-of-behat/symfony-extension": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.13",
-        "friendsoftwig/twigcs": "^3.2",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "friendsoftwig/twigcs": "^6.0",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
         "phpunit/phpunit": "^9.5",
-        "symfony/browser-kit": "^4.4",
-        "symfony/css-selector": "^4.4",
-        "symfony/debug-pack": "^1.0",
-        "symfony/maker-bundle": "^1.17",
-        "symfony/phpunit-bridge": "^5.3",
+        "symfony/browser-kit": "^6.1",
+        "symfony/css-selector": "^6.1",
+        "symfony/debug-bundle": "^6.1",
+        "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^6.1",
+        "symfony/stopwatch": "^6.1",
+        "symfony/var-dumper": "^6.1",
+        "symfony/web-profiler-bundle": "^6.1",
         "vimeo/psalm": "^4.8"
     },
     "config": {
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -92,27 +101,23 @@
             "@auto-scripts"
         ],
         "check-coding-standards/php-cs-fixer": [
-            "php-cs-fixer --config=.php_cs.dist fix --dry-run --format=checkstyle"
+            "php-cs-fixer fix --dry-run --format=checkstyle"
         ],
         "check-coding-standards/twigcs": [
-            "twigcs lint templates"
+            "twigcs templates"
         ],
         "coding-standards-check": [
             "@check-coding-standards/php-cs-fixer",
             "@check-coding-standards/twigcs"
         ],
         "coding-standards-apply": [
-            "php-cs-fixer --config=.php_cs.dist fix"
+            "php-cs-fixer fix"
         ],
         "phpunit": [
             "./vendor/bin/phpunit"
         ],
-        "behat": [
-            "./vendor/bin/behat"
-        ],
         "test-suite": [
-            "@phpunit",
-            "@behat"
+            "@phpunit"
         ]
     },
     "conflict": {
@@ -120,8 +125,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
-            "require": "4.4.*"
+            "require": "6.1.*"
         }
     }
 }

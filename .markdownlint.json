@@ -1,4 +1,9 @@
 {
   "default": true,
-  "line-length": false
+  "MD013": {
+    "line_length": 120,
+  },
+  "no-duplicate-heading": {
+    "siblings_only": true   
+  }
 }

@@ -13,32 +13,22 @@ use ItkDev\MetricsBundle\Service\MetricsService;
 /**
  * Class SearchService.
  */
-class SearchService implements SearchServiceInterface
+class SearchElasticService implements SearchServiceInterface
 {
-    private Client $client;
-    private string$index;
-    private string $type;
-    private int $minImageSize;
-
-    private MetricsService $metricsService;
-
     /**
      * SearchService constructor.
      *
      * @param Client $client
-     * @param string $bindElasticIndex
-     * @param string $bindElasticType
-     * @param int $bindElasticMinImageSize
      * @param MetricsService $metricsService
+     * @param string $index
+     * @param int $minImageSize
      */
-    public function __construct(Client $client, string $bindElasticIndex, string $bindElasticType, int $bindElasticMinImageSize, MetricsService $metricsService)
-    {
-        $this->client = $client;
-        $this->index = $bindElasticIndex;
-        $this->type = $bindElasticType;
-        $this->minImageSize = $bindElasticMinImageSize;
-
-        $this->metricsService = $metricsService;
+    public function __construct(
+        private readonly Client $client,
+        private readonly MetricsService $metricsService,
+        private readonly string $index,
+        private readonly int $minImageSize
+    ) {
     }
 
     /**
@@ -53,7 +43,6 @@ class SearchService implements SearchServiceInterface
 
         $documents = $this->client->search([
             'index' => $this->index,
-            'type' => $this->type,
             'body' => $body,
         ]);
 

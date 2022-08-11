@@ -19,26 +19,21 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 final class NoHitService
 {
-    private bool $noHitsProcessingEnabled;
-    private EventDispatcherInterface $dispatcher;
-    private MetricsService $metricsService;
-
     /**
      * NoHitService constructor.
      *
-     * @param bool $bindEnableNoHits
-     *   Is no hits processing enabled
      * @param EventDispatcherInterface $dispatcher
      *   Event dispatcher for search no hit events
      * @param MetricsService $metricsService
      *   Metrics service for performance logging
+     * @param bool $noHitsProcessingEnabled
+     *   Is no hits processing enabled
      */
-    public function __construct(bool $bindEnableNoHits, EventDispatcherInterface $dispatcher, MetricsService $metricsService)
-    {
-        $this->noHitsProcessingEnabled = $bindEnableNoHits;
-
-        $this->dispatcher = $dispatcher;
-        $this->metricsService = $metricsService;
+    public function __construct(
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly MetricsService $metricsService,
+        private readonly bool $noHitsProcessingEnabled
+    ) {
     }
 
     /**
