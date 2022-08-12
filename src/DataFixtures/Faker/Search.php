@@ -24,7 +24,7 @@ class Search
     /**
      * Get the id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -144,7 +144,7 @@ class Search
     /**
      * Get the iamge width.
      *
-     * @return int
+     * @return int|null
      */
     public function getWidth(): ?int
     {

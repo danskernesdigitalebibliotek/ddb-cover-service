@@ -40,15 +40,14 @@ api_platform:
     patch_formats:
         json: ['application/merge-patch+json']
 
-    collection:
-        pagination:
-            enabled: false
+    defaults:
+        pagination_enabled: false
 
     doctrine:
         enabled: false
 
     elasticsearch:
-        hosts: ['%env(ELASTIC_URL)%']
+        hosts: ['%env(INDEXING_URL)%']
 
     graphql:
         enabled: false
@@ -63,7 +62,7 @@ api_platform:
         Doctrine\ORM\OptimisticLockException: 409
 
         # App mapping
-        App\Api\Exception\IdentifierCountExceededException: 'HTTP_BAD_REQUEST'
-        App\Api\Exception\RequiredParameterMissingException: 'HTTP_BAD_REQUEST'
-        App\Api\Exception\UnknownIdentifierTypeException: 'HTTP_BAD_REQUEST'
-        App\Api\Exception\UnknownImageSizeException: 'HTTP_BAD_REQUEST'
+        App\Api\Exception\IdentifierCountExceededException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        App\Api\Exception\RequiredParameterMissingException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        App\Api\Exception\UnknownIdentifierTypeException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        App\Api\Exception\UnknownImageSizeException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST

@@ -11,6 +11,7 @@ use App\Message\SearchNoHitsMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
 use ItkDev\MetricsBundle\Service\MetricsService;
+use JetBrains\PhpStorm\ArrayShape;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\CacheItem;
@@ -22,28 +23,21 @@ use Symfony\Component\Messenger\MessageBusInterface;
  */
 class SearchNoHitEventSubscriber implements EventSubscriberInterface
 {
-    private bool $noHitsProcessingEnabled;
-    private MessageBusInterface $bus;
-    private CacheItemPoolInterface $noHitsCache;
-    private MetricsService $metricsService;
-
     /**
      * SearchNoHitEventSubscriber constructor.
      *
-     * @param bool $bindEnableNoHits
-     *   Is no hits processing enabled
      * @param MessageBusInterface $bus
-     *   Queue producer to send messages (jobs)
      * @param CacheItemPoolInterface $noHitsCache
-     *   Cache pool for storing no hits
+     * @param MetricsService $metricsService
+     * @param bool $noHitsProcessingEnabled
+     *   Is no hits processing enabled
      */
-    public function __construct(bool $bindEnableNoHits, MessageBusInterface $bus, CacheItemPoolInterface $noHitsCache, MetricsService $metricsService)
-    {
-        $this->noHitsProcessingEnabled = $bindEnableNoHits;
-
-        $this->bus = $bus;
-        $this->noHitsCache = $noHitsCache;
-        $this->metricsService = $metricsService;
+    public function __construct(
+        private readonly MessageBusInterface $bus,
+        private readonly CacheItemPoolInterface $noHitsCache,
+        private readonly MetricsService $metricsService,
+        private readonly bool $noHitsProcessingEnabled
+    ) {
     }
 
     /**
@@ -51,6 +45,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      *
      * Defines the events that we subscribe to.
      */
+    #[ArrayShape([SearchNoHitEvent::NAME => 'string'])]
     public static function getSubscribedEvents(): array
     {
         return [

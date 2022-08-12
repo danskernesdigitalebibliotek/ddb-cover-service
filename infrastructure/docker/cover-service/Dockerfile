@@ -1,4 +1,4 @@
-FROM danskernesdigitalebibliotek/php7.4-fpm-base AS APP_BUILDER
+FROM danskernesdigitalebibliotek/php8.1-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
@@ -23,7 +23,7 @@ RUN APP_ENV=github_actions composer install --no-dev -o --no-scripts --classmap-
 ####
 ## Build main application image.
 ####
-FROM danskernesdigitalebibliotek/php7.4-fpm-base
+FROM danskernesdigitalebibliotek/php8.1-fpm-base
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html
@@ -39,7 +39,7 @@ RUN chown -R www-data:www-data ${APP_PATH}/var \
     && chown -R www-data:www-data ${APP_PATH}/public
 
 # Download prometheus php-fpm export.
-COPY --from=hipages/php-fpm_exporter:1.1.1 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
+COPY --from=hipages/php-fpm_exporter:2.2.0 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
 
 # Copy configuration.
 COPY etc/ /etc/

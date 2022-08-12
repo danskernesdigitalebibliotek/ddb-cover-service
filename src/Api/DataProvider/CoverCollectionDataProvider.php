@@ -26,12 +26,6 @@ use ItkDev\MetricsBundle\Service\MetricsService;
  */
 final class CoverCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private SearchServiceInterface $searchService;
-    private CoverFactory $coverFactory;
-    private NoHitService $noHitService;
-    private MetricsService $metricsService;
-    private int $maxIdentifierCount;
-
     /**
      * CoverCollectionDataProvider constructor.
      *
@@ -39,20 +33,17 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
      * @param CoverFactory $coverFactory
      * @param NoHitService $noHitService
      * @param MetricsService $metricsService
-     * @param int $bindApiMaxIdentifiers
+     * @param int $maxIdentifierCount
      */
-    public function __construct(SearchServiceInterface $searchService, CoverFactory $coverFactory, NoHitService $noHitService, MetricsService $metricsService, int $bindApiMaxIdentifiers)
-    {
-        $this->searchService = $searchService;
-        $this->coverFactory = $coverFactory;
-        $this->noHitService = $noHitService;
-        $this->metricsService = $metricsService;
-        $this->maxIdentifierCount = $bindApiMaxIdentifiers;
+    public function __construct(
+        private readonly SearchServiceInterface $searchService,
+        private readonly CoverFactory $coverFactory,
+        private readonly NoHitService $noHitService,
+        private readonly MetricsService $metricsService,
+        private readonly int $maxIdentifierCount
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return Cover::class === $resourceClass;
@@ -78,7 +69,7 @@ final class CoverCollectionDataProvider implements ContextAwareCollectionDataPro
         foreach ($results as $result) {
             $foundIdentifiers[] = $result['isIdentifier'];
 
-            yield $this->coverFactory->createCoverDto($identifierType, $imageSizes, $result);
+            yield $this->coverFactory->createCoverDto($imageSizes, $result);
         }
 
         $this->metricsService->counter('api_request_total', 'Total number of requests', 1, ['type' => 'rest']);

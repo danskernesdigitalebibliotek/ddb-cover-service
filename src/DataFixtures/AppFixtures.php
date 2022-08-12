@@ -21,17 +21,15 @@ class AppFixtures
     private const BATCH_SIZE = 100;
     private const FAKER_SEED = 123456789;
 
-    private ElasticService $elasticService;
-
     /**
      * AppFixtures constructor.
      *
      * @param ElasticService $elasticService
      *   Service to update elasticsearch
      */
-    public function __construct(ElasticService $elasticService)
-    {
-        $this->elasticService = $elasticService;
+    public function __construct(
+        private readonly ElasticService $elasticService
+    ) {
     }
 
     /**
@@ -56,18 +54,26 @@ class AppFixtures
                 $search->setIsIdentifier('870970-basis:29862885');
                 $search->setHeight(2000);
             } elseif (2 === $i) {
+                $search->setIsType(IdentifierType::ISBN);
+                $search->setIsIdentifier('9785341366046');
+                $search->setHeight(2000);
+            } elseif (3 === $i) {
                 $search->setIsType(IdentifierType::PID);
                 $search->setIsIdentifier('870970-basis:27992625');
                 $search->setHeight(500);
+            } elseif (4 === $i) {
+                $search->setIsType(IdentifierType::ISBN);
+                $search->setIsIdentifier('9799913633580');
+                $search->setHeight(500);
             } else {
-                $search->setIsType($faker->isType);
+                $search->setIsType($faker->isType());
                 $search->setIsIdentifier($faker->isIdentifier($search->getIsType()));
-                $search->setHeight($faker->height);
+                $search->setHeight($faker->height());
             }
 
-            $search->setImageFormat($faker->imageFormat);
-            $search->setImageUrl($faker->imageUrl);
-            $search->setWidth($faker->width);
+            $search->setImageFormat($faker->imageFormat());
+            $search->setImageUrl($faker->imageUrl());
+            $search->setWidth($faker->width());
 
             $searches[] = $search;
 

@@ -6,6 +6,7 @@
 
 namespace App\EnvVarProcessor;
 
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
 /**
@@ -16,7 +17,7 @@ class AppendDateStampEnvVarProcessor implements EnvVarProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function getEnv($prefix, $name, \Closure $getEnv)
+    public function getEnv($prefix, $name, \Closure $getEnv): string
     {
         $env = $getEnv($name);
         $date = new \DateTimeImmutable();
@@ -27,6 +28,7 @@ class AppendDateStampEnvVarProcessor implements EnvVarProcessorInterface
     /**
      * {@inheritdoc}
      */
+    #[ArrayShape(['append_date' => 'string'])]
     public static function getProvidedTypes(): array
     {
         return [

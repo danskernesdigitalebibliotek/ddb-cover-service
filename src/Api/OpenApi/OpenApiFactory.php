@@ -17,19 +17,16 @@ use ApiPlatform\Core\OpenApi\OpenApi;
  */
 class OpenApiFactory implements OpenApiFactoryInterface
 {
-    private OpenApiFactoryInterface $decorated;
-    private int $maxIdentifierCount;
-
     /**
      * OpenApiFactory constructor.
      *
      * @param OpenApiFactoryInterface $decorated
-     * @param int $bindApiMaxIdentifiers
+     * @param int $maxIdentifierCount
      */
-    public function __construct(OpenApiFactoryInterface $decorated, int $bindApiMaxIdentifiers)
-    {
-        $this->decorated = $decorated;
-        $this->maxIdentifierCount = $bindApiMaxIdentifiers;
+    public function __construct(
+        private readonly OpenApiFactoryInterface $decorated,
+        private readonly int $maxIdentifierCount
+    ) {
     }
 
     /**
@@ -49,6 +46,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             // so we need to manually remove it from the docs.
             if ('/api/v2/covers/{id}' === $key) {
                 // Do nothing
+                continue;
             }
 
             // Set max identifier count from .env in the parameter description for the collections endpoint
