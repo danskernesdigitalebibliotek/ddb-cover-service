@@ -779,16 +779,16 @@
         },
         {
             "name": "itk-dev/metrics-bundle",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/metrics-bundle.git",
-                "reference": "9f5b784a7c91e86c0f8618b7e8b251c4a82721a8"
+                "reference": "24a8d94a074c119cc32ed2528908e1daca4264f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/metrics-bundle/zipball/9f5b784a7c91e86c0f8618b7e8b251c4a82721a8",
-                "reference": "9f5b784a7c91e86c0f8618b7e8b251c4a82721a8",
+                "url": "https://api.github.com/repos/itk-dev/metrics-bundle/zipball/24a8d94a074c119cc32ed2528908e1daca4264f0",
+                "reference": "24a8d94a074c119cc32ed2528908e1daca4264f0",
                 "shasum": ""
             },
             "require": {
@@ -829,9 +829,9 @@
             "description": "Provide metrics for prometheus",
             "support": {
                 "issues": "https://github.com/itk-dev/metrics-bundle/issues",
-                "source": "https://github.com/itk-dev/metrics-bundle/tree/1.0.0"
+                "source": "https://github.com/itk-dev/metrics-bundle/tree/1.0.1"
             },
-            "time": "2022-07-06T09:04:50+00:00"
+            "time": "2022-08-16T13:13:35+00:00"
         },
         {
             "name": "laminas/laminas-code",
