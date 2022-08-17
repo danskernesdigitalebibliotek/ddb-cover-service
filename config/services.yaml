@@ -56,11 +56,11 @@ services:
 
     App\EventSubscriber\SearchNoHitEventSubscriber:
         arguments:
-            $noHitsProcessingEnabled: '%env(bool:APP_ENABLE_NO_HITS)%'
+            $noHitsProcessingEnabled: '%env(bool:APP_NO_HITS_ENABLED)%'
 
     App\Service\NoHitService:
         arguments:
-            $noHitsProcessingEnabled: '%env(bool:APP_ENABLE_NO_HITS)%'
+            $noHitsProcessingEnabled: '%env(bool:APP_NO_HITS_ENABLED)%'
 
     App\Service\CoverStore\CloudinaryTransformationService:
         arguments:
