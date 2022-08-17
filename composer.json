@@ -20,6 +20,7 @@
         "predis/predis": "^1.1",
         "ruflin/elastica": "^7.1",
         "sensio/framework-extra-bundle": "^6.2",
+        "symfony/amqp-messenger": "6.1.*",
         "symfony/asset": "^6.1",
         "symfony/console": "^6.1",
         "symfony/dotenv": "^6.1",
