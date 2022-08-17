@@ -11,6 +11,11 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+## [4.0.3] - 2022-08-17
+
+### Changed
+- Renamed no-hit enable processing variable name
+
 ## [4.0.2] - 2022-08-17
 
 ### Changed
