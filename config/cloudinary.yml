@@ -14,17 +14,41 @@ default:
   extension: 'jpg'
   size: 1000
 
+# 104 px
+xx-small:
+  transformation: 't_ddb_cover_xxs'
+  extension: 'jpg'
+  size: 104
+
+# 136 px
+x-small:
+  transformation: 't_ddb_cover_xs'
+  extension: 'jpg'
+  size: 136
+
 # 160 px
 small:
   transformation: 't_ddb_cover_small'
   extension: 'jpg'
   size: 160
 
+# 230 px
+small-medium:
+  transformation: 't_ddb_cover_sm'
+  extension: 'jpg'
+  size: 230
+
 # 270 px
 medium:
   transformation: 't_ddb_cover_medium'
   extension: 'jpg'
   size: 270
+
+# 430 px
+medium-large:
+  transformation: 't_ddb_cover_ml'
+  extension: 'jpg'
+  size: 430
 
 # 540 px
 large:

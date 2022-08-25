@@ -49,7 +49,7 @@ final class ImageUrl
      *     attributes={
      *          "openapi_context"={
      *              "type" : "string",
-     *              "enum": {"default", "original", "small", "medium", "large"},
+     *              "enum": {"default", "original", "xx-small", "x-small", "small", "small-medium", "medium", "medium-large", "large"},
      *              "example" : "large"
      *          }
      *     }

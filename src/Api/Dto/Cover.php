@@ -91,19 +91,27 @@ use ApiPlatform\Core\Annotation\ApiResource;
  The different sizes in pixels (height).
   - default: 1000px
   - original: [variable]
+  - xx-small: 104px
+  - x-small: 136px
   - small: 160px
+  - small-medium: 230px
   - medium: 270px
+  - medium-large: 430px
   - large: 540px",
  *                          "required" = false,
  *                          "schema" : {
  *                              "type": "array",
  *                              "items" : {
  *                                  "type" : "string",
- *                                  "enum": {"default", "original", "small", "medium", "large"},
+ *                                  "enum": {"default", "original", "xx-small", "x-small", "small", "small-medium", "medium", "medium-large", "large"},
  *                                  "example" : {
  *                                      "original",
+ *                                      "xx-small",
+ *                                      "x-small",
  *                                      "small",
+ *                                      "small-medium",
  *                                      "medium",
+ *                                      "medium-large",
  *                                      "large"
  *                                  },
  *                              },
@@ -112,8 +120,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *                          "explode" : false,
  *                          "example" : {
  *                              "original",
+ *                              "xx-small",
+ *                              "x-small",
  *                              "small",
+ *                              "small-medium",
  *                              "medium",
+ *                              "medium-large",
  *                              "large"
  *                          },
  *                      }
@@ -170,10 +182,22 @@ class Cover
      *                  "original"={
      *                      "$ref"= "#/components/schemas/ImageUrl"
      *                  },
+     *                  "xx-small"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "x-small"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
      *                  "small"={
      *                      "$ref"= "#/components/schemas/ImageUrl"
      *                  },
+     *                  "small-medium"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
      *                  "medium"={
+     *                      "$ref"= "#/components/schemas/ImageUrl"
+     *                  },
+     *                  "medium-large"={
      *                      "$ref"= "#/components/schemas/ImageUrl"
      *                  },
      *                  "large"={
