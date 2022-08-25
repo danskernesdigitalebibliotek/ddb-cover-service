@@ -83,8 +83,12 @@ paths:
              The different sizes in pixels (height).
               - default: 1000px
               - original: [variable]
+              - xx-small: 104px
+              - x-small: 136px
               - small: 160px
+              - small-medium: 230px
               - medium: 270px
+              - medium-large: 430px
               - large: 540px
           required: false
           deprecated: false
@@ -96,21 +100,33 @@ paths:
               enum:
                 - default
                 - original
+                - xx-small
+                - x-small
                 - small
+                - small-medium
                 - medium
+                - medium-large
                 - large
               example:
                 - original
+                - xx-small
+                - x-small
                 - small
+                - small-medium
                 - medium
+                - medium-large
                 - large
           style: form
           explode: false
           allowReserved: false
           example:
             - original
+            - xx-small
+            - x-small
             - small
+            - small-medium
             - medium
+            - medium-large
             - large
       deprecated: false
     parameters: []
@@ -136,9 +152,17 @@ components:
               $ref: '#/components/schemas/ImageUrl'
             original:
               $ref: '#/components/schemas/ImageUrl'
+            xx-small:
+              $ref: '#/components/schemas/ImageUrl'
+            x-small:
+              $ref: '#/components/schemas/ImageUrl'
             small:
               $ref: '#/components/schemas/ImageUrl'
+            small-medium:
+              $ref: '#/components/schemas/ImageUrl'
             medium:
+              $ref: '#/components/schemas/ImageUrl'
+            medium-large:
               $ref: '#/components/schemas/ImageUrl'
             large:
               $ref: '#/components/schemas/ImageUrl'
@@ -177,8 +201,12 @@ components:
           enum:
             - default
             - original
+            - xx-small
+            - x-small
             - small
+            - small-medium
             - medium
+            - medium-large
             - large
           example: large
   responses: {  }
