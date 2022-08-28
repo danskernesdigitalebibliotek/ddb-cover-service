@@ -12,35 +12,55 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 ## [Unreleased]
 
 ### Added
-- Allow plugins section to composer.json
+- Added support for new cover size transformations xs (104px), xxs (136px), sm (230px), ml (430px).
+
+## [4.0.3] - 2022-08-17
+
+### Changed
+- Renamed no-hit enable processing variable name.
+
+## [4.0.2] - 2022-08-17
+
+### Changed
+- Added missing symfony/amqp-messenger package.
+
+## [4.0.1] - 2022-08-16
+
+### Changed
+- Updated metrics bundle.
+
+## [4.0.0] - 2022-08-15
+
+### Added
+- Allow plugins section to composer.json.
 
 ### Changed
 - Update rabbit MQ to 3.9 in composer setup.
-- Update symfony/fex
-- Switched from behat tests to php-unit tests only
-- Updated to Symfony 6.1
+- Update symfony/fex.
+- Switched from behat tests to php-unit tests only.
+- Updated to Symfony 6.1.
 - Update Elastic .env variables to indexing to match imports.
-- Update PHP version in docker builds
-- Update helm charts
-- Update nginx version (1.23) in docker builds
+- Update PHP version in docker builds.
+- Update helm charts.
+- Update nginx version (1.23) in docker builds.
 
-## [3.0.5] - 2022-18-03
-
-### Changed
-- Updated base docker image for new build
-
-## [3.0.4] - 2022-18-03
+## [3.0.5] - 2022-03-18
 
 ### Changed
-- Updated base docker image for new build
+- Updated base docker image for new build.
 
-## [3.0.3] - 2022-09-03
+## [3.0.4] - 2022-03-18
+
+### Changed
+- Updated base docker image for new build.
+
+## [3.0.3] - 2022-03-09
 
 ### Added
-- Ensured properties are initialized in queue messages
+- Ensured properties are initialized in queue messages.
 
-## [3.0.2] - 2022-08-01
+## [3.0.2] - 2022-01-08
 
 ### Changed
-- Updated cert-manager version in docs til 1.7.1
-- Removed statics logging to ElasticSearch
+- Updated cert-manager version in docs til 1.7.1.
+- Removed statics logging to ElasticSearch.
