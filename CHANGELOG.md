@@ -11,6 +11,8 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+## [4.1.0] - 2022-08-28
+
 ### Added
 - Added support for new cover size transformations xs (104px), xxs (136px), sm (230px), ml (430px).
 
