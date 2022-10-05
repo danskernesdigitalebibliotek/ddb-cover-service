@@ -37,7 +37,7 @@ http {
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
     error_log /dev/stderr;
-    access_log /dev/stdout;
+    access_log /dev/stdout main;
 
     include /etc/nginx/conf.d/*.conf;
 }
