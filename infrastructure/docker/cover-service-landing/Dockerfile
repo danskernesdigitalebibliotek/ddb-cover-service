@@ -25,6 +25,6 @@ RUN chmod +x /docker-entrypoint.sh \
 
 USER $UID
 
-CMD [ "/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
 CMD ["nginx", "-g", "daemon off;"]
