@@ -320,7 +320,7 @@ commonConfiguration: |-
 Install Redis into the cluster.
 ```sh
 helm upgrade --install redis bitnami/redis --namespace cover-service \
---set image.tag=4.0 \
+--set image.tag=6.2 \
 --set global.storageClass=azurefile-premium-retain \
 --set usePassword=false \
 --set metrics.enabled=true \
