@@ -12,12 +12,14 @@ use App\EventSubscriber\SearchNoHitEventSubscriber;
 use App\Message\SearchNoHitsMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
+use DanskernesDigitaleBibliotek\AgencyAuthBundle\Security\User;
 use ItkDev\MetricsBundle\Service\MetricsService;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class SearchNoHitEventSubscriberTest.
@@ -27,6 +29,7 @@ class SearchNoHitEventSubscriberTest extends TestCase
     private MessageBusInterface $bus;
     private CacheItemPoolInterface $noHitsCache;
     private MetricsService $metricsService;
+    private Security $security;
 
     /**
      * Set up test.
@@ -38,6 +41,13 @@ class SearchNoHitEventSubscriberTest extends TestCase
         $this->bus = $this->createMock(MessageBusInterface::class);
         $this->noHitsCache = $this->createMock(CacheItemPoolInterface::class);
         $this->metricsService = $this->createMock(MetricsService::class);
+
+        $user = $this->createConfiguredMock(User::class, [
+            'getAgency' => '775100',
+        ]);
+        $this->security = $this->createConfiguredMock(Security::class, [
+            'getUser' => $user,
+        ]);
     }
 
     /**
@@ -101,9 +111,11 @@ class SearchNoHitEventSubscriberTest extends TestCase
         // Producer expects
         $message1 = new SearchNoHitsMessage();
         $message1->setIdentifierType('pid')
+            ->setAgency('775100')
             ->setIdentifier('870970-basis:23452345');
         $message2 = new SearchNoHitsMessage();
         $message2->setIdentifierType('pid')
+            ->setAgency('775100')
             ->setIdentifier('870970-basis:34563456');
         $this->bus->expects($this->exactly(2))->method('dispatch')
             ->withConsecutive(
@@ -141,6 +153,6 @@ class SearchNoHitEventSubscriberTest extends TestCase
      */
     private function getSearchNoHitEventSubscriber(bool $noHitsProcessingEnabled): SearchNoHitEventSubscriber
     {
-        return new SearchNoHitEventSubscriber($this->bus, $this->noHitsCache, $this->metricsService, $noHitsProcessingEnabled);
+        return new SearchNoHitEventSubscriber($this->bus, $this->noHitsCache, $this->metricsService, $this->security, $noHitsProcessingEnabled);
     }
 }
