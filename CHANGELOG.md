@@ -11,6 +11,8 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+## [4.2.0] - 2022-11-10
+
 ### Changed
 - Added agency and profile to no-hit messages based on request token.
 
