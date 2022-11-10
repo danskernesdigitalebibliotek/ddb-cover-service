@@ -10,7 +10,7 @@ RUN tar -zxf /tmp/app.tar --strip-components=1 -C ${APP_PATH} \
     && rm /tmp/app.tar
 
 # Add composer in from the official composer image (also alpine).
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.4.0 /usr/bin/composer /usr/bin/composer
 
 WORKDIR ${APP_PATH}
 
