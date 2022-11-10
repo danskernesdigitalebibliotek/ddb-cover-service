@@ -10,6 +10,7 @@ use App\Event\SearchNoHitEvent;
 use App\Message\SearchNoHitsMessage;
 use App\Utils\Types\IdentifierType;
 use App\Utils\Types\NoHitItem;
+use DanskernesDigitaleBibliotek\AgencyAuthBundle\Security\User;
 use ItkDev\MetricsBundle\Service\MetricsService;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Cache\CacheItemPoolInterface;
@@ -17,6 +18,7 @@ use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class SearchNoHitEventSubscriber.
@@ -36,6 +38,7 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
         private readonly MessageBusInterface $bus,
         private readonly CacheItemPoolInterface $noHitsCache,
         private readonly MetricsService $metricsService,
+        private readonly Security $security,
         private readonly bool $noHitsProcessingEnabled
     ) {
     }
@@ -88,12 +91,16 @@ class SearchNoHitEventSubscriber implements EventSubscriberInterface
      */
     private function sendSearchNoHitEvents(array $nonCommittedCacheItems): void
     {
+        /** @var User $user */
+        $user = $this->security->getUser();
+
         foreach ($nonCommittedCacheItems as $cacheItem) {
             /** @var NoHitItem $noHitItem */
             $noHitItem = $cacheItem->get();
             $message = new SearchNoHitsMessage();
             $message->setIdentifierType($noHitItem->getIsType())
-                ->setIdentifier($noHitItem->getIsIdentifier());
+                ->setIdentifier($noHitItem->getIsIdentifier())
+                ->setAgency($user->getAgency());
 
             $this->noHitsCache->saveDeferred($cacheItem);
 

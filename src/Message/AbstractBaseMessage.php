@@ -18,18 +18,15 @@ abstract class AbstractBaseMessage
     private ?int $imageId = null;
     private bool $useSearchCache = true;
     private ?string $traceId = null;
+    private ?string $agency = null;
+    private ?string $profile = null;
 
-    /**
-     * @return string
-     */
     public function getOperation(): string
     {
         return $this->operation;
     }
 
     /**
-     * @param string $operation
-     *
      * @return $this
      */
     public function setOperation(string $operation): self
@@ -39,17 +36,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getIdentifierType(): string
     {
         return $this->identifierType;
     }
 
     /**
-     * @param string $type
-     *
      * @return static
      */
     public function setIdentifierType(string $type): self
@@ -59,17 +51,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getIdentifier(): string
     {
         return $this->identifier;
     }
 
     /**
-     * @param string $identifier
-     *
      * @return static
      */
     public function setIdentifier(string $identifier): self
@@ -79,17 +66,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getVendorId(): int
     {
         return $this->vendorId;
     }
 
     /**
-     * @param int $vendorId
-     *
      * @return static
      */
     public function setVendorId(int $vendorId): self
@@ -99,17 +81,12 @@ abstract class AbstractBaseMessage
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getImageId(): ?int
     {
         return $this->imageId;
     }
 
     /**
-     * @param int|null $imageId
-     *
      * @return static
      */
     public function setImageId(?int $imageId): self
@@ -122,7 +99,6 @@ abstract class AbstractBaseMessage
     /**
      * Use search cache.
      *
-     * @return bool
      *   Defaults to true if not set
      */
     public function useSearchCache(): bool
@@ -148,7 +124,6 @@ abstract class AbstractBaseMessage
     /**
      * Get request id (which is unique for the whole request).
      *
-     * @return string|null
      *   The request id
      */
     public function getTraceId(): ?string
@@ -161,12 +136,60 @@ abstract class AbstractBaseMessage
      *
      * @param string $traceId
      *   The trace id used to trace this message between services
-     *
-     * @return AbstractBaseMessage
      */
     public function setTraceId(string $traceId): self
     {
         $this->traceId = $traceId;
+
+        return $this;
+    }
+
+    /**
+     * Get agency id.
+     *
+     * This is an optional field that maybe used to change what agency is used during search.
+     *
+     * @return string
+     *   Library agency id, if set else empty string
+     */
+    public function getAgency(): string
+    {
+        return $this->agency ?? '';
+    }
+
+    /**
+     * Set agency id.
+     *
+     * @param string $agency
+     *   Library agency id
+     *
+     * @return $this
+     */
+    public function setAgency(string $agency): self
+    {
+        $this->agency = $agency;
+
+        return $this;
+    }
+
+    /**
+     * Get OpenPlatform search profile.
+     *
+     * @return string
+     */
+    public function getProfile(): string
+    {
+        return $this->profile ?? '';
+    }
+
+    /**
+     * @param string $profile
+     *
+     * @return $this
+     */
+    public function setProfile(string $profile): self
+    {
+        $this->profile = $profile;
 
         return $this;
     }
