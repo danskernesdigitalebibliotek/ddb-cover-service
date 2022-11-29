@@ -62,7 +62,7 @@ services:
       - RABBITMQ_ERLANG_COOKIE='d53f319cd7376f8f840aaf9889f315ab'
 
   elasticsearch:
-    image: 'elasticsearch:8.2.2'
+    image: 'elasticsearch:8.5.2'
     networks:
       - app
     environment:
