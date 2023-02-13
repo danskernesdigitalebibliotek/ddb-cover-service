@@ -313,8 +313,8 @@ helm install below with the following content.
 ```yaml
 ---
 commonConfiguration: |-
-  maxmemory 250mb
-  maxmemory-policy volatile-lfu
+  maxmemory 512mb
+  maxmemory-policy allkeys-lru
 ```
 
 Install Redis into the cluster.
