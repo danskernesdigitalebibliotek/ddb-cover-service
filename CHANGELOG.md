@@ -11,6 +11,11 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+## [4.2.0] - 2023-02-13
+
+### Changed
+- Bumped version to update service
+
 ## [4.2.0] - 2022-11-10
 
 ### Changed
