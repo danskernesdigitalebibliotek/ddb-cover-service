@@ -23,7 +23,7 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - nfsApp:/app:delegated
+      - .:/app:delegated
 
   nginx:
     image: nginxinc/nginx-unprivileged:alpine
@@ -35,7 +35,7 @@ services:
     ports:
       - '8080'
     volumes:
-      - ${PWD}/.docker/vhost.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./.docker/vhost.conf:/etc/nginx/conf.d/default.conf:ro
       - ./:/app:delegated
     labels:
       - "traefik.enable=true"
@@ -71,35 +71,13 @@ services:
       - ELASTIC_PASSWORD="password"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.http.ssl.key=/usr/share/elasticsearch/data/es01/es01.key
-      - xpack.security.http.ssl.certificate_authorities=/usr/share/elasticsearch/data/ca/ca.crt
-      - xpack.security.http.ssl.certificate=/usr/share/elasticsearch/data/es01/es01.crt
       - xpack.security.transport.ssl.enabled=false
-      - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.security.transport.ssl.certificate_authorities=/usr/share/elasticsearch/data/ca/ca.crt
-      - xpack.security.transport.ssl.certificate=/usr/share/elasticsearch/data/es01/es01.crt
-      - xpack.security.transport.ssl.key=/usr/share/elasticsearch/data/es01/es01.key
     volumes:
-      - nfsElastic:/usr/share/elasticsearch/data:rw
+      - esdata:/usr/share/elasticsearch/data
     ports:
       - '9200'
       - '9300'
 
 volumes:
-  # Named volume requires that you have NFS shares enabled (performance boost on Macs).
-  # Use `itkdev-docker-compose nfs:enable` to enable NFS shares. If you don't want to use it remove it from here and
-  # change the volume mapping to use normal shares in the containers. See
-  # https://sean-handley.medium.com/how-to-set-up-docker-for-mac-with-native-nfs-145151458adc
-  nfsApp:
+  esdata:
     driver: local
-    driver_opts:
-      type: nfs
-      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
-      device: ":$PWD"
-  nfsElastic:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
-      device: ":$PWD/.docker/es"

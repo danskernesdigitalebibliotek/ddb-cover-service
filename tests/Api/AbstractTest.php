@@ -12,7 +12,7 @@ abstract class AbstractTest extends ApiTestCase
 {
     private ?string $token = null;
     private ?Client $clientWithCredentials = null;
-    private AdapterInterface $tokenCache;
+    private ?AdapterInterface $tokenCache;
     protected string $apiPath = '';
 
     public static function setUpBeforeClass(): void
