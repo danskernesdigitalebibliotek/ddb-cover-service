@@ -57,6 +57,7 @@ class ElasticService
                 'imageFormat' => $search->getImageFormat(),
                 'width' => $search->getWidth(),
                 'height' => $search->getHeight(),
+                'generic' => $search->isGenericCover(),
             ];
         }
 
