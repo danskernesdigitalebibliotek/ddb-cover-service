@@ -91,7 +91,7 @@ jobs:
         run: INDEXING_URL=http://localhost:9200 ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
       - name: Upload coverage to Codecov test
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/unit.xml
