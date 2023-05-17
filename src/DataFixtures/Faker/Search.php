@@ -205,6 +205,4 @@ class Search
     {
         $this->genericCover = $genericCover;
     }
-
-
 }
