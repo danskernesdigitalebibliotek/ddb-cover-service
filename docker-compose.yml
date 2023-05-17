@@ -19,6 +19,8 @@ services:
       - PHP_MEMORY_LIMIT=256M
       - DOCKER_HOST_DOMAIN=${COMPOSE_DOMAIN}
       - PHP_IDE_CONFIG=serverName=localhost
+      - PHP_APCU_ENABLED=1
+      - PHP_APCU_ENABLED_CLI=1
       - COMPOSER_VERSION=2
     depends_on:
       - elasticsearch
