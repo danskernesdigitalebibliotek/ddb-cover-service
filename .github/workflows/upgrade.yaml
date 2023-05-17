@@ -77,7 +77,7 @@ jobs:
       - name: Runs Elasticsearch
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
-          stack-version: 8.2.2
+          stack-version: 8.5.2
           security-enabled: false
 
       - name: Wait for ES to be ready
