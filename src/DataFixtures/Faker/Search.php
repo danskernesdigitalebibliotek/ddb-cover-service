@@ -20,6 +20,7 @@ class Search
     private ?string $imageFormat;
     private ?int $width;
     private ?int $height;
+    private bool $genericCover = false;
 
     /**
      * Get the id.
@@ -176,7 +177,7 @@ class Search
     }
 
     /**
-     * Set the image heigth.
+     * Set the image height.
      *
      * @param int $height
      *
@@ -187,5 +188,21 @@ class Search
         $this->height = $height;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGenericCover(): bool
+    {
+        return $this->genericCover;
+    }
+
+    /**
+     * @param bool $genericCover
+     */
+    public function setGenericCover(bool $genericCover): void
+    {
+        $this->genericCover = $genericCover;
     }
 }
