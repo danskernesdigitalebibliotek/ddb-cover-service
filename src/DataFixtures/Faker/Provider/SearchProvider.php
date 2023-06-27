@@ -127,4 +127,17 @@ final class SearchProvider extends BaseProvider
     {
         return self::numberBetween(128, 10000);
     }
+
+    /**
+     * Get random width.
+     *
+     * @return bool
+     *   A random boolean value, skewed to false
+     */
+    public function generic(): bool
+    {
+        $int = self::numberBetween(1, 100);
+
+        return $int <= 1;
+    }
 }

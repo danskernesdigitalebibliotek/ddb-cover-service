@@ -12,6 +12,17 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 ## [Unreleased]
 
 ### Changed
+- Added `generic` field to fixtures
+- Updated ElasticSerach index definition to match importers
+
+## [4.2.0] - 2023-02-13
+
+### Changed
+- Bumped version to update service
+
+## [4.2.0] - 2022-11-10
+
+### Changed
 - Added agency and profile to no-hit messages based on request token.
 
 ## [4.1.0] - 2022-08-28
