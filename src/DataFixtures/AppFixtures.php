@@ -69,6 +69,7 @@ class AppFixtures
                 $search->setIsType($faker->isType());
                 $search->setIsIdentifier($faker->isIdentifier($search->getIsType()));
                 $search->setHeight($faker->height());
+                $search->setGenericCover($faker->generic());
             }
 
             $search->setImageFormat($faker->imageFormat());

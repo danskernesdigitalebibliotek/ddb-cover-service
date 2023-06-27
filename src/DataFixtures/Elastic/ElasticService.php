@@ -57,6 +57,7 @@ class ElasticService
                 'imageFormat' => $search->getImageFormat(),
                 'width' => $search->getWidth(),
                 'height' => $search->getHeight(),
+                'generic' => $search->isGenericCover(),
             ];
         }
 
@@ -78,24 +79,45 @@ class ElasticService
                     'number_of_replicas' => 0,
                 ],
                 'mappings' => [
+                    'dynamic' => 'strict',
                     'properties' => [
+                        'isType' => [
+                            'type' => 'keyword',
+                            'index_options' => 'docs',
+                            'doc_values' => false,
+                            'norms' => false,
+                        ],
                         'isIdentifier' => [
                             'type' => 'keyword',
+                            'index_options' => 'docs',
+                            // API responses are sorted by identifier
+                            'doc_values' => true,
+                            'norms' => false,
                         ],
                         'imageFormat' => [
                             'type' => 'keyword',
+                            'index_options' => 'docs',
+                            'index' => false,
+                            'doc_values' => false,
+                            'norms' => false,
                         ],
                         'imageUrl' => [
                             'type' => 'text',
+                            'index' => false,
+                            'norms' => false,
                         ],
                         'width' => [
                             'type' => 'integer',
-                        ],
-                        'isType' => [
-                            'type' => 'keyword',
+                            'index' => false,
+                            'doc_values' => false,
                         ],
                         'height' => [
                             'type' => 'integer',
+                            'doc_values' => false,
+                        ],
+                        'generic' => [
+                            'type' => 'boolean',
+                            'doc_values' => false,
                         ],
                     ],
                 ],

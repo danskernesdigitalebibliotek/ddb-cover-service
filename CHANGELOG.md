@@ -11,6 +11,10 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+### Changed
+- Added `generic` field to fixtures
+- Updated ElasticSerach index definition to match importers
+
 ## [4.2.0] - 2023-02-13
 
 ### Changed
