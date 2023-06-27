@@ -13,7 +13,7 @@
         "ext-json": "*",
         "ext-redis": "*",
         "ext-zend-opcache": "*",
-        "api-platform/core": "2.6.*",
+        "api-platform/core": "^2.6",
         "danskernesdigitalebibliotek/agency-auth-bundle": "^3.0",
         "itk-dev/metrics-bundle": "^1.0",
         "nelmio/cors-bundle": "^2.1",
