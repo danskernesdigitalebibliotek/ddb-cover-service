@@ -11,6 +11,11 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+## [4.2.7] - 2023-06-27
+
+### Changed
+- Updated landing page entry point script
+
 ## [4.2.6] - 2023-06-27
 
 ### Changed
