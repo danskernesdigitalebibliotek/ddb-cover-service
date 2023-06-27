@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v2.7.9",
+            "version": "v2.7.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "1c9a025aac450035ddd6b6a89b0312493303be49"
+                "reference": "c1b4e5a71c2235ae5a4acc8b1cee6e0ffef24484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/1c9a025aac450035ddd6b6a89b0312493303be49",
-                "reference": "1c9a025aac450035ddd6b6a89b0312493303be49",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/c1b4e5a71c2235ae5a4acc8b1cee6e0ffef24484",
+                "reference": "c1b4e5a71c2235ae5a4acc8b1cee6e0ffef24484",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v2.7.9"
+                "source": "https://github.com/api-platform/core/tree/v2.7.13"
             },
             "funding": [
                 {
@@ -173,7 +173,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-03T08:53:46+00:00"
+            "time": "2023-06-22T11:16:50+00:00"
         },
         {
             "name": "danskernesdigitalebibliotek/agency-auth-bundle",

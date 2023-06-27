@@ -11,6 +11,18 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+## [4.2.5] - 2023-06-27
+
+### Changed
+- Downgraded API platform core to 2.6
+
+## [4.2.4] - 2023-06-27
+
+### Changed
+- Nginx container entry point script update
+
+## [4.2.3] - 2023-06-27
+
 ### Changed
 - Added `generic` field to fixtures
 - Updated ElasticSerach index definition to match importers

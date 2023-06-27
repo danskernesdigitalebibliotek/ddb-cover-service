@@ -29,7 +29,7 @@ LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 ENV APP_PATH=/var/www/html
 
 # Add composer needed to run last minut optimizations after config is loaded.
-COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.4.0 /usr/bin/composer /usr/bin/composer
 
 # Install the application.
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
