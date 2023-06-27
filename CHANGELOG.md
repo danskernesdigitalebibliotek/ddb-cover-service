@@ -11,6 +11,12 @@ See [keep a changelog](https://keepachangelog.com/en/1.0.0/) for information abo
 
 ## [Unreleased]
 
+## [4.2.6] - 2023-06-27
+
+### Changed
+- Downgraded API platform core to 2.7
+- Fixed composer version to 2.x in image
+
 ## [4.2.5] - 2023-06-27
 
 ### Changed
